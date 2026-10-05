@@ -1,52 +1,14 @@
 ---
-import '../styles/global.css';
-import { ESCENA, CAMINANTE } from '../config.js';
-
-/*
- * Fase 0 — andamiaje.
- * El escenario todavía no camina: acá sólo comprobamos que los tokens y la
- * configuración llegan al HTML. La lógica de scroll entra en la Fase 1.
- */
-
-const valores = [
-  ['altoRef', ESCENA.altoRef],
-  ['separacion', ESCENA.separacion],
-  ['margen', ESCENA.margen],
-  ['ritmo', ESCENA.ritmo],
-  ['umbralActiva', ESCENA.umbralActiva],
-  ['capas', ESCENA.capas.map((c) => `${c.id} ${c.factor}`).join(' · ')],
-  ['caminante.x', CAMINANTE.x],
-  ['caminante.cicloPaso', CAMINANTE.cicloPaso],
-];
+import Vereda from '../layouts/Vereda.astro';
+import Escenario from '../components/Escenario.astro';
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Vereda — TODO(Mica): nombre final del sitio</title>
-  </head>
-  <body>
-    <main style="padding: 3rem 1.5rem; max-width: 44rem;">
-      <h1>Vereda</h1>
-      <p>
-        Andamiaje de la <strong>Fase 0</strong>. El escenario empieza a caminar en la
-        Fase 1.
-      </p>
+<Vereda>
+  <main>
+    <Escenario />
+  </main>
+</Vereda>
 
-      <h2 style="margin-top: 2rem;">Configuración cargada</h2>
-      <ul>
-        {
-          valores.map(([clave, valor]) => (
-            <li>
-              <code>{clave}</code>: {String(valor)}
-            </li>
-          ))
-        }
-      </ul>
-
-      <p class="todo-mica">TODO(Mica): texto de bienvenida</p>
-    </main>
-  </body>
-</html>
+<script>
+  import '../scripts/escenario.js';
+</script>
