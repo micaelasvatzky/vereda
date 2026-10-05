@@ -40,3 +40,24 @@ Se prueban como mínimo estos tamaños, en vertical y horizontal los de celular:
 | `npm run dev` | OK |
 | Sin JavaScript | **Pendiente** (la página actual no tiene nada que testear todavía) |
 | Teclado | **Pendiente** |
+
+### Fase 1 — Motor del escenario
+
+Verificado por el agente (sin poder ver la página):
+
+| Prueba | Resultado |
+| --- | --- |
+| `npm run build` | OK |
+| HTML servido en `localhost:4321` | 1 riel, 1 escenario, 5 carteleras con índice, 1 chica, 1 capa de mundo, 4 capas de fondo |
+
+**Todo lo demás quedó pendiente de que Mica abra la página.** Le comprobamos:
+
+| Prueba | Resultado |
+| --- | --- |
+| ¿Se ve la chica? | **Pendiente** |
+| ¿Camina al scrollear? | **Pendiente** |
+| ¿El parallax se nota (fondo más lento que la vereda)? | **Pendiente** |
+| ¿La cartelera activa se prende? | **Pendiente** |
+| Flechas ← →, Home, End | **Pendiente** |
+| Rotar el celular / cambiar el tamaño | **Pendiente** |
+| Fps en un celular de gama media | **Pendiente** — es el criterio de cierre de la fase |
