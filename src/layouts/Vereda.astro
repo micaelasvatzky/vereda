@@ -1,0 +1,41 @@
+---
+import '@fontsource/archivo/latin-700.css';
+import '@fontsource/archivo/latin-800.css';
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-600.css';
+import '../styles/global.css';
+import { CAMINANTE } from '../config.js';
+
+interface Props {
+  titulo?: string;
+}
+
+const { titulo = 'Vereda — TODO(Mica): nombre final del sitio' } = Astro.props;
+---
+
+<html lang="es" data-motor="desconocido">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content="TODO(Mica): descripción del sitio para buscadores." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{titulo}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  /*
+   * Variables que salen de src/config.js. Se publican acá como respaldo para
+   * que la página se vea bien antes de que corra el script; `escenario.js`
+   * después calcula --escala y las actualiza.
+   */
+  :root {
+    --caminante-x: {CAMINANTE.x};
+    --caminante-y: {CAMINANTE.y};
+    --ciclo-paso: {CAMINANTE.cicloPaso}s;
+  }
+</style>
