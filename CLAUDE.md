@@ -12,6 +12,21 @@ proyecto y el afiche negro que lleva puesto es la preview del proyecto. El fondo
 cielo, que cambia con la hora real de Buenos Aires. Se avanza con las flechas del teclado o
 con scroll.
 
+## Estado
+
+**Fase 1 (motor del escenario) — abierta y a la espera de revisión visual de Mica.**
+Build pasa, el servidor sirve bien el HTML, pero **nadie miró la página renderizada**.
+Falta: que Mica confirme la chica, la caminata, el parallax y la cartelera que se prende, y
+medir fps. La Fase 1 **no se cierra hasta que eso esté hecho**.
+
+Pendientes que bloquean o atrasan:
+
+- **Falta una foto del cartel verde icónico de Buenos Aires.** Dos búsquedas web no dieron
+  una forma documentada y no se inventó. El `Cartelera.astro` usa un rectángulo con sombra
+  como placeholder.
+- Las capas del fondo y la chica son SVG provisionales. Mica busca ilustraciones.
+- El repo es local: la push a GitHub la hace Mica.
+
 ## Reglas no negociables
 
 1. **AstroJS es la única tecnología obligatoria.** Todo lo demás se puede elegir, pero en
@@ -40,6 +55,13 @@ con scroll.
    `docs/`.
 10. **LaPush a GitHub la hace Mica.** El agente la guía con los comandos.
 
+## Comandos de sesión
+
+- `iniciar sesion` → cargar la memoria del proyecto con engram y recuperar el estado.
+- `cerrar sesion` → guardar todo en engram en condiciones para seguir la próxima sesión:
+  actualizar `docs/bitacora.md`, `docs/uso-de-ia.md` y `docs/pruebas.md`, commitear, y llamar
+  a `mem_save` + `mem_session_summary`.
+
 ## Idioma
 
 Documentación, comentarios y commits en español rioplatense informal. Nombres de
@@ -67,17 +89,4 @@ When starting the dev server, use background mode:
 astro dev --background
 ```
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
-
-## Documentation
-
-Full documentation: https://docs.astro.build
-
-Consult these guides before working on related tasks:
-
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+Manage the background server with `astro dev stop`, 
