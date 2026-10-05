@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1080" viewBox="0 0 1440 1080">
+  <!--
+    PLACEHOLDER Fase 1 — vereda porteña: cordón, cantera de pasto y baldosas.
+    Tile de 1440 px de ancho: los bordes empalman al repetirse en horizontal.
+  -->
+  <rect x="0" y="806" width="1440" height="30" fill="#a9a29a"/>
+  <rect x="0" y="836" width="1440" height="40" fill="#6f7d52"/>
+  <rect x="0" y="876" width="1440" height="204" fill="#b9b0a4"/>
+  <g fill="#a49b90">
+    <rect x="0" y="876" width="1440" height="4"/>
+    <rect x="0" y="932" width="1440" height="4"/>
+    <rect x="0" y="988" width="1440" height="4"/>
+    <rect x="0" y="1044" width="1440" height="4"/>
+    <rect x="72" y="876" width="4" height="204"/>
+    <rect x="216" y="876" width="4" height="204"/>
+    <rect x="360" y="876" width="4" height="204"/>
+    <rect x="504" y="876" width="4" height="204"/>
+    <rect x="648" y="876" width="4" height="204"/>
+    <rect x="792" y="876" width="4" height="204"/>
+    <rect x="936" y="876" width="4" height="204"/>
+    <rect x="1080" y="876" width="4" height="204"/>
+    <rect x="1224" y="876" width="4" height="204"/>
+    <rect x="1368" y="876" width="4" height="204"/>
+  </g>
+</svg>

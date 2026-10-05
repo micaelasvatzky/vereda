@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="300" viewBox="0 0 620 300">
+  <!-- PLACEHOLDER Fase 1 — colectivo de fondo, para que se vea el movimiento ambiental. Decorativo. -->
+  <rect x="20" y="40" width="580" height="220" rx="26" fill="#3f6f9e"/>
+  <rect x="20" y="40" width="580" height="46" rx="26" fill="#35608a"/>
+  <g fill="#cfe3f2">
+    <rect x="48" y="106" width="96" height="82" rx="10"/>
+    <rect x="166" y="106" width="96" height="82" rx="10"/>
+    <rect x="284" y="106" width="96" height="82" rx="10"/>
+    <rect x="402" y="106" width="96" height="82" rx="10"/>
+    <rect x="520" y="106" width="60" height="82" rx="10"/>
+  </g>
+  <rect x="40" y="204" width="540" height="14" rx="7" fill="#2c5273"/>
+  <circle cx="140" cy="268" r="30" fill="#232323"/>
+  <circle cx="470" cy="268" r="30" fill="#232323"/>
+</svg>
