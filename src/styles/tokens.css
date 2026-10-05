@@ -34,11 +34,9 @@
   --alto-ref: 1080;
   --escala: 1;
 
-  /* Alto y ancho de una cartelera en px de referencia. */
-  --cartelera-ancho: 520;
-  --cartelera-alto: 700;
-  --cartelera-separacion: 1400;
-  --cartelera-margen: 1000;
+  /* El ancho, la separación y el margen de las carteleras NO están acá a
+   propósito: salen de config.js y los publica escenario.js como variables CSS.
+   Así hay una sola fuente de verdad y no se contradicen dos archivos. */
 
   /* Colores de acento. Definidos acá; la paleta final se ajusta con Mica en la Fase 5. */
   --acento: var(--verde-cartelera-claro);

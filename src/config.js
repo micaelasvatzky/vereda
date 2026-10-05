@@ -18,6 +18,8 @@ export const ESCENA = {
   separacion: 1400,
   /** Espacio antes de la primera y después de la última cartelera, en px de referencia. */
   margen: 1000,
+  /** Ancho de una cartelera, en px de referencia. El motor lo usa para centrar el salto. */
+  carteleraAncho: 520,
   /** Cuánto scroll vertical hace falta por px de mundo. >1 = más lento. */
   ritmo: 1,
   /**
