@@ -1,0 +1,248 @@
+---
+import { ESCENA, RUTAS_CAPAS, STICKERS } from '../config.js';
+import Caminante from './Caminante.astro';
+import Cartelera from './Cartelera.astro';
+
+/*
+ * Escenario — el mundo por el que camina la chica.
+ *
+ * Estructura, de atrás hacia adelante:
+ *   cielo        → degradé según el momento del día (lo cambia cielo.js en la Fase 4)
+ *   capa lejana  → edificios, se mueve poco (parallax lento)
+ *   capa media   → locales y árboles, se mueve más
+ *   capa vereda  → cordón y baldosas, se mueve a la velocidad del mundo.
+ *                  Acá viven las carteleras, porque es el plano donde están.
+ *   colectivo    → pasa por detrás, movimiento ambiental propio
+ *   caminante    → la chica, fija en pantalla
+ *
+ * El motor vive en src/scripts/escenario.js. Este componente sólo pone las
+ * piezas y le pasa los números que necesita.
+ *
+ * PLACEHOLDER Fase 1: hay 5 carteleras de prueba. La colección real entra en
+ * la Fase 2.
+ */
+
+const NUM_CARTELERAS_PRUEBA = 5;
+const indices = Array.from({ length: NUM_CARTELERAS_PRUEBA }, (_, i) => i);
+---
+
+<div class="riel" data-riel>
+  <div class="escenario" data-escenario data-posicion="inicio">
+    <div class="escenario__cielo" data-cielo></div>
+
+    <div class="escenario__capa escenario__capa--lejana" data-capa={ESCENA.capas[0].id}>
+    </div>
+
+    <div class="escenario__capa escenario__capa--media" data-capa={ESCENA.capas[1].id}>
+    </div>
+
+    <div
+      class="escenario__capa escenario__capa--vereda escenario__mundo"
+      data-capa={ESCENA.capas[2].id}
+      data-mundo
+    >
+      {
+        STICKERS.map((st) => (
+          <img
+            class="escenario__sticker"
+            src={st.src}
+            alt=""
+            aria-hidden="true"
+            style={`left:${st.x * 100}%; top:${st.y * 100}%; rotate:${st.rotacion}deg; scale:${st.escala};`}
+          />
+        ))
+      }
+      {indices.map((i) => <Cartelera indice={i} />)}
+    </div>
+
+    <div class="escenario__colectivo" data-colectivo aria-hidden="true">
+      <img src={RUTAS_CAPAS.colectivo} alt="" />
+    </div>
+
+    <Caminante />
+
+    {
+      /* Indicador de debug. Sólo en desarrollo: muestra los números del motor. */
+      import.meta.env.DEV && (
+        <div class="escenario__debug" data-debug>
+          <p>
+            p: <span data-debug-p>0</span> · escala: <span data-debug-escala>1</span>
+          </p>
+          <p>
+            recorrido: <span data-debug-recorrido>0</span>px · activa:{' '}
+            <span data-debug-activa>ninguna</span>
+          </p>
+        </div>
+      )
+    }
+
+    <p class="escenario__sin-js">
+      Sin JavaScript el recorrido no camina, pero las carteleras se leen: se las puede
+      desplazar con la barra de scroll horizontal.
+    </p>
+  </div>
+</div>
+
+<style>
+  /*
+   * El "riel" es la página alta. Es lo único que crece con el recorrido; el
+   * escenario queda fijo mientras el riel se desplaza.
+   */
+  .riel {
+    position: relative;
+    height: 100dvh;
+  }
+
+  .escenario {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .escenario__cielo {
+    position: absolute;
+    inset: 0;
+    background: var(--cielo-dia);
+    transition: background var(--duracion-cielo) var(--curva-cielo);
+  }
+
+  /*
+   * Las capas se mueven con translate3d, que corre en la GPU: por eso el
+   * `will-change`. El ancho extra es lo que viaja al hacer scroll.
+   */
+  .escenario__capa {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    will-change: transform;
+    background-repeat: repeat-x;
+    background-position: 0 0;
+    background-size: auto 100%;
+  }
+
+  .escenario__capa--lejana {
+    background-image: url('/capas/lejana.svg');
+  }
+  .escenario__capa--media {
+    background-image: url('/capas/media.svg');
+  }
+  .escenario__capa--vereda {
+    background-image: url('/capas/vereda.svg');
+  }
+
+  .escenario__mundo {
+    /* Altura de referencia: el layer se estira al alto de la pantalla. */
+    height: 100%;
+  }
+
+  .escenario__sticker {
+    position: absolute;
+    width: calc(70px * var(--escala));
+    opacity: 0.9;
+    pointer-events: none;
+  }
+
+  /* El colectivo pasa por detrás, con su propio ciclo. */
+  .escenario__colectivo {
+    position: absolute;
+    bottom: calc(12% * var(--escala));
+    left: 0;
+    width: calc(620px * var(--escala));
+    z-index: 1;
+    animation: pasar-colectivo 24s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes pasar-colectivo {
+    from {
+      transform: translate3d(-60vw, 0, 0);
+    }
+    to {
+      transform: translate3d(110vw, 0, 0);
+    }
+  }
+
+  /* Menos movimiento: el colectivo queda parked y no arranca solo. */
+  @media (prefers-reduced-motion: reduce) {
+    .escenario__colectivo {
+      animation: none;
+      transform: translate3d(-20vw, 0, 0);
+    }
+  }
+
+  .escenario__debug {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10;
+    background: rgb(0 0 0 / 0.7);
+    color: #fff;
+    font-family: ui-monospace, monospace;
+    font-size: 12px;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    line-height: 1.5;
+    pointer-events: none;
+  }
+
+  .escenario__debug p {
+    margin: 0;
+  }
+
+  .escenario__sin-js {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10;
+    background: #ffe066;
+    color: #1a1a1a;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+
+  /*
+   * --- Sin JavaScript ---------------------------------------------------
+   * El motor pone `data-motor="riel"` en el `<html>` apenas arranca. Si no está,
+   * es que el script no corrió: en ese caso el escenario deja de ser fijo y las
+   * carteleras pasan a ser una fila que se puede desplazar a mano. Se leen
+   * todas, que es lo que importa: el sitio no queda en blanco.
+   */
+  html:not([data-motor='riel']) .riel {
+    height: auto;
+  }
+
+  html:not([data-motor='riel']) .escenario {
+    position: static;
+    height: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4rem 1.5rem 2rem;
+    background: var(--fondo);
+  }
+
+  html:not([data-motor='riel']) .escenario__cielo,
+  html:not([data-motor='riel']) .escenario__capa:not([data-mundo]),
+  html:not([data-motor='riel']) .escenario__colectivo,
+  html:not([data-motor='riel']) .caminante,
+  html:not([data-motor='riel']) .escenario__sticker {
+    display: none;
+  }
+
+  html:not([data-motor='riel']) .escenario__mundo {
+    position: static;
+    height: auto;
+    width: auto;
+    background-image: none;
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+
+  /* Pistas de posición. Se muestran según data-posicion, más adelante en la Fase 3. */
+  [data-posicion] .pista {
+    display: none;
+  }
+</style>

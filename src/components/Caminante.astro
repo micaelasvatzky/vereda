@@ -1,0 +1,141 @@
+---
+import { CAMINANTE } from '../config.js';
+
+/*
+ * La chica que camina por la vereda.
+ *
+ * No se mueve con el mundo: queda siempre en el mismo lugar de la pantalla.
+ * Lo que se mueve es el mundo, pasando frente a ella. Así el personaje es un
+ * ancla estable y no hay que perseguirlo con el scroll.
+ *
+ * El ciclo de pasos se anima con CSS, pero sólo corre mientras el sitio la
+ * marca como `data-caminando="true"` (ver `escenario.js`). Si está quieta, está
+ * quieta de verdad: las piernas se paran.
+ *
+ * PLACEHOLDER Fase 1: silueta simple. Mica aporta la ilustración definitiva.
+ */
+---
+
+<div
+  class="caminante"
+  data-caminante
+  data-caminando="false"
+  style={`--alto-caminante: ${CAMINANTE.alto}px;`}
+  aria-hidden="true"
+>
+  <svg viewBox="0 0 120 300" width="100%" height="100%" preserveAspectRatio="xMidYMax meet">
+    <!-- cabeza y pelo -->
+    <circle cx="60" cy="34" r="22" fill="#2b2320" />
+    <path d="M38 32a22 22 0 0 1 44 0c0-14-10-24-22-24s-22 10-22 24Z" fill="#3d3029" />
+
+    <!-- torso -->
+    <path d="M44 58h32l6 78H38Z" fill="#c94f3d" />
+
+    <!-- brazo atrás -->
+    <g class="caminante__brazo-atras">
+      <path d="M42 66l-10 62" stroke="#c94f3d" stroke-width="11" stroke-linecap="round" />
+      <circle cx="32" cy="130" r="6" fill="#e0a184" />
+    </g>
+
+    <!-- brazo adelante -->
+    <g class="caminante__brazo-adelante">
+      <path d="M78 66l10 62" stroke="#c94f3d" stroke-width="11" stroke-linecap="round" />
+      <circle cx="88" cy="130" r="6" fill="#e0a184" />
+    </g>
+
+    <!-- pierna atrás -->
+    <g class="caminante__pierna-atras">
+      <path d="M52 136l-8 96" stroke="#3f4a63" stroke-width="14" stroke-linecap="round" />
+      <path d="M44 232h-20" stroke="#232323" stroke-width="11" stroke-linecap="round" />
+    </g>
+
+    <!-- pierna adelante -->
+    <g class="caminante__pierna-adelante">
+      <path d="M68 136l8 96" stroke="#3f4a63" stroke-width="14" stroke-linecap="round" />
+      <path d="M76 232h20" stroke="#232323" stroke-width="11" stroke-linecap="round" />
+    </g>
+  </svg>
+</div>
+
+<style>
+  .caminante {
+    position: absolute;
+    left: calc(var(--caminante-x, 0.28) * 100%);
+    bottom: calc((1 - var(--caminante-y, 0.82)) * 100%);
+    width: calc(var(--alto-caminante, 260px) * var(--escala, 1) * 0.4);
+    height: calc(var(--alto-caminante, 260px) * var(--escala, 1));
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* El ciclo corre sólo mientras el mundo se está moviendo. */
+  .caminante[data-caminando='true'] .caminante__pierna-adelante {
+    animation: paso-adelante var(--ciclo-paso, 0.62s) ease-in-out infinite alternate;
+  }
+  .caminante[data-caminando='true'] .caminante__pierna-atras {
+    animation: paso-atras var(--ciclo-paso, 0.62s) ease-in-out infinite alternate;
+  }
+  .caminante[data-caminando='true'] .caminante__brazo-adelante {
+    animation: balanceo-adelante var(--ciclo-paso, 0.62s) ease-in-out infinite alternate;
+  }
+  .caminante[data-caminando='true'] .caminante__brazo-atras {
+    animation: balanceo-atras var(--ciclo-paso, 0.62s) ease-in-out infinite alternate;
+  }
+
+  /*
+   * Sin `transform-box: fill-box` y `transform-origin`, el navegador gira cada
+   * pierna alrededor del origen del SVG (la esquina 0,0) y la chica se desarma.
+   * El origen va arriba del grupo, que es donde está la cadera.
+   */
+  .caminante__pierna-adelante,
+  .caminante__pierna-atras,
+  .caminante__brazo-adelante,
+  .caminante__brazo-atras {
+    transform-box: fill-box;
+    transform-origin: 50% 0%;
+  }
+
+  @keyframes paso-adelante {
+    from {
+      transform: rotate(16deg);
+    }
+    to {
+      transform: rotate(-16deg);
+    }
+  }
+  @keyframes paso-atras {
+    from {
+      transform: rotate(-16deg);
+    }
+    to {
+      transform: rotate(16deg);
+    }
+  }
+  @keyframes balanceo-adelante {
+    from {
+      transform: rotate(-14deg);
+    }
+    to {
+      transform: rotate(14deg);
+    }
+  }
+  @keyframes balanceo-atras {
+    from {
+      transform: rotate(14deg);
+    }
+    to {
+      transform: rotate(-14deg);
+    }
+  }
+
+  /* Sin movimiento: la chica se queda quieta, con las piernas apoyadas. */
+  @media (prefers-reduced-motion: reduce) {
+    .caminante[data-caminando='true'] .caminante__pierna-adelante,
+    .caminante[data-caminando='true'] .caminante__pierna-atras,
+    .caminante[data-caminando='true'] .caminante__brazo-adelante,
+    .caminante[data-caminando='true'] .caminante__brazo-atras {
+      animation: none;
+    }
+  }
+</style>
