@@ -88,3 +88,52 @@ con parallax en tres capas, detección de la cartelera activa y el ciclo de paso
 - El agente encontró cuatro bugs revisando su propio código antes de que los viera nadie. Se
   documentan en `docs/bitacora.md` porque son decisiones de diseño, no sólo errores de
   tipeo.
+
+---
+
+## Fase 1 (continuación) — Integración de las ilustraciones (7 de octubre de 2026)
+
+**Para qué se usó IA**
+
+Integrar las cuatro ilustraciones que mandó Mica: armar el ciclo de caminata con las tres
+poses de caminata y la pose "mira al cartel" al hacer hover sobre el marco verde.
+
+**Qué generó el agente**
+
+- Copia de los cuatro SVG a `public/caminante/` (los originales quedan en `docs/imgs/`).
+- `Caminante.astro` reescrito: cuatro poses apiladas, ciclo por keyframes CSS y el hover
+  de la mirada resuelto con `:has()`, sin JavaScript.
+- Cambios de apoyo en `escenario.js` (freno por timer de 140 ms y `--ciclo-sprite`),
+  `Escenario.astro` (fix del selector `:global(.caminante)` del fallback sin JS),
+  `Vereda.astro` (`define:vars`), `config.js` (`RUTAS_CHICA`) y `tokens.css`
+  (`--duracion-mira`).
+- Los keyframes del ciclo, escritos dos veces: la primera versión tenía la pausa en la pose
+  equivocada y transparecía el fondo en los fundidos; el agente lo detectó al
+  autorrevisarse y los rediseñó antes de tocar los docs.
+
+**Revisó / adaptó / descartó Mica** *(lo completa ella)*
+
+- [ ] Revisado
+- [ ] Adaptado
+- [ ] Descartado
+
+**Problemas, errores o límites detectados por Mica** *(lo completa ella)*
+
+**Decisiones pendientes de Mica**
+
+- La pose de reposo de la chica quedó en `camina-1` (decisión del agente, ver bitácora
+  bug 8). Si ninguna de las tres sirve de parada, ella manda una y se agrega al array.
+- El ritmo del ciclo (`CAMINANTE.cicloPaso`) y la velocidad del fundido de la mirada
+  (`--duracion-mira`) son números de un solo archivo: si al verlo le parece muy rápido o
+  muy lento, se ajustan sin tocar más nada.
+
+**Límites del agente que conviene registrar**
+
+- **El agente no vio la animación corriendo.** Verificó los porcentajes de los keyframes a
+  mano (cobertura en cada tramo, cierre del bucle y pose en t=0) pero no con los ojos: la
+  confirmación visual de la suavidad es de Mica.
+- El selector cross-component del hover (`:global(html:has(...))`) se verificó contra la
+  fuente del compilador de Astro y contra la guía de styling de la documentación oficial,
+  no con una prueba en navegador.
+- El build no se corrió después de estos cambios (regla de sesión), así que la fase no se
+  cierra hasta que alguien lo corra y Mica vea la página.

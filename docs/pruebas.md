@@ -2,7 +2,8 @@
 
 Matriz de pantallas, navegadores, qué se probó, resultado y correcciones.
 
-> Esto se completa a medida que avanzan las fases. Hoy sólo hay entradas de la Fase 0.
+> Esto se completa a medida que avanzan las fases. Hoy hay entradas de las Fases 0 y 1
+> (los resultados de la Fase 1 siguen pendientes de que Mica abra la página).
 
 ## Matriz de pantallas
 
@@ -56,8 +57,14 @@ Verificado por el agente (sin poder ver la página):
 | --- | --- |
 | ¿Se ve la chica? | **Pendiente** |
 | ¿Camina al scrollear? | **Pendiente** |
+| ¿La caminata se ve suave, sin saltos de pose? | **Pendiente** — el agente verificó los keyframes a mano, sin verlos |
+| ¿Al parar el scroll frena la chica (no sigue caminando parada)? | **Pendiente** — el freno es por timer de 140 ms |
+| Hover en el marco verde → la chica mira el cartel | **Pendiente** |
+| ¿La pose quieta se ve bien (quedó `camina-1`)? | **Pendiente** — decisión del agente, ver bitácora |
 | ¿El parallax se nota (fondo más lento que la vereda)? | **Pendiente** |
 | ¿La cartelera activa se prende? | **Pendiente** |
 | Flechas ← →, Home, End | **Pendiente** |
+| Sin JavaScript: escenario estático y chica oculta | **Pendiente** — había un selector muerto, corregido sin verlo en navegador |
 | Rotar el celular / cambiar el tamaño | **Pendiente** |
 | Fps en un celular de gama media | **Pendiente** — es el criterio de cierre de la fase |
+| `npm run build` después de integrar las ilustraciones | **Pendiente** — no se corre build después de cambios (regla de sesión); el último build OK es anterior a esta integración |

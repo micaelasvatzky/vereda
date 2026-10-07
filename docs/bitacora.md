@@ -105,3 +105,80 @@ Cuatro bugs que aparecieron revisando el código, antes de que nadie los viera:
 - Las capas y la chica son placeholders definitivos hasta que Mica mande las ilustraciones.
 
 **Mica todavía no revisó nada de esta fase.**
+
+---
+
+## Fase 1 — 7 de octubre de 2026 — Las ilustraciones de Mica: caminata y mirada
+
+**Qué se hizo**
+
+- Mica mandó cuatro ilustraciones (viven en `docs/imgs/`): tres poses de caminata
+  (`Camina1/2/3`) y una de "mira al cartel". Se copiaron a `public/caminante/` para que
+  Astro las sirva. Los originales quedan en `docs/imgs/` y no se borran.
+- `Caminante.astro` reescrito: las cuatro imágenes apiladas en el mismo lugar (comparten
+  lienzo `0 0 209.25 511.5`, así que no hay que calcular anchos) con ciclo de caminata
+  animado por CSS puro y la pose "mira" encima, invisible hasta el hover.
+- El ciclo es ida y vuelta `1 → 2 → 3 → 2 → 1` (nunca 3 → 1 directo, eso salta) con cuatro
+  fundidos de 6% del ciclo (~75 ms) por vuelta. Cada cruce va en dos tiempos: la pose que
+  entra sube a 1 mientras la que sale sigue opaca abajo, y recién después se baja la otra
+  (escondida). En ningún momento se transparenta el fondo a través del cuerpo, y el t=0
+  cae en la pose 1 pura: la animación pausada queda exactamente en la pose de reposo.
+- `escenario.js`: el ciclo sólo corre con `data-caminando="true"` — pausar congela el frame
+  en el que estaba, no salta a la pose 1 —; publica `--ciclo-sprite` (= 2 ×
+  `CAMINANTE.cicloPaso`) y el freno pasó a ser por timer de 140 ms.
+- Hover en el marco verde de cualquier cartelera: `:global(html:has(.cartelera__marco:hover))`
+  muestra la pose "mira al cartel" con un fundido de `--duracion-mira`. Sin JavaScript.
+- `Vereda.astro`: el bloque de estilo pasó a `is:global define:vars` para poder publicar
+  `--caminante-x`, `--caminante-y` y `--ciclo-sprite`.
+- `config.js` ganó `RUTAS_CHICA` (las cuatro rutas en un solo lugar) y `tokens.css` ganó
+  `--duracion-mira`.
+
+**Problemas encontrados y cómo se resolvieron**
+
+Sigue la numeración de los cuatro bugs de arriba:
+
+5. **La caminata no frenaba al parar el scroll.** El último `scroll` de un gesto puede no
+   volver a dispararse nunca más, así que `caminando` quedaba en `true` y la chica seguía
+   caminando estando parada. **Se resolvió** con un freno por `setTimeout` de 140 ms que se
+   reprograma en cada scroll: si no llega ninguno nuevo, apaga el ciclo.
+6. **El fallback sin JavaScript no ocultaba a la chica.** El selector
+   `html:not([data-motor='riel']) .caminante` estaba en `Escenario.astro`, pero `html` no
+   recibe el scope del componente y `.caminante` vive en otro archivo: selector muerto, sin
+   error, simplemente no matcheaba nunca. **Se resolvió** con
+   `html:not([data-motor='riel']) :global(.caminante)`.
+7. **`--ciclo-paso` se publicaba como texto.** `Vereda.astro` lo escribía con interpolación
+   de template dentro de `<style>` (`{CAMINANTE.cicloPaso}s`), que Astro no procesa: CSS
+   roto. Nadie lo vio porque el JS lo pisaba después. **Se resolvió** con `define:vars`,
+   la única forma que tiene Astro de pasar datos del frontmatter al CSS.
+8. **La primera versión de los keyframes estaba mal (hallazgo del agente al
+   autorrevisarse).** Dos problemas: el `0%` de la pose 2 daba `opacity: 1`, así que con la
+   animación pausada la chica quieta se habría visto en pose 2 y no en pose 1; y los
+   fundidos complementarios (una baja de 1 a 0 mientras la otra sube de 0 a 1) suman 1 en
+   el papel, pero apiladas las capas el cuerpo se pone translúcido en el punto medio y el
+   fondo se cuela ~25%. **Se rediseñaron los keyframes** con la estructura de dos tiempos:
+   siempre hay al menos una capa en `opacity: 1` y los cuatro fundidos visibles quedan en
+   `[7,13]`, `[32,38]`, `[63,69]` y `[88,94]`.
+
+**Alternativas descartadas**
+
+- **Fundidos complementarios simples** (la vieja versión del punto 8): matemáticamente
+  correctos en suma, visualmente con sangrado de fondo. Descartados.
+- **Cortes secos con `steps()`**: cero translucidez, pero se ve el salto de pose. El fundido
+  de 75 ms es lo que pidió Mica ("que sean suaves y parezcan una animación").
+- **Reiniciar la animación al parar**: vuelve de golpe a la pose 1 a mitad de un cruce.
+  Descartado: pausar congela el frame.
+- **Clase JS para el hover de la mirada**: no hace falta JavaScript para un hover. `:has()`
+  lo resuelve en CSS; se verificó contra la fuente del compilador de Astro que el selector
+  cross-component con `:global()` al principio queda scoping al lado correcto.
+
+**Qué queda pendiente**
+
+- **Mica todavía no vio nada de esto.** Falta: que mire la chica caminando (suavidad del
+  ciclo), que pase el mouse por el marco verde y le cambie la pose, que confirme la pose de
+  reposo (`camina-1`, decisión del agente) y medir fps.
+- **El build NO se corrió después de estos cambios** (regla de sesión: nunca build después
+  de cambios). Antes de cerrar la fase hay que correrlo.
+- Las rutas y el ritmo del ciclo se cambian en un solo lugar: `RUTAS_CHICA` y
+  `CAMINANTE.cicloPaso` en `src/config.js`.
+
+**Mica todavía no revisó nada de esta fase.**
