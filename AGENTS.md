@@ -14,18 +14,27 @@ con scroll.
 
 ## Estado
 
-**Fase 1 (motor del escenario) — abierta y a la espera de revisión visual de Mica.**
-Build pasa, el servidor sirve bien el HTML, pero **nadie miró la página renderizada**.
-Falta: que Mica confirme la chica, la caminata, el parallax y la cartelera que se prende, y
-medir fps. La Fase 1 **no se cierra hasta que eso esté hecho**.
+**Fase 1 (motor del escenario) — abierta.** Mica vio la escena el 7/10: **parallax
+aprobado**; reportó flechas raras y afiches fuera de la vereda → bugs 9-11 arreglados el
+mismo día, **pendientes de su confirmación visual**. El build pasa, pero el último OK es
+anterior a la integración de ilustraciones y a esos arreglos: hay que correrlo antes de
+cerrar la fase. Falta también medir fps y que Mica confirme chica, caminata, hover y
+cartelera activa.
 
 Pendientes que bloquean o atrasan:
 
+- **Confirmar en navegador los fixes del 7/10 (tarde):** flechas (bug 9), carteleras sobre
+  la vereda (bug 10) y aparición progresiva. Detalle en `docs/bitacora.md`.
+- **Pregunta abierta sin responder:** si el cielo por horario de Buenos Aires se hace ahora
+  (adelantar la Fase 4) o en su fase. Hoy el cielo es fijo `--cielo-dia`; `cielo.js` no existe.
+- **Postergado a pedido de Mica:** rig de partes separadas para animar la chica (SVG con
+  capas nombradas y pivotes en las articulaciones). Ella manda el SVG partido cuando vuelva.
 - **Falta una foto del cartel verde icónico de Buenos Aires.** Dos búsquedas web no dieron
   una forma documentada y no se inventó. El `Cartelera.astro` usa un rectángulo con sombra
   como placeholder.
-- Las capas del fondo y la chica son SVG provisionales. Mica busca ilustraciones.
-- El repo es local: la push a GitHub la hace Mica.
+- Las capas de fondo siguen siendo SVG placeholder; las cuatro ilustraciones de la chica ya
+  están integradas en `public/caminante/`.
+- El repo es local: la push a GitHub la hace Mica (**4 commits sin subir** al cerrar el 7/10).
 
 ## Reglas no negociables
 
