@@ -35,12 +35,16 @@ const { indice } = Astro.props;
 <style>
   .cartelera {
     position: absolute;
-    bottom: 0;
     /*
-     * La posición sale de las variables que publica escenario.js desde
-     * config.js. Los valores de respaldo son sólo para que el recuadro siga
-     * siendo razonable antes de que corra el script.
+     * La base se planta en la MISMA línea de suelo que la chica
+     * (CAMINANTE.y, publicada como --caminante-y): el pie del poste queda
+     * parado sobre la baldosa donde camina ella, no colgado en el borde
+     * inferior de la pantalla.
+     * Los números de posición salen de config.js vía escenario.js. Los
+     * valores de respaldo son sólo para que el recuadro siga siendo
+     * razonable antes de que corra el script.
      */
+    bottom: calc((1 - var(--caminante-y, 0.82)) * 100%);
     left: calc(
       (var(--cartelera-margen, 1000) + var(--indice) * var(--cartelera-separacion, 1400)) *
         var(--escala, 1)
@@ -49,6 +53,24 @@ const { indice } = Astro.props;
     display: flex;
     flex-direction: column;
     align-items: center;
+    transition:
+      opacity var(--duracion-aparecer, 0.6s) var(--curva-aparecer, ease-out),
+      transform var(--duracion-aparecer, 0.6s) var(--curva-aparecer, ease-out);
+  }
+
+  /*
+   * La cartelera se aparece: mientras no la "desoculte" el motor
+   * (escenario.js, método revelar), está escondida y un toque más abajo.
+   * El pointer-events: none es necesario: sin él, el hover del marco verde
+   * escondido cambiaría la pose de la chica a "mira" hacia un cartel que
+   * no se ve.
+   * El selector exige data-motor="riel": si no hay JavaScript, las
+   * carteleras se muestran todas (fallback al final del bloque).
+   */
+  html[data-motor='riel'] .cartelera:not([data-visible='true']) {
+    opacity: 0;
+    transform: translateY(24px);
+    pointer-events: none;
   }
 
   /* Sin JavaScript las carteleras dejan de estar posicionadas en el mundo. */
@@ -93,5 +115,15 @@ const { indice } = Astro.props;
     box-shadow:
       0 24px 60px rgb(0 0 0 / 0.5),
       0 0 0 8px rgb(255 255 255 / 0.12);
+  }
+
+  /*
+   * Menos movimiento: la cartelera aparece igual (el motor sigue marcando
+   * data-visible), pero sin fundido ni desplazamiento.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    html[data-motor='riel'] .cartelera {
+      transition: none;
+    }
   }
 </style>

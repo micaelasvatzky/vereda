@@ -48,7 +48,12 @@ export const ESCENA = {
 export const CAMINANTE = {
   /** Fracción del ancho de pantalla donde se ubica. 0.28 = un poco a la izquierda del centro. */
   x: 0.28,
-  /** Posición vertical como fracción del alto. 0.82 = los pies cerca del borde inferior. */
+  /**
+   * Línea de suelo: fracción del alto donde tocan la baldosa los objetos de
+   * la vereda — los pies de la chica y la base de las carteleras. 0.82 =
+   * un poco arriba del borde inferior. Si se cambia, las dos cosas se
+   * mueven juntas: están clavadas en la misma recta.
+   */
   y: 0.82,
   /** Altura del personaje en px de referencia (se escala con --escala). */
   alto: 260,

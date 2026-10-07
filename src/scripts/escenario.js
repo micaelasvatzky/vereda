@@ -39,12 +39,17 @@ class Escenario {
     this.ultimoY = window.scrollY;
     this.caminando = false;
     this.freno = 0; // id del timer que frena la caminata (ver marcarCaminando)
+    this.pendientes = new Set(this.carteleras); // carteleras aún escondidas (ver revelar)
 
     this.medir();
     this.publicar();
     this.prescribirAlScroll();
     this.prescribirTeclado();
     this.prescribirResize();
+
+    // Estado de arranque: posición, cartelera activa y carteleras visibles.
+    // Sin esto, hasta el primer scroll todo quedaría sin calcular.
+    this.desplazar();
 
     // Sin esto, si el usuario abre la página con el scroll restaurado desde el
     // historial, la primera pintada queda desfasada.
@@ -110,6 +115,7 @@ class Escenario {
 
     this.marcarActiva();
     this.marcarPosicion();
+    this.revelar();
     this.marcarCaminando(y);
 
     this.pintarDebug(p);
@@ -148,6 +154,38 @@ class Escenario {
     if (y <= 4) this.escenario.dataset.posicion = 'inicio';
     else if (y >= this.recorridoScroll - 4) this.escenario.dataset.posicion = 'fin';
     else this.escenario.dataset.posicion = 'medio';
+  }
+
+  /**
+   * Las carteleras se aparecen solas: cada una arranca escondida y se da
+   * vuelta (`data-visible`) recién cuando el movimiento del mundo la entra
+   * en pantalla. Una vez vista queda visible para siempre.
+   *
+   * Dos condiciones a propósito:
+   *
+   *   - Hasta que la chica no arranca (`desplazamiento > 0`) no se ve NINGUNA,
+   *     así el principio no abre con todas juntas.
+   *   - Si el mundo es más angosto que la pantalla no hay recorrido posible
+   *     y ninguna entraría jamás: en ese caso se muestran todas de una.
+   */
+  revelar() {
+    if (this.pendientes.size === 0) return;
+
+    if (this.recorrido <= 0) {
+      for (const cartelera of this.pendientes) cartelera.dataset.visible = 'true';
+      this.pendientes.clear();
+      return;
+    }
+
+    if (this.desplazamiento <= 0) return;
+
+    const ancho = window.innerWidth;
+    for (const cartelera of this.pendientes) {
+      if (cartelera.getBoundingClientRect().left < ancho) {
+        cartelera.dataset.visible = 'true';
+        this.pendientes.delete(cartelera);
+      }
+    }
   }
 
   /**
@@ -253,9 +291,33 @@ class Escenario {
     return this.recorrido > 0 ? (desplazamiento / this.recorrido) * this.recorridoScroll : 0;
   }
 
+  /**
+   * Índice de la parada más cercana a donde estamos, medido por scroll.
+   *
+   * NO se usa `this.activa` para esto: la activa se pone en `null` apenas uno
+   * se corre del umbral del centro, y entre parada y parada hay huecos sin
+   * activa. En esos huecos el teclado se desorientaba: asumía la parada 0,
+   * con lo cual la flecha derecha volvía hacia atrás (por ejemplo, entre la
+   * parada 3 y la 4 saltaba a la 1) y la flecha izquierda no hacía nada.
+   */
+  indiceCercano() {
+    let mejor = 0;
+    let mejorDistancia = Infinity;
+
+    for (let i = 0; i < this.carteleras.length; i++) {
+      const distancia = Math.abs(this.yDeCartelera(i) - window.scrollY);
+      if (distancia < mejorDistancia) {
+        mejorDistancia = distancia;
+        mejor = i;
+      }
+    }
+
+    return mejor;
+  }
+
   /** Saltar a la parada siguiente o anterior. */
   saltar(delta) {
-    const actual = this.activa ? Number(this.activa.dataset.indice) : 0;
+    const actual = this.indiceCercano();
     const siguiente = acotar(actual + delta, 0, this.carteleras.length - 1);
 
     if (siguiente === actual) return;
