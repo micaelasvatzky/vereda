@@ -137,3 +137,53 @@ poses de caminata y la pose "mira al cartel" al hacer hover sobre el marco verde
   no con una prueba en navegador.
 - El build no se corrió después de estos cambios (regla de sesión), así que la fase no se
   cierra hasta que alguien lo corra y Mica vea la página.
+
+---
+
+## Fase 1 (continuación) — Ajustes sobre la revisión de Mica: teclado, suelo y aparición (7 de octubre de 2026, tarde)
+
+**Para qué se usó IA**
+
+Resolver lo que reportó Mica al ver la escena: las flechas se movían raro, los afiches no
+estaban sobre la vereda y aparecían todos juntos al principio. Además, verificar si el cielo
+por horario de Buenos Aires funcionaba.
+
+**Qué generó el agente**
+
+- `escenario.js`: `indiceCercano()` (el salto de parada medido por scroll, reemplaza al cálculo
+  desde la cartelera activa), `revelar()` (aparición progresiva con `pendientes`) y una
+  llamada inicial a `desplazar()` en el constructor.
+- `Cartelera.astro`: `bottom` sobre la línea de suelo (`--caminante-y`), estado escondido con
+  fundido + `pointer-events: none`, y regla para `prefers-reduced-motion`.
+- `tokens.css`: `--duracion-aparecer` y `--curva-aparecer`.
+- `config.js`: `CAMINANTE.y` documentado como línea de suelo compartida.
+- Dos commits: uno de código, uno de docs.
+
+**Revisó / adaptó / descartó Mica** *(lo completa ella)*
+
+- [ ] Revisado
+- [ ] Adaptado
+- [ ] Descartado
+
+**Problemas, errores o límites detectados por Mica**
+
+- Reportó tres: flechas raras (bug 9), afiches fuera de la vereda (bug 10), todos juntos al
+  principio. Y aprobó el parallax.
+
+**Decisiones tomadas por Mica**
+
+- **El rig de partes separadas para animar la chica se postergó.** Se explicó el approach
+  (SVG con capas nombradas, pivotes en las articulaciones, overlap en las juntas) y ella
+  decidió dejarlo para otro momento; manda el SVG partido cuando vuelva.
+- **Pregunta abierta al cerrar la sesión:** si el cielo por horario se hace ahora o en la
+  Fase 4. Sin responder todavía.
+
+**Límites del agente que conviene registrar**
+
+- **Ninguno de los tres fixes se vio corriendo.** El teclado y la aparición se verificaron
+  leyendo el código y con `node --check` (sintaxis); el posicionamiento se calculó contra el
+  SVG de la vereda (suelo en y=876 de 1080). La confirmación visual es de Mica.
+- El bug 11 (hover de cartelera escondida) lo encontró el agente al revisar su propio fix
+  del 10 — no Mica, ni un navegador.
+- La respuesta sobre el cielo fue verificada por grep en `src/`, no asumida de memoria: no
+  hay lógica de hora en ninguna parte.

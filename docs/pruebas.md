@@ -61,10 +61,13 @@ Verificado por el agente (sin poder ver la página):
 | ¿Al parar el scroll frena la chica (no sigue caminando parada)? | **Pendiente** — el freno es por timer de 140 ms |
 | Hover en el marco verde → la chica mira el cartel | **Pendiente** |
 | ¿La pose quieta se ve bien (quedó `camina-1`)? | **Pendiente** — decisión del agente, ver bitácora |
-| ¿El parallax se nota (fondo más lento que la vereda)? | **Pendiente** |
+| ¿El parallax se nota (fondo más lento que la vereda)? | **OK** — probado por Mica el 7/10: "el parallax va bien" |
 | ¿La cartelera activa se prende? | **Pendiente** |
-| Flechas ← →, Home, End | **Pendiente** |
+| Flechas ← →, Home, End | **Falló lo probado por Mica** (bug 9: entre paradas las flechas se desorientaban). **Arreglado, falta re-ver** en navegador |
+| ¿Las carteleras están plantadas sobre la vereda (misma línea que la chica)? | **Falló lo probado por Mica** (bug 10: base en el borde inferior de la pantalla). **Arreglado, falta re-ver** |
+| ¿Las carteleras aparecen al caminar, no todas juntas al principio? | **Falló lo reportado por Mica**. **Arreglado** (aparición progresiva con gate de movimiento), **falta re-ver** |
+| ¿El cielo cambia con el horario de Buenos Aires? | **No existe todavía** — `cielo.js` es Fase 4; hoy el cielo es fijo `--cielo-dia`. Decisión pendiente de Mica: ¿ahora o en su fase? |
 | Sin JavaScript: escenario estático y chica oculta | **Pendiente** — había un selector muerto, corregido sin verlo en navegador |
 | Rotar el celular / cambiar el tamaño | **Pendiente** |
 | Fps en un celular de gama media | **Pendiente** — es el criterio de cierre de la fase |
-| `npm run build` después de integrar las ilustraciones | **Pendiente** — no se corre build después de cambios (regla de sesión); el último build OK es anterior a esta integración |
+| `npm run build` después de integrar las ilustraciones y de los ajustes del 7/10 | **Pendiente** — no se corre build después de cambios (regla de sesión); el último build OK es anterior a ambas |

@@ -182,3 +182,77 @@ Sigue la numeración de los cuatro bugs de arriba:
   `CAMINANTE.cicloPaso` en `src/config.js`.
 
 **Mica todavía no revisó nada de esta fase.**
+
+---
+
+## Fase 1 — 7 de octubre de 2026 (tarde) — Ajustes sobre la primera revisión de Mica
+
+Mica vio la escena y reportó tres cosas: las flechas se movían raro, los afiches no estaban
+sobre la vereda y aparecían todos juntos al principio. El parallax, OK.
+
+**Qué se hizo**
+
+- **Teclado sin estado derivado.** `saltar()` ahora calcula en qué parada estamos con la
+  nueva `indiceCercano()`, que invierte `yDeCartelera()` y mide contra el `scrollY`. El
+  constructor pasó a llamar `desplazar()` una vez al arrancar, así el estado inicial (posición,
+  activa, carteleras visibles) queda calculado antes del primer scroll.
+- **Las carteleras se plantan en la línea de suelo de la chica.** El `bottom` de la cartelera
+  salió del borde inferior de la pantalla (`0`) y ahora es `(1 - var(--caminante-y)) * 100%`,
+  la misma recta donde tocan la baldosa los pies de la chica. `CAMINANTE.y` en `config.js`
+  quedó documentado como la "línea de suelo" compartida: un número, dos objetos clavados.
+- **Aparición progresiva de las carteleras.** El motor ganó `revelar()`: cada cartelera arranca
+  escondida y el motor la da vuelta (`data-visible`) recién cuando el movimiento del mundo la
+  entra en pantalla. Hasta que la chica no arranca (`desplazamiento > 0`) no se ve ninguna, y
+  una vez vista queda visible para siempre. `tokens.css` ganó `--duracion-aparecer` (0.6 s) y
+  `--curva-aparecer`.
+- **Verificación del cielo por horario.** Consultado por Mica: confirmado en el código que
+  **no existe** — el cielo es un `var(--cielo-dia)` fijo y no hay lógica de hora en todo `src/`.
+  Los degradés y `CIUDAD.zonaHoraria` ya están; el script sigue siendo Fase 4 (pregunta
+  abierta más abajo).
+
+**Problemas encontrados y cómo se resolvieron**
+
+Sigue la numeración de los ocho bugs anteriores:
+
+9. **Las flechas se desorientaban entre paradas.** `saltar()` tomaba la parada actual desde
+   `this.activa`, pero la activa es `null` apenas uno se corre del umbral del centro, y entre
+   parada y parada hay huecos de ~450 px sin activa. En esos huecos el código asumía la
+   parada 0: la flecha derecha volvía hacia atrás (entre la parada 3 y la 4 saltaba a la 1) y
+   la flecha izquierda no hacía nada. **Se resolvió** con `indiceCercano()` (ver arriba): la
+   posición sale del scroll, que es la verdad, y no de un estado derivado del umbral.
+10. **Las carteleras no estaban sobre la vereda.** Su base estaba en `bottom: 0`, ~190 px por
+    debajo de los pies de la chica: se veían colgadas en el borde inferior de la pantalla, en
+    otro plano que el donde ella camina. **Se resolvió** plantándolas en la misma línea de
+    suelo (`--caminante-y`).
+11. **El arreglo del 10 introdujo uno nuevo (detectado al revisar, antes de que nadie lo viera).**
+    Las carteleras escondidas seguían siendo interactivas: pasar el mouse por un espacio vacío
+    disparaba `:has(.cartelera__marco:hover)` y la chica miraba un cartel que no se veía.
+    **Se resolvió** con `pointer-events: none` en el estado escondido, más una regla de
+    `prefers-reduced-motion` para que la aparición sea sin animación.
+
+**Alternativas descartadas**
+
+- **Parchear el 9 subiendo `umbralActiva`** para que no queden huecos sin activa: el umbral
+  es fracción de pantalla y la distancia entre paradas crece con la escala — nunca se alcanza
+  para todo. Además "¿dónde estoy?" se responde con el scroll, no con un estado derivado.
+- **Aparición por proximidad a la chica** (que aparezca cuando se le acerca, no al entrar en
+  pantalla): en pantallas anchas un cartel ya visible a pantalla completa aparecería tarde y
+  de golpe. La entrada en pantalla con gate de movimiento cubre los dos pedidos con menos magia.
+- **Subir las carteleras con un `bottom` a ojo** (p. ej. 15%): otro número suelto que se
+  contradice con la chica. Se usó la línea de suelo que ya existe.
+
+**Qué queda pendiente**
+
+- **Mica no vio estos fixes.** Falta que pruebe las flechas, que mire las carteleras paradas
+  sobre la vereda y que vea la aparición progresiva al caminar.
+- **Pregunta abierta de Mica, sin responder al cerrar la sesión:** si el cielo por horario de
+  Buenos Aires se implementa ahora (Fase 4 adelantada) o en su fase.
+- **Postergado a pedido de Mica:** el rig de partes separadas para animar la chica (SVG con
+  capas nombradas y pivotes). Se explicó el approach; ella manda el SVG partido cuando vuelva.
+- **El build NO se corre después de cambios** (regla de sesión): el último build OK es
+  anterior a la integración de ilustraciones y a estos ajustes. Antes de cerrar la Fase 1 hay
+  que correrlo.
+- Sin push: quedan **4 commits** sin subir (los dos de la mañana y los dos de hoy).
+
+**Mica revisó la escena el 7 de octubre: parallax aprobado; flechas y afiches reportados
+como mal (bugs 9 y 10). Los fixes quedan pendientes de su confirmación visual.**
