@@ -1,5 +1,5 @@
 ---
-import { CAMINANTE } from '../config.js';
+import { CAMINANTE, RUTAS_CHICA } from '../config.js';
 
 /*
  * La chica que camina por la vereda.
@@ -8,11 +8,17 @@ import { CAMINANTE } from '../config.js';
  * Lo que se mueve es el mundo, pasando frente a ella. Así el personaje es un
  * ancla estable y no hay que perseguirlo con el scroll.
  *
- * El ciclo de pasos se anima con CSS, pero sólo corre mientras el sitio la
- * marca como `data-caminando="true"` (ver `escenario.js`). Si está quieta, está
- * quieta de verdad: las piernas se paran.
+ * Sus cuatro ilustraciones (de Mica) comparten lienzo —las cuatro tienen
+ * viewBox 0 0 209.25 511.5— y están apiladas una arriba de otra:
  *
- * PLACEHOLDER Fase 1: silueta simple. Mica aporta la ilustración definitiva.
+ *   - camina-1, camina-2 y camina-3 forman el ciclo de caminata. El ciclo
+ *     sólo avanza mientras el motor la marca como `data-caminando="true"`
+ *     (ver `escenario.js`); si está quieta, el ciclo queda congelado.
+ *   - mira-al-cartel se asoma cuando alguien hace hover sobre el marco
+ *     verde de una cartelera. Esa regla vive al final del bloque de estilos.
+ *
+ * En reposo queda en la pose camina-1. Si alguna de las tres no sirve como
+ * pose de parada, Mica manda una de reposo y se agrega al array.
  */
 ---
 
@@ -23,38 +29,22 @@ import { CAMINANTE } from '../config.js';
   style={`--alto-caminante: ${CAMINANTE.alto}px;`}
   aria-hidden="true"
 >
-  <svg viewBox="0 0 120 300" width="100%" height="100%" preserveAspectRatio="xMidYMax meet">
-    <!-- cabeza y pelo -->
-    <circle cx="60" cy="34" r="22" fill="#2b2320" />
-    <path d="M38 32a22 22 0 0 1 44 0c0-14-10-24-22-24s-22 10-22 24Z" fill="#3d3029" />
-
-    <!-- torso -->
-    <path d="M44 58h32l6 78H38Z" fill="#c94f3d" />
-
-    <!-- brazo atrás -->
-    <g class="caminante__brazo-atras">
-      <path d="M42 66l-10 62" stroke="#c94f3d" stroke-width="11" stroke-linecap="round" />
-      <circle cx="32" cy="130" r="6" fill="#e0a184" />
-    </g>
-
-    <!-- brazo adelante -->
-    <g class="caminante__brazo-adelante">
-      <path d="M78 66l10 62" stroke="#c94f3d" stroke-width="11" stroke-linecap="round" />
-      <circle cx="88" cy="130" r="6" fill="#e0a184" />
-    </g>
-
-    <!-- pierna atrás -->
-    <g class="caminante__pierna-atras">
-      <path d="M52 136l-8 96" stroke="#3f4a63" stroke-width="14" stroke-linecap="round" />
-      <path d="M44 232h-20" stroke="#232323" stroke-width="11" stroke-linecap="round" />
-    </g>
-
-    <!-- pierna adelante -->
-    <g class="caminante__pierna-adelante">
-      <path d="M68 136l8 96" stroke="#3f4a63" stroke-width="14" stroke-linecap="round" />
-      <path d="M76 232h20" stroke="#232323" stroke-width="11" stroke-linecap="round" />
-    </g>
-  </svg>
+  {
+    RUTAS_CHICA.camina.map((src, i) => (
+      <img
+        class={`caminante__pose caminante__pose--camina-${i + 1}`}
+        src={src}
+        alt=""
+        decoding="async"
+      />
+    ))
+  }
+  <img
+    class="caminante__pose caminante__pose--mira"
+    src={RUTAS_CHICA.mira}
+    alt=""
+    decoding="async"
+  />
 </div>
 
 <style>
@@ -62,80 +52,170 @@ import { CAMINANTE } from '../config.js';
     position: absolute;
     left: calc(var(--caminante-x, 0.28) * 100%);
     bottom: calc((1 - var(--caminante-y, 0.82)) * 100%);
-    width: calc(var(--alto-caminante, 260px) * var(--escala, 1) * 0.4);
     height: calc(var(--alto-caminante, 260px) * var(--escala, 1));
+    /*
+     * Las cuatro ilustraciones comparten lienzo: la proporción sale del
+     * viewBox y no hace falta calcular un ancho a mano.
+     */
+    aspect-ratio: 209.25 / 511.5;
     transform: translateX(-50%);
     pointer-events: none;
     z-index: 2;
   }
 
-  /* El ciclo corre sólo mientras el mundo se está moviendo. */
-  .caminante[data-caminando='true'] .caminante__pierna-adelante {
-    animation: paso-adelante var(--ciclo-paso, 0.62s) ease-in-out infinite alternate;
-  }
-  .caminante[data-caminando='true'] .caminante__pierna-atras {
-    animation: paso-atras var(--ciclo-paso, 0.62s) ease-in-out infinite alternate;
-  }
-  .caminante[data-caminando='true'] .caminante__brazo-adelante {
-    animation: balanceo-adelante var(--ciclo-paso, 0.62s) ease-in-out infinite alternate;
-  }
-  .caminante[data-caminando='true'] .caminante__brazo-atras {
-    animation: balanceo-atras var(--ciclo-paso, 0.62s) ease-in-out infinite alternate;
+  /* Las cuatro ocupan exactamente el mismo lugar, apiladas en el DOM:
+     la que se ve es la última con opacidad > 0. */
+  .caminante__pose {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   /*
-   * Sin `transform-box: fill-box` y `transform-origin`, el navegador gira cada
-   * pierna alrededor del origen del SVG (la esquina 0,0) y la chica se desarma.
-   * El origen va arriba del grupo, que es donde está la cadera.
+   * --- Ciclo de caminata -----------------------------------------------
+   *
+   * La vuelta es 1 → 2 → 3 → 2 → 1 (ida y vuelta), NO 1 → 2 → 3 → 1:
+   * de la pose 3 a la 1 directo no hay intermedia y se vería como un salto.
+   *
+   * Cada cruce dura 6% del ciclo (~75 ms con el ritmo por defecto) y va en
+   * dos tiempos, para que el fondo nunca se transparente a través del
+   * cuerpo: la pose que entra sube de 0 a 1 mientras la que sale sigue
+   * opaca (arriba o abajo, da igual: entre las dos siempre hay una con
+   * opacidad 1 tapando el fondo), y recién cuando la nueva llegó a 1 se
+   * baja la otra — que además queda escondida debajo, así que esa bajada
+   * no se ve. Lo que SÍ se ve son los cuatro fundidos por ciclo, de ~75 ms
+   * cada uno: 1→2, 2→3, 3→2 y 2→1.
+   *
+   * Los porcentajes están corridos para que el t=0 caiga en la pose 1 pura:
+   * así la animación pausada (chica quieta) se congela justamente en la
+   * pose de reposo, y lo que sigue es el primer fundido.
+   *
+   * El ciclo asume exactamente tres poses de caminata (las de
+   * RUTAS_CHICA.camina, en orden).
    */
-  .caminante__pierna-adelante,
-  .caminante__pierna-atras,
-  .caminante__brazo-adelante,
-  .caminante__brazo-atras {
-    transform-box: fill-box;
-    transform-origin: 50% 0%;
+  .caminante__pose--camina-1 {
+    opacity: 1;
+    animation: pose-camina-1 var(--ciclo-sprite, 1.24s) linear infinite;
+  }
+  .caminante__pose--camina-2 {
+    opacity: 0;
+    animation: pose-camina-2 var(--ciclo-sprite, 1.24s) linear infinite;
+  }
+  .caminante__pose--camina-3 {
+    opacity: 0;
+    animation: pose-camina-3 var(--ciclo-sprite, 1.24s) linear infinite;
   }
 
-  @keyframes paso-adelante {
-    from {
-      transform: rotate(16deg);
-    }
-    to {
-      transform: rotate(-16deg);
-    }
+  /*
+   * La animación no se apaga: se pausa. Si la chica se queda quieta a mitad
+   * de un cruce, congela ese frame en vez de volver de golpe a la pose 1.
+   * La pausa arranca en t=0, que por los keyframes de arriba es la pose 1.
+   */
+  .caminante .caminante__pose--camina-1,
+  .caminante .caminante__pose--camina-2,
+  .caminante .caminante__pose--camina-3 {
+    animation-play-state: paused;
   }
-  @keyframes paso-atras {
-    from {
-      transform: rotate(-16deg);
-    }
-    to {
-      transform: rotate(16deg);
-    }
+
+  .caminante[data-caminando='true'] .caminante__pose--camina-1,
+  .caminante[data-caminando='true'] .caminante__pose--camina-2,
+  .caminante[data-caminando='true'] .caminante__pose--camina-3 {
+    animation-play-state: running;
   }
-  @keyframes balanceo-adelante {
-    from {
-      transform: rotate(-14deg);
+
+  /* Pose 1: quieta hasta el 13%, ahí entra la 2 por encima; se va entre el
+     13% y el 19% (tapada por la 2, que ya está a 1) y vuelve a entrar entre
+     el 82% y el 88%, también tapada, para el fundido final 2 → 1. */
+  @keyframes pose-camina-1 {
+    0%, 13% {
+      opacity: 1;
     }
-    to {
-      transform: rotate(14deg);
+    19%, 82% {
+      opacity: 0;
     }
-  }
-  @keyframes balanceo-atras {
-    from {
-      transform: rotate(14deg);
-    }
-    to {
-      transform: rotate(-14deg);
+    88%, 100% {
+      opacity: 1;
     }
   }
 
-  /* Sin movimiento: la chica se queda quieta, con las piernas apoyadas. */
+  /* Pose 2: entra en el fundido 1 → 2 [7,13], se va tapada entre 38 y 44,
+     reaparece tapada entre 57 y 63, manda en el fundido 3 → 2 [63,69] y se
+     va sobre la 1 en el fundido 2 → 1 [88,94]. */
+  @keyframes pose-camina-2 {
+    0%, 7% {
+      opacity: 0;
+    }
+    13%, 38% {
+      opacity: 1;
+    }
+    44%, 57% {
+      opacity: 0;
+    }
+    63%, 88% {
+      opacity: 1;
+    }
+    94%, 100% {
+      opacity: 0;
+    }
+  }
+
+  /* Pose 3: entra sobre la 2 en [32,38], manda hasta el 63 y se va sobre
+     la 2 en el fundido 3 → 2 [63,69]. */
+  @keyframes pose-camina-3 {
+    0%, 32% {
+      opacity: 0;
+    }
+    38%, 63% {
+      opacity: 1;
+    }
+    69%, 100% {
+      opacity: 0;
+    }
+  }
+
+  /*
+   * --- Pose "mira al cartel" -------------------------------------------
+   *
+   * Vive arriba de las otras (última en el DOM) y arranca invisible. El
+   * trigger está abajo, en la regla con :has().
+   */
+  .caminante__pose--mira {
+    opacity: 0;
+    transition: opacity var(--duracion-mira, 0.2s) ease-out;
+  }
+
+  /*
+   * El hover sobre el marco verde de CUALQUIER cartelera cambia la pose.
+   *
+   * Esta regla queda en este archivo (y no en Cartelera.astro) porque lo que
+   * importa acá es el estado de la chica. El `:global()` del principio es
+   * necesario y a propósito: `html` y el marco verde pertenecen a otros
+   * componentes, y Astro no deja que un selector scoped cruce componentes
+   * (docs.astro.build/en/guides/styling). La pose, en cambio, es de este
+   * componente, así que esa parte sigue scoped.
+   *
+   * :has() lo soportan todos los navegadores actuales: Chrome 105+,
+   * Safari 15.4+ y Firefox 121+. No hace falta ni una línea de JavaScript.
+   */
+  :global(html:has(.cartelera__marco:hover)) .caminante__pose--mira {
+    opacity: 1;
+  }
+
+  /*
+   * Menos movimiento: el ciclo no corre (queda la pose 1) y el cambio a
+   * "mira al cartel" pasa sin fundido. El hover en sí sigue funcionando:
+   * es un cambio de estado, no un movimiento.
+   */
   @media (prefers-reduced-motion: reduce) {
-    .caminante[data-caminando='true'] .caminante__pierna-adelante,
-    .caminante[data-caminando='true'] .caminante__pierna-atras,
-    .caminante[data-caminando='true'] .caminante__brazo-adelante,
-    .caminante[data-caminando='true'] .caminante__brazo-atras {
+    .caminante__pose--camina-1,
+    .caminante__pose--camina-2,
+    .caminante__pose--camina-3 {
       animation: none;
+    }
+    .caminante__pose--mira {
+      transition: none;
     }
   }
 </style>

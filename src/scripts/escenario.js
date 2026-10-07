@@ -38,6 +38,7 @@ class Escenario {
     this.desplazamiento = 0;
     this.ultimoY = window.scrollY;
     this.caminando = false;
+    this.freno = 0; // id del timer que frena la caminata (ver marcarCaminando)
 
     this.medir();
     this.publicar();
@@ -78,7 +79,8 @@ class Escenario {
     estilo.setProperty('--cartelera-ancho', String(ESCENA.carteleraAncho));
     estilo.setProperty('--caminante-x', String(CAMINANTE.x));
     estilo.setProperty('--caminante-y', String(CAMINANTE.y));
-    estilo.setProperty('--ciclo-paso', `${CAMINANTE.cicloPaso}s`);
+    // La vuelta completa del sprite (1 → 2 → 3 → 2 → 1) son dos pasos.
+    estilo.setProperty('--ciclo-sprite', `${CAMINANTE.cicloPaso * 2}s`);
 
     // Cada capa tiene que ser más ancha que la pantalla para que al desplazarla
     // no aparezca fondo vacío: el ancho extra es justamente lo que viaja.
@@ -148,14 +150,33 @@ class Escenario {
     else this.escenario.dataset.posicion = 'medio';
   }
 
-  /** El ciclo de pasos sólo corre mientras el mundo se está moviendo. */
+  /**
+   * El ciclo de pasos sólo corre mientras el mundo se está moviendo.
+   *
+   * El delta por sí solo no alcanza: el último scroll event de una rueda o
+   * de una flecha puede venir con un salto grande y no vuelve a dispararse,
+   * y entonces "caminando" quedaría en true para siempre. Por eso además
+   * del delta hay un freno: si pasan 140 ms sin scroll, la chica se para
+   * sola.
+   */
   marcarCaminando(y) {
     const moviendo = Math.abs(y - this.ultimoY) > 0.5;
     this.ultimoY = y;
 
-    if (moviendo === this.caminando) return;
-    this.caminando = moviendo;
-    if (this.caminante) this.caminante.dataset.caminando = String(moviendo);
+    clearTimeout(this.freno);
+    if (moviendo) {
+      this.freno = setTimeout(() => this.ponerCaminando(false), 140);
+      this.ponerCaminando(true);
+    } else {
+      this.ponerCaminando(false);
+    }
+  }
+
+  /** Prende o apaga `data-caminando` en el DOM, sólo cuando el estado cambia. */
+  ponerCaminando(valor) {
+    if (valor === this.caminando) return;
+    this.caminando = valor;
+    if (this.caminante) this.caminante.dataset.caminando = String(valor);
   }
 
   /** El scroll recalcula en cada frame, no en cada evento. */

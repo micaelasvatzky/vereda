@@ -28,6 +28,8 @@
   --curva-cielo: ease-in-out;
   --duracion-prendido: 0.35s;
   --curva-prendido: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Fundido al cambiar de la pose de caminata a la pose "mira al cartel". */
+  --duracion-mira: 0.2s;
 
   /* --- Medidas ------------------------------------------------------- */
   /* El escenario está desenhado contra 1080 px de alto y se reescala con esto. */

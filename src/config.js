@@ -52,7 +52,12 @@ export const CAMINANTE = {
   y: 0.82,
   /** Altura del personaje en px de referencia (se escala con --escala). */
   alto: 260,
-  /** Segundos que tarda un paso completo del ciclo de caminata. */
+  /**
+   * Segundos que tarda un paso. El sprite de caminata da la vuelta completa
+   * (pose 1 → 2 → 3 → 2 → 1) en dos pasos: escenario.js publica
+   * `--ciclo-sprite` multiplicando esto por 2. Si la caminata se ve muy
+   * rápida o muy lenta, se toca sólo este número.
+   */
   cicloPaso: 0.62,
   /** Largo máximo de la caminata en px de referencia (1 = 100% de la velocidad del scroll). */
   desfase: 0,
@@ -92,4 +97,17 @@ export const RUTAS_CAPAS = {
   media: '/capas/media.svg',
   vereda: '/capas/vereda.svg',
   colectivo: '/capas/colectivo.svg',
+};
+
+/**
+ * Ilustraciones de la chica. Las tres de `camina` forman el ciclo de
+ * caminata y tienen que ir en orden: el CSS las apila por índice
+ * (camina-1, camina-2, camina-3). `mira` es la pose que se muestra cuando
+ * alguien hace hover sobre el marco verde de una cartelera.
+ * Para cambiar las ilustraciones se reemplazan los archivos en
+ * `public/caminante/` manteniendo los nombres, o se cambia solo acá.
+ */
+export const RUTAS_CHICA = {
+  camina: ['/caminante/camina-1.svg', '/caminante/camina-2.svg', '/caminante/camina-3.svg'],
+  mira: '/caminante/mira-al-cartel.svg',
 };

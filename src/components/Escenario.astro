@@ -226,7 +226,9 @@ const indices = Array.from({ length: NUM_CARTELERAS_PRUEBA }, (_, i) => i);
   html:not([data-motor='riel']) .escenario__cielo,
   html:not([data-motor='riel']) .escenario__capa:not([data-mundo]),
   html:not([data-motor='riel']) .escenario__colectivo,
-  html:not([data-motor='riel']) .caminante,
+  /* La chica se renderiza en Caminante.astro: Astro no deja que un selector
+     scoped mire adentro de otro componente, así que esa parte va con :global(). */
+  html:not([data-motor='riel']) :global(.caminante),
   html:not([data-motor='riel']) .escenario__sticker {
     display: none;
   }

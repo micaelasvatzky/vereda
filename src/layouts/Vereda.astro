@@ -27,15 +27,23 @@ const { titulo = 'Vereda — TODO(Mica): nombre final del sitio' } = Astro.props
   </body>
 </html>
 
-<style is:global>
+<style
+  is:global
+  define:vars={{
+    'caminante-x': CAMINANTE.x,
+    'caminante-y': CAMINANTE.y,
+    'ciclo-sprite': `${CAMINANTE.cicloPaso * 2}s`,
+  }}
+>
   /*
-   * Variables que salen de src/config.js. Se publican acá como respaldo para
-   * que la página se vea bien antes de que corra el script; `escenario.js`
-   * después calcula --escala y las actualiza.
+   * --caminante-x, --caminante-y y --ciclo-sprite salen de src/config.js.
+   * Son el respaldo para la primera pintada, antes de que corra
+   * escenario.js (ese recalcula con --escala y los publica sobre el
+   * escenario, ganándole a este valor).
+   *
+   * Van con define:vars y no tipeados a mano: dentro de un <style> de Astro
+   * NO hay interpelación de template, así que `{CAMINANTE.x}` se iba al CSS
+   * como texto literal y cualquier calc() que usara la variable quedaba
+   * inválido. define:vars es la forma documentada de Astro para esto.
    */
-  :root {
-    --caminante-x: {CAMINANTE.x};
-    --caminante-y: {CAMINANTE.y};
-    --ciclo-paso: {CAMINANTE.cicloPaso}s;
-  }
 </style>
