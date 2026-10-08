@@ -187,3 +187,62 @@ por horario de Buenos Aires funcionaba.
   del 10 — no Mica, ni un navegador.
 - La respuesta sobre el cielo fue verificada por grep en `src/`, no asumida de memoria: no
   hay lógica de hora en ninguna parte.
+
+---
+
+## Fase 1 (continuación) — Los carteles que nunca se vieron y el feedback del 8 de octubre de 2026
+
+**Para qué se usó IA**
+
+Diagnosticar por qué Mica no veía las carteleras verdes ("aparecen un rato al recargar y
+desaparecen") y sus 404 de stickers; aplicar su feedback visual (preview reemplaza al
+afiche, colectivo fuera, edificios del obelisco, chica más atrás y más grande, sin marcos
+en el cartel).
+
+**Qué generó el agente**
+
+- Fix del bug 12: `* 1px` en los `calc()` de `left` y `width` de `Cartelera.astro` —
+  eran número × número, inválidos, y las carteleras colapsaban a ancho 0 (invisible
+  desde que existen).
+- Fallback sin-JS movido a `<noscript><style is:inline>` (fin del flash) y `revelar()`
+  sin gate de movimiento (la cartelera en pantalla se ve al abrir).
+- `STICKERS = []` (la carpeta siempre estuvo vacía; los 404 eran de toda la vida).
+- `box-shadow` y anillo blanco de la cartelera activa quitados (marcos rectangulares).
+- `OBJETOS` con edificios trasero/delantero en la zona del obelisco (placeholders).
+- Ajustes en `config.js`: chica x 0.24 y alto 300; `--cielo-dia` en tokens.
+- Verificación por datos: Edge headless + conteo de píxeles por color (466 → 2621 verdes)
+  y `getComputedStyle` desde la propia página para confirmar el ancho 0.
+
+**Revisó / adaptó / descartó Mica** *(lo completa ella)*
+
+- [ ] Revisado
+- [ ] Adaptado
+- [ ] Descartado
+
+**Problemas, errores o límites detectados por Mica**
+
+- Los carteles verdes nunca se vieron (bug 12) y lo reportó dos veces con precisión:
+  "aparecen al recargar y desaparecen".
+- 404 de `/stickers/*.svg` en consola.
+- Marcos rectangulares alrededor de su SVG ("no se aplica a la forma del cartel").
+- La chica "muy chica" y luego "el tamaño está bien" (380 descartado, quedó 300).
+
+**Decisiones tomadas por Mica**
+
+- La preview del proyecto **reemplaza** al afiche negro (hueco transparente).
+- El colectivo sale de la escena.
+- Edificios detrás y delante del obelisco, nunca en la zona del cartel de calles.
+- `foto-vertical.png` borrada del repo (no sabía qué era).
+- Sin sombra ni anillo en el cartel; la activa prende sólo con scale.
+- Reemplazó dos veces `CartelVerde.svg` (versión final: sin el rect del afiche).
+
+**Límites del agente que conviene registrar**
+
+- **El diagnóstico salió de medir, no de mirar**: screenshots de Edge headless + conteo de
+  píxeles por color y valores computados leídos con un script inline. Tres capturas dieron
+  falsos negativos por medir la zona equivocada (la escala real no es la del `--window-size`).
+- El fallback sin JS quedó **sin probar en navegador**: `--headless` con scripts apagados
+  no genera screenshots en este entorno.
+- El hueco del afiche (`.cartelera__afiche`) quedó con las medidas del rect `#0b100a`
+  que Mica eliminó de su SVG — re-pensar cuando entre la Fase 2.
+- `npm run build` sin correr después de todo el 8/10 (regla de sesión).

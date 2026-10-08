@@ -71,3 +71,27 @@ Verificado por el agente (sin poder ver la pÃ¡gina):
 | Rotar el celular / cambiar el tamaÃ±o | **Pendiente** |
 | Fps en un celular de gama media | **Pendiente** â€” es el criterio de cierre de la fase |
 | `npm run build` despuÃ©s de integrar las ilustraciones y de los ajustes del 7/10 | **Pendiente** â€” no se corre build despuÃ©s de cambios (regla de sesiÃ³n); el Ãºltimo build OK es anterior a ambas |
+### Fase 1 (continuación) — 8 de octubre de 2026: carteleras, marcos y ajustes
+
+Verificado por el agente con Edge headless + conteo de píxeles (no puede ver la pantalla;
+mide colores en screenshots):
+
+| Prueba | Resultado |
+| --- | --- |
+| ¿El SVG CartelVerde renderiza? | **OK** — 7079 píxeles #345238 al abrirlo directo; tras el fix del calc, 2621 en la escena (antes 466 = ruido) |
+| ¿La primera cartelera se ve al abrir sin scrollear? | **OK por píxeles** — `revelar()` ya no exige desplazamiento > 0 |
+| ¿El HTML/CSS servido es correcto? | **OK** — `data-motor="riel"` en `<html>`, `data-visible="true"` en la article, reglas compiladas presentes |
+| ¿Los 404 de `/stickers/*.svg`? | **Causa encontrada**: `public/stickers/` siempre vacía. `STICKERS = []` — sin 404 |
+| ¿Los marcos rectangulares del cartel? | **Quitados** (box-shadow + anillo blanco del activo), pedido de Mica |
+| ¿La chica en x 0.24 / alto 300? | **OK** — `CAMINANTE` en config.js, verificado con import de node |
+
+**Pendiente de Mica (confirmación visual):**
+
+| Prueba | Resultado |
+| --- | --- |
+| ¿Se ven las carteleras al abrir y al caminar? | **Pendiente** — arreglado el bug 12 (calc con ancho 0), falta su vista |
+| ¿El flash "aparecen y desaparecen" desapareció? | **Pendiente** — fallback movido a `<noscript>` |
+| ¿La chica se ve bien en su nueva posición/tamaño? | **Pendiente** — 0.24 / 300 |
+| ¿El SVG nuevo de la cartelera se ve limpio, sin marco? | **Pendiente** |
+| Fallback sin JavaScript (carteleras apiladas) | **Sin probar en navegador** — `--headless` con scripts apagados no genera screenshots; verificado por selector y especificidad |
+| `npm run build` después de todo el 8/10 | **Pendiente** — regla de sesión: no se corre build después de cambios |

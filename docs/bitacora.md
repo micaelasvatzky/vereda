@@ -256,3 +256,78 @@ Sigue la numeración de los ocho bugs anteriores:
 
 **Mica revisó la escena el 7 de octubre: parallax aprobado; flechas y afiches reportados
 como mal (bugs 9 y 10). Los fixes quedan pendientes de su confirmación visual.**
+
+## Fase 1 — 8 de octubre de 2026 — Los carteles que nunca se vieron: un `calc()` inválido
+
+Segundo reporte de Mica, con dos pistas que lo cambiaron todo: "los carteles verdes sigo sin
+verlos, es como que cuando recargo la página aparecen por un minuto y después desaparecen",
+y un puñado de 404 de `/stickers/*.svg` en la consola. Además aplicamos su feedback de la
+mañana: la preview **reemplaza** al afiche (hueco transparente, el negro lo pinta su SVG),
+el colectivo salió de la escena, dos edificios nuevos en la zona del obelisco (capa lejana
+y capa media, placeholders grises por ahora) y se borró `foto-vertical.png` del repo (Mica no
+sabe qué es; si lo necesita, la Escena de Figma lo tiene).
+
+**El bug de fondo (12): las carteleras tuvieron ancho 0 toda su vida.**
+
+- `calc()` sólo acepta **longitud × número** (o porcentaje × número). En `Cartelera.astro`,
+  `left` y `width` eran `calc(var(--cartelera-margen, 1000) * var(--escala, 1))` —
+  **número × número**, que da una expresión sin unidades: inválida donde se espera una
+  longitud. Verificado con valores computados reales: `left = 8px`, `width = 0px`. El ancho
+  0 es literal: el cartel no ocupaba lugar y no se veía **nunca**, con ningún scroll.
+- Lo que Mica veía "aparecer un ratito al recargar" era el **fallback sin JavaScript**:
+  mientras el motor no arrancaba, `html:not([data-motor])` mostraba las carteleras en
+  `position: static` con ancho fijo. En cuanto corría el script, volvían al mundo con el
+  calc roto y desaparecían. Su descripción fue precisa desde el primer reporte.
+- **Se resolvió** agregando `* 1px` al final de cada `calc()` de `left` y `width`: número
+  × número × 1px = longitud válida. El mismo truco ya lo usaba `Escenario.astro` para la
+  altura de los objetos (`calc(var(--objeto-alto) * 1px * var(--escala))`) — la lección
+  estaba en casa y no se aplicó al cartel.
+- **El flash también se cortó**: el fallback sin-JS se movió de una regla CSS normal a un
+  `<noscript><style is:inline>`. Con JS activo, el contenido del `<noscript>` ni se parsea,
+  así que las carteleras arrancan escondidas desde la primera pintada y no hay estado
+  intermedio visible. (El fallback no-JS queda **sin probar en navegador**: `--headless` con
+  scripts apagados no genera screenshots en este entorno; se verificó por selector y
+  especificidad, no por píxel.)
+- **`revelar()` aprendió a no exigir movimiento**: el gate `desplazamiento > 0` escondía
+  todas al abrir — Mica tenía que adivinar que había que scrollear. Ahora la cartelera que
+  ya está en pantalla se revela apenas arranca el motor; las de afuera siguen apareciendo
+  con el movimiento.
+- **Stickers**: `STICKERS = []`. `public/stickers/` sólo tiene `.gitkeep` desde siempre —
+  los SVG nunca existieron y los 404 eran de toda la vida. El mecanismo (config + `.map`)
+  queda listo para cuando Mica mande los assets.
+- **La chica, más atrás y más grande** (pedido de Mica, 8/10): `CAMINANTE.x` bajó de 0.28
+  a 0.24 y `CAMINANTE.alto` subió de 260 a 300, sólo tocando `config.js`. Se probó 380
+  y Mica lo desconfirmó al toque: quedó en 300 ("el tamaño está bien").
+- **Mica reemplazó `CartelVerde.svg`** (resolución nueva, misma proporción; el rect
+  `#0b100a` del afiche ya no existe en el dibujo). Y pidió sacar "los cosos de los
+  bordes": se quitaron el `box-shadow` de `.cartelera__cartel` y el anillo blanco del
+  estado activo — ambos dibujaban un rectángulo alrededor del cartel en vez de ceñirse
+  a su forma. La cartelera activa ahora "prendе" sólo con `scale`. El hueco del afiche
+  (`.cartelera__afiche`) sigue con las medidas del rect viejo; al entrar la Fase 2 hay
+  que re-pensarlo contra el SVG sin hueco.
+
+**Verificación por datos (el modelo no ve pantallas):**
+
+- Diagnóstico: Edge headless + conteo de píxeles por color. El SVG renderiza perfecto
+  (7079 píxeles #345238 al abrirlo directo); el DOM servido tenía `data-visible="true"` y
+  el CSS compilado correcto — pero la zona del cartel salía **cielo** (#a1e3e4). Página
+  estática de prueba con el mismo CSS aisló el problema en el `calc()`, y leer
+  `getComputedStyle` desde la propia página dio la sentencia: `width = 0px`.
+- Después del fix: **466 píxeles verdes (ruido de fondo) → 2602** en el mismo screenshot
+  de la página real, con la primera cartelera visible al abrir **sin scrollear**.
+- Lección de método: cuando dos fuentes de verdad se contradicen (DOM correcto, píxel
+  roto), no se elige una — se busca la tercera (valores computados). Y ojo con las zonas
+  de medición: medir "donde creo que está" con la escala equivocada dio falsos negativos
+  dos veces.
+
+**Qué queda pendiente**
+
+- **Mica confirma en navegador:** primer cartel visible al abrir, aparición progresiva al
+  caminar, y los cambios de su feedback (colectivo fuera, edificios del obelisco, hueco
+  transparente).
+- **Edificios del obelisco:** son placeholders grises (`lejana.svg` / `media.svg`). Si Mica
+  quiere los suyos, sólo cambia el `src` en `OBJETOS`.
+- **Stickers:** el día que mande los SVG van en `STICKERS` (config.js) y se dibujan solos.
+- **Pregunta sigue abierta:** cielo por horario de Buenos Aires — ¿ahora o en la Fase 4?
+- **Build sin correr** (regla de sesión) y **push lo hace Mica**: quedan varios commits
+  sin subir.
