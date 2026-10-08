@@ -31,6 +31,7 @@ class Escenario {
 
     this.capas = Array.from(document.querySelectorAll('[data-capa]'));
     this.carteleras = Array.from(document.querySelectorAll('[data-cartelera]'));
+    this.objetos = Array.from(document.querySelectorAll('[data-objeto]'));
     this.caminante = document.querySelector('[data-caminante]');
 
     this.escala = 1;
@@ -84,6 +85,7 @@ class Escenario {
     estilo.setProperty('--cartelera-ancho', String(ESCENA.carteleraAncho));
     estilo.setProperty('--caminante-x', String(CAMINANTE.x));
     estilo.setProperty('--caminante-y', String(CAMINANTE.y));
+    estilo.setProperty('--suelo-carteleras', String(ESCENA.sueloCarteleras));
     // La vuelta completa del sprite (1 → 2 → 3 → 2 → 1) son dos pasos.
     estilo.setProperty('--ciclo-sprite', `${CAMINANTE.cicloPaso * 2}s`);
 
@@ -92,6 +94,30 @@ class Escenario {
     for (const capa of this.capas) {
       const factor = this.factorDe(capa);
       capa.style.width = `${window.innerWidth + this.recorrido * factor}px`;
+    }
+
+    this.posicionarObjetos();
+  }
+
+  /**
+   * Ubica cada objeto decorativo dentro de su capa.
+   *
+   * La fórmula deja el objeto centrado en pantalla en el instante en que el
+   * mundo llega hasta su `x`. Como la capa viaja más lento que el mundo
+   * (parallax), en cualquier otro instante el objeto se corre de la posición
+   * que tenía en la Escena de Mica: eso es justamente el parallax.
+   */
+  posicionarObjetos() {
+    const ancho = window.innerWidth;
+
+    for (const objeto of this.objetos) {
+      const capa = objeto.closest('[data-capa]');
+      if (!capa || !objeto.dataset.x) continue;
+
+      const factor = this.factorDe(capa);
+      const x = parseFloat(objeto.dataset.x) * this.escala;
+      const izquierda = ancho / 2 + factor * (x - ancho / 2);
+      objeto.style.left = `${izquierda.toFixed(1)}px`;
     }
   }
 
@@ -161,12 +187,13 @@ class Escenario {
    * vuelta (`data-visible`) recién cuando el movimiento del mundo la entra
    * en pantalla. Una vez vista queda visible para siempre.
    *
-   * Dos condiciones a propósito:
+   * La que ya está en pantalla al arrancar se muestra apenas inicia el
+   * motor: si no, el sitio abría vacío y Mica tendría que adivinar que
+   * tiene que scrollear para ver algo. Las de afuera siguen apareciendo
+   * con el movimiento, así el principio no abre con todas juntas.
    *
-   *   - Hasta que la chica no arranca (`desplazamiento > 0`) no se ve NINGUNA,
-   *     así el principio no abre con todas juntas.
-   *   - Si el mundo es más angosto que la pantalla no hay recorrido posible
-   *     y ninguna entraría jamás: en ese caso se muestran todas de una.
+   * Si el mundo es más angosto que la pantalla no hay recorrido posible
+   * y ninguna entraría jamás: en ese caso se muestran todas de una.
    */
   revelar() {
     if (this.pendientes.size === 0) return;
@@ -176,8 +203,6 @@ class Escenario {
       this.pendientes.clear();
       return;
     }
-
-    if (this.desplazamiento <= 0) return;
 
     const ancho = window.innerWidth;
     for (const cartelera of this.pendientes) {

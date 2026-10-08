@@ -14,12 +14,21 @@
 export const ESCENA = {
   /** Alto de referencia del escenario, en px. Todo el mundo se expresa contra esto. */
   altoRef: 1080,
-  /** Distancia entre carteleras, en px de referencia. */
-  separacion: 1400,
+  /**
+   * Distancia entre carteleras, en px de referencia.
+   * Sale de la Escena de Mica: sus carteles están cada 15.310 px de dibujo
+   * y el dibujo mide 26.088 px de alto = 1080 de referencia, así que
+   * 15310 / 24.16 = 633.
+   */
+  separacion: 633,
   /** Espacio antes de la primera y después de la última cartelera, en px de referencia. */
   margen: 1000,
-  /** Ancho de una cartelera, en px de referencia. El motor lo usa para centrar el salto. */
-  carteleraAncho: 520,
+  /**
+   * Ancho de una cartelera, en px de referencia. El motor lo usa para
+   * centrar el salto. También sale de la Escena: cada cartel mide
+   * 8.662 px de dibujo = 359 de referencia.
+   */
+  carteleraAncho: 359,
   /** Cuánto scroll vertical hace falta por px de mundo. >1 = más lento. */
   ritmo: 1,
   /**
@@ -31,6 +40,15 @@ export const ESCENA = {
     { id: 'media', factor: 0.55 },
     { id: 'vereda', factor: 1.0 },
   ],
+  /**
+   * Línea de suelo de las CARTELERAS: fracción del alto donde se apoya la
+   * base del poste. En la Escena de Mica los tres carteles se apoyan entre
+   * el 84.7% y el 87.9%, así que va 0.86.
+   *
+   * Es DISTINTA de CAMINANTE.y a propósito: ella pisa más abajo (adelante
+   * de los carteles), así nunca "pisa encima" de un cartel.
+   */
+  sueloCarteleras: 0.86,
   /** Fracción del ancho de pantalla alrededor del centro que cuenta como "cerca" de una cartelera. */
   umbralActiva: 0.25,
   /** Escala mínima y máxima para que en un teléfono no se lea gigante ni en una pantalla enorme se vea chiquito. */
@@ -46,17 +64,26 @@ export const ESCENA = {
  * es un ancla estable y no hay que perseguirlo con el scroll.
  */
 export const CAMINANTE = {
-  /** Fracción del ancho de pantalla donde se ubica. 0.28 = un poco a la izquierda del centro. */
-  x: 0.28,
   /**
-   * Línea de suelo: fracción del alto donde tocan la baldosa los objetos de
-   * la vereda — los pies de la chica y la base de las carteleras. 0.82 =
-   * un poco arriba del borde inferior. Si se cambia, las dos cosas se
-   * mueven juntas: están clavadas en la misma recta.
+   * Fracción del ancho de pantalla donde se ubica. 0 = borde izquierdo,
+   * 1 = borde derecho. Mica pidió (8/10) que arranque "un poco más
+   * atrás": bajó de 0.28 a 0.24. Si se quiere más o menos, se toca
+   * sólo este número.
    */
-  y: 0.82,
-  /** Altura del personaje en px de referencia (se escala con --escala). */
-  alto: 260,
+  x: 0.24,
+  /**
+   * Línea de suelo: fracción del alto donde tocan la baldosa los pies de la
+   * chica. Va MÁS ABAJO que ESCENA.sueloCarteleras (0.86): ella camina por
+   * adelante de los carteles y no pisa nunca sobre ellos. 0.90 deja sus pies
+   * 21 px (de referencia) por debajo de la base del cartel más bajo.
+   */
+  y: 0.9,
+  /**
+   * Altura del personaje en px de referencia (se escala con --escala).
+   * Mica pidió (8/10) "un poco más grande": 260 → 300. Se probó 380 y
+   * volvió a 300 ("el tamaño está bien").
+   */
+  alto: 300,
   /**
    * Segundos que tarda un paso. El sprite de caminata da la vuelta completa
    * (pose 1 → 2 → 3 → 2 → 1) en dos pasos: escenario.js publica
@@ -85,30 +112,91 @@ export const CIUDAD = {
 
 /**
  * Stickers sueltos pegados sobre la vereda. Decorativos.
- * x e y van en fracciones del ancho y alto de referencia. Se placean al azar
- * en cada carga, así el sitio no se ve idéntico cada vez.
+ * x e y van en fracciones del ancho y alto de referencia.
+ *
+ * Vacíos a propósito: Mica todavía no mandó los SVG y los rutas viejas
+ * daban 404 en la consola. Cuando estén, van acá y en Escenario.astro
+ * se dibujan solos (el .map sobre este array).
  */
-export const STICKERS = [
-  { src: '/stickers/star.svg', x: 0.06, y: 0.74, rotacion: -12, escala: 1 },
-  { src: '/stickers/heart.svg', x: 0.14, y: 0.68, rotacion: 9, escala: 0.9 },
-  { src: '/stickers/rayo.svg', x: 0.23, y: 0.79, rotacion: -5, escala: 1.1 },
-  { src: '/stickers/nube.svg', x: 0.34, y: 0.71, rotacion: 14, escala: 0.85 },
-  { src: '/stickers/star.svg', x: 0.47, y: 0.77, rotacion: -20, escala: 0.8 },
-];
+export const STICKERS = [];
 
-/** Rutas de las capas de fondo. Para pasar de los SVG placeholder a los webp finales se cambia solo acá. */
+/**
+ * Rutas de las capas de fondo. La franja de vereda se cambia sólo acá.
+ * Las capas lejana y media ya no llevan imagen de fondo: llevan los objetos
+ * de abajo, cada uno con su posición en el mundo.
+ */
 export const RUTAS_CAPAS = {
-  lejana: '/capas/lejana.svg',
-  media: '/capas/media.svg',
-  vereda: '/capas/vereda.svg',
-  colectivo: '/capas/colectivo.svg',
+  vereda: '/img/Vereda.svg',
 };
+
+/** Assets de las carteleras. El cartel es el SVG que dibujó Mica. */
+export const RUTAS_CARTEL = {
+  verde: '/img/CartelVerde.svg',
+};
+
+/**
+ * Objetos sueltos del escenario. Van dentro de una capa y viajan con la
+ * velocidad de esa capa (parallax). Todos los números están en px de
+ * referencia (26.088 px de dibujo de la Escena = 1080 de referencia).
+ *
+ * - capa:  a qué capa se engancha (lejana / media / vereda). La capa
+ *          define qué tan atrás está y a qué velocidad viaja.
+ * - x:     posición horizontal del mundo en px de referencia. El objeto queda
+ *          centrado en pantalla cuando el mundo llega hasta ahí. Las de la
+ *          Escena van corridas 643 px (1000 - 357): nuestra cartelera
+ *          arranca en el margen 1000 y la de ella en 357.
+ * - alto:  altura en px de referencia.
+ * - base:  fracción del alto donde se apoya (su propia línea de suelo).
+ *
+ * Los dos edificios van a propósito EN LA ZONA DEL OBELISCO y no en la del
+ * cartel de calles (pedido de Mica): misma x que el obelisco pero capas
+ * distintas, así uno queda detrás suyo y el otro adelante, y al viajar a
+ * velocidad distinta se despegan uno del otro. Los archivos son los
+ * placeholders de la Fase 1; cuando Mica mande sus edificios se cambia
+ * sólo el src.
+ */
+export const OBJETOS = [
+  {
+    id: 'obelisco',
+    capa: 'lejana',
+    src: '/img/ObeliscoP.svg',
+    x: 2534, // Escena: centro en x 1891 + 643
+    alto: 825,
+    base: 0.86,
+  },
+  {
+    // Detrás del obelisco: misma capa (lejana) y misma x, se mueve con él.
+    id: 'edificio-trasero',
+    capa: 'lejana',
+    src: '/capas/lejana.svg', // PLACEHOLDER: silueta de edificios.
+    x: 2534,
+    alto: 700,
+    base: 0.86,
+  },
+  {
+    // Delante del obelisco: capa media, más cerca y más veloz que él.
+    id: 'edificio-delantero',
+    capa: 'media',
+    src: '/capas/media.svg', // PLACEHOLDER: locales y árboles.
+    x: 2534,
+    alto: 620,
+    base: 0.86,
+  },
+  {
+    id: 'cartel-calles',
+    capa: 'media',
+    src: '/img/CartelCalles.svg',
+    x: 1494, // Escena: centro en x 851 + 643
+    alto: 559,
+    base: 0.81,
+  },
+];
 
 /**
  * Ilustraciones de la chica. Las tres de `camina` forman el ciclo de
  * caminata y tienen que ir en orden: el CSS las apila por índice
  * (camina-1, camina-2, camina-3). `mira` es la pose que se muestra cuando
- * alguien hace hover sobre el marco verde de una cartelera.
+ * alguien hace hover sobre el cartel de una cartelera.
  * Para cambiar las ilustraciones se reemplazan los archivos en
  * `public/caminante/` manteniendo los nombres, o se cambia solo acá.
  */

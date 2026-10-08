@@ -14,8 +14,9 @@ import { CAMINANTE, RUTAS_CHICA } from '../config.js';
  *   - camina-1, camina-2 y camina-3 forman el ciclo de caminata. El ciclo
  *     sólo avanza mientras el motor la marca como `data-caminando="true"`
  *     (ver `escenario.js`); si está quieta, el ciclo queda congelado.
- *   - mira-al-cartel se asoma cuando alguien hace hover sobre el marco
- *     verde de una cartelera. Esa regla vive al final del bloque de estilos.
+   *   - mira-al-cartel se asoma cuando alguien hace hover sobre el
+   *     cartel de una cartelera. Esa regla vive al final del bloque de
+   *     estilos.
  *
  * En reposo queda en la pose camina-1. Si alguna de las tres no sirve como
  * pose de parada, Mica manda una de reposo y se agrega al array.
@@ -187,11 +188,11 @@ import { CAMINANTE, RUTAS_CHICA } from '../config.js';
   }
 
   /*
-   * El hover sobre el marco verde de CUALQUIER cartelera cambia la pose.
+   * El hover sobre el cartel de CUALQUIER cartelera cambia la pose.
    *
    * Esta regla queda en este archivo (y no en Cartelera.astro) porque lo que
    * importa acá es el estado de la chica. El `:global()` del principio es
-   * necesario y a propósito: `html` y el marco verde pertenecen a otros
+   * necesario y a propósito: `html` y el cartel pertenecen a otros
    * componentes, y Astro no deja que un selector scoped cruce componentes
    * (docs.astro.build/en/guides/styling). La pose, en cambio, es de este
    * componente, así que esa parte sigue scoped.
@@ -199,7 +200,7 @@ import { CAMINANTE, RUTAS_CHICA } from '../config.js';
    * :has() lo soportan todos los navegadores actuales: Chrome 105+,
    * Safari 15.4+ y Firefox 121+. No hace falta ni una línea de JavaScript.
    */
-  :global(html:has(.cartelera__marco:hover)) .caminante__pose--mira {
+  :global(html:has(.cartelera__cartel:hover)) .caminante__pose--mira {
     opacity: 1;
   }
 

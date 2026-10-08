@@ -1,14 +1,21 @@
 ---
 /*
- * Cartelera — placeholder de la Fase 1.
+ * Cartelera — un cartel de la vereda con su afiche.
  *
- * En esta fase sólo está el marco verde y el afiche negro, para poder medir
- * el motor del escenario (dónde caen, cuál queda activa). El contenido real,
- * el `<dialog>` y el afiche tipográfico entran en la Fase 2.
+ * El cartel ES el SVG que dibujó Mica (/img/CartelVerde.svg): marco,
+ * afiche y poste vienen de una sola pieza en su dibujo, así que ya no hay
+ * poste de CSS ni rectángulo verde pintado a mano. Lo único que se
+ * superpone es el afiche, adentro del hueco que el propio SVG deja
+ * (medido del dibujo: rect #0b100a en x 5.9%, y 18.2%, con 88.1% de
+ * ancho y 42.6% de alto del cartel).
  *
- * PLACEHOLDER Fase 1: el marco verde es un rectángulo con sombra, NO la forma
- * del cartel icónico de Buenos Aires. Falta la foto de referencia de Mica.
+ * PLACEHOLDER Fase 1: el hueco lleva sólo un TODO(Mica). Mica confirmó
+ * que la preview del proyecto REEMPLAZA al afiche, así que cuando entre
+ * la Fase 2 acá va la imagen real. El <dialog> y el afiche tipográfico
+ * entran en esa misma fase.
  */
+
+import { RUTAS_CARTEL } from '../config.js';
 
 interface Props {
   indice: number;
@@ -24,97 +31,126 @@ const { indice } = Astro.props;
   data-activa="false"
   style={`--indice: ${indice};`}
 >
-  <div class="cartelera__marco">
+  <div class="cartelera__cartel">
+    <img
+      class="cartelera__arte"
+      src={RUTAS_CARTEL.verde}
+      alt=""
+      aria-hidden="true"
+      decoding="async"
+    />
     <div class="cartelera__afiche">
       <span class="todo-mica">TODO(Mica): #{indice + 1}</span>
     </div>
   </div>
-  <div class="cartelera__poste" aria-hidden="true"></div>
 </article>
 
 <style>
   .cartelera {
     position: absolute;
     /*
-     * La base se planta en la MISMA línea de suelo que la chica
-     * (CAMINANTE.y, publicada como --caminante-y): el pie del poste queda
-     * parado sobre la baldosa donde camina ella, no colgado en el borde
-     * inferior de la pantalla.
+     * La base se planta en la línea de suelo de las CARTELERAS
+     * (ESCENA.sueloCarteleras = 0.86, publicada como
+     * --suelo-carteleras): la punta del poste toca la vereda donde ella
+     * la dibujó. Es distinta de la de la chica (0.90): ella camina por
+     * delante, más abajo, y no pisa nunca sobre un cartel.
      * Los números de posición salen de config.js vía escenario.js. Los
      * valores de respaldo son sólo para que el recuadro siga siendo
      * razonable antes de que corra el script.
      */
-    bottom: calc((1 - var(--caminante-y, 0.82)) * 100%);
+    bottom: calc((1 - var(--suelo-carteleras, 0.86)) * 100%);
+    /*
+     * OJO: el * 1px final no es decorativo. calc() sólo acepta
+     * "longitud × número"; número × número da inválido y el left/width
+     * entero se cae a auto (el cartel quedaba con ancho 0 y Mica no veía
+     * NUNCA las carteleras). Multiplicar por 1px convierte el resultado
+     * en longitud y el calc' es válido. Mismo truco que usa
+     * Escenario.astro para la altura de los objetos.
+     */
     left: calc(
-      (var(--cartelera-margen, 1000) + var(--indice) * var(--cartelera-separacion, 1400)) *
-        var(--escala, 1)
+      (var(--cartelera-margen, 1000) + var(--indice) * var(--cartelera-separacion, 633)) *
+        var(--escala, 1) * 1px
     );
-    width: calc(var(--cartelera-ancho, 520) * var(--escala, 1));
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: calc(var(--cartelera-ancho, 359) * var(--escala, 1) * 1px);
     transition:
       opacity var(--duracion-aparecer, 0.6s) var(--curva-aparecer, ease-out),
       transform var(--duracion-aparecer, 0.6s) var(--curva-aparecer, ease-out);
   }
 
   /*
-   * La cartelera se aparece: mientras no la "desoculte" el motor
-   * (escenario.js, método revelar), está escondida y un toque más abajo.
-   * El pointer-events: none es necesario: sin él, el hover del marco verde
-   * escondido cambiaría la pose de la chica a "mira" hacia un cartel que
-   * no se ve.
-   * El selector exige data-motor="riel": si no hay JavaScript, las
-   * carteleras se muestran todas (fallback al final del bloque).
+   * Las carteleras arrancan escondidas Y fuera de lugar. Escondidas desde
+   * el CSS inicial (no sólo cuando el motor ya corrió) a propósito: el
+   * HTML se pinta antes de que cargue el script, y eso era lo que Mica
+   * veía como "aparecen un rato al recregar y después desaparecen".
+   *
+   * El motor las da vuelta una por una con `data-visible`; el
+   * pointer-events: none es necesario sin eso, el hover de una cartelera
+   * escondida cambiaría la pose de la chica a "mira" hacia algo que no se
+   * ve. El fallback sin JavaScript vive en un <noscript> al final del
+   * archivo: si estuviera acá, se aplicaría TAMBIÉN antes de que el
+   * motor arranque y volvería el flash.
    */
-  html[data-motor='riel'] .cartelera:not([data-visible='true']) {
+  .cartelera {
     opacity: 0;
     transform: translateY(24px);
     pointer-events: none;
   }
 
-  /* Sin JavaScript las carteleras dejan de estar posicionadas en el mundo. */
-  html:not([data-motor='riel']) .cartelera {
-    position: static;
-    width: min(320px, 78vw);
+  html[data-motor='riel'] .cartelera[data-visible='true'] {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
   }
 
-  .cartelera__marco {
+  .cartelera__cartel {
+    position: relative;
     width: 100%;
-    aspect-ratio: 4 / 5;
-    background: var(--verde-cartelera);
-    border: 6px solid var(--verde-cartelera-oscuro);
-    border-radius: 10px;
-    box-shadow: 0 18px 40px rgb(0 0 0 / 0.35);
-    padding: 22px;
-    transition:
-      transform var(--duracion-prendido) var(--curva-prendido),
-      box-shadow var(--duracion-prendido) var(--curva-prendido);
+    /* Proporción del dibujo de Mica: CartelVerde.svg mide 702 × 1088. */
+    aspect-ratio: 702 / 1088;
+    /*
+     * Sin sombra ni marco de CSS (pedido de Mica, 8/10): cualquier halo
+     * rectangular queda como un recuadro alrededor del dibujo en vez de
+     * ceñirse a su forma. Lo que "prende" la activa es sólo el scale.
+     */
+    transition: transform var(--duracion-prendido) var(--curva-prendido);
   }
 
-  .cartelera__afiche {
+  /* El arte de Mica ocupa todo el cartel. */
+  .cartelera__arte {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
-    background: var(--afiche-fondo);
+    display: block;
+  }
+
+  /*
+   * El hueco del afiche, medido sobre el SVG: es el rect #0b100a del
+   * dibujo. El cartel es opaco, así que el contenido SÓLO puede ir encima
+   * de este rectángulo — no por detrás.
+   *
+   * Fondo transparente a propósito: Mica confirmó que la preview del
+   * proyecto REEMPLAZA al afiche, y el fondo negro ya lo pinta su propio
+   * dibujo. Cuando entre la Fase 2 acá va la imagen real del proyecto.
+   */
+  .cartelera__afiche {
+    position: absolute;
+    left: 5.9%;
+    top: 18.2%;
+    width: 88.1%;
+    height: 42.6%;
+    background: transparent;
     color: var(--afiche-texto);
     display: grid;
     place-items: center;
-    padding: 1rem;
+    padding: 0.6rem;
     text-align: center;
+    overflow: hidden;
   }
 
-  .cartelera__poste {
-    width: 14px;
-    height: calc(180 * var(--escala));
-    background: var(--verde-cartelera-oscuro);
-  }
-
-  /* La cartelera activa se "prende": crece apenas y levanta sombra. */
-  .cartelera[data-activa='true'] .cartelera__marco {
+  /* La cartelera activa se "prende": crece apenas y se levanta. Sin marco. */
+  .cartelera[data-activa='true'] .cartelera__cartel {
     transform: scale(1.04) translateY(-10px);
-    box-shadow:
-      0 24px 60px rgb(0 0 0 / 0.5),
-      0 0 0 8px rgb(255 255 255 / 0.12);
   }
 
   /*
@@ -127,3 +163,23 @@ const { indice } = Astro.props;
     }
   }
 </style>
+
+<!--
+  Fallback sin JavaScript. Va en <noscript> con style is:inline (crudo,
+  sin scope de Astro) porque sólo tiene que aplicar cuando NO hay JS:
+  si el navegador corre scripts, este contenido ni se parsea y las
+  carteleras siguen ocultas hasta que el motor las revele — así no hay
+  flash de carteleras sueltas al cargar. Sin JS, en cambio, dejan de
+  estar posicionadas en el mundo y se apilan legibles.
+-->
+<noscript>
+  <style is:inline>
+    html:not([data-motor='riel']) .cartelera {
+      position: static;
+      width: min(320px, 78vw);
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+  </style>
+</noscript>

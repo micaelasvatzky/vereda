@@ -16,9 +16,11 @@
   --fuente-texto: 'Inter', system-ui, sans-serif;
 
   /* --- Cielos -------------------------------------------------------- */
-  /* Los degradés los aplica cielo.js según el momento del día y el clima. */
+  /* Los degradés los aplica cielo.js según el momento del día y el clima.
+     El de día arranca plano y con el azul exacto de la Escena de Mica
+     (#A1E3E4, medido del SVG), no con el degradé viejo de placeholder. */
   --cielo-amanecer: linear-gradient(#f5c98a, #e88f6e 55%, #b06a72);
-  --cielo-dia: linear-gradient(#7fc2e8, #b8dcef);
+  --cielo-dia: #a1e3e4;
   --cielo-tarde: linear-gradient(#f2a65a, #d96f4a 60%, #8c4a5c);
   --cielo-noche: linear-gradient(#0d1b2e, #1b2a41 60%, #2b3a55);
 

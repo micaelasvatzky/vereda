@@ -1,5 +1,5 @@
 ---
-import { ESCENA, RUTAS_CAPAS, STICKERS } from '../config.js';
+import { ESCENA, RUTAS_CAPAS, STICKERS, OBJETOS } from '../config.js';
 import Caminante from './Caminante.astro';
 import Cartelera from './Cartelera.astro';
 
@@ -7,33 +7,68 @@ import Cartelera from './Cartelera.astro';
  * Escenario — el mundo por el que camina la chica.
  *
  * Estructura, de atrás hacia adelante:
- *   cielo        → degradé según el momento del día (lo cambia cielo.js en la Fase 4)
- *   capa lejana  → edificios, se mueve poco (parallax lento)
- *   capa media   → locales y árboles, se mueve más
- *   capa vereda  → cordón y baldosas, se mueve a la velocidad del mundo.
- *                  Acá viven las carteleras, porque es el plano donde están.
- *   colectivo    → pasa por detrás, movimiento ambiental propio
+ *   cielo        → color plano de la Escena de Mica (lo cambia cielo.js en la Fase 4)
+ *   capa lejana  → el obelisco, se mueve poco (parallax lento)
+ *   capa media   → el cartel de calles + la franja de vereda de atrás
+ *   capa vereda  → la franja de vereda de adelante, se mueve a la velocidad
+ *                  del mundo. Acá viven las carteleras, porque es el plano
+ *                  donde están.
  *   caminante    → la chica, fija en pantalla
+ *
+ * Los objetos (obelisco, cartel de calles) salen de config.js con la posición
+ * que tienen en la Escena de Mica; el motor los acomoda en su capa.
  *
  * El motor vive en src/scripts/escenario.js. Este componente sólo pone las
  * piezas y le pasa los números que necesita.
  *
- * PLACEHOLDER Fase 1: hay 5 carteleras de prueba. La colección real entra en
- * la Fase 2.
+ * PLACEHOLDER Fase 2: hay 6 carteleras de prueba (Mica dijo "calculá 6").
+ * La colección real de proyectos entra después.
  */
 
-const NUM_CARTELERAS_PRUEBA = 5;
+const NUM_CARTELERAS_PRUEBA = 6;
 const indices = Array.from({ length: NUM_CARTELERAS_PRUEBA }, (_, i) => i);
+
+/** Objetos decorativos que viven dentro de una capa. */
+const objetosDe = (capaId) => OBJETOS.filter((o) => o.capa === capaId);
+
+/** La franja de vereda de Mica es la misma imagen en la capa media y en la vereda. */
+const franjaVereda = `url(${RUTAS_CAPAS.vereda})`;
 ---
 
 <div class="riel" data-riel>
-  <div class="escenario" data-escenario data-posicion="inicio">
+  <div class="escenario" data-escenario data-posicion="inicio" style={`--fondo-vereda: ${franjaVereda}`}>
     <div class="escenario__cielo" data-cielo></div>
 
     <div class="escenario__capa escenario__capa--lejana" data-capa={ESCENA.capas[0].id}>
+      {
+        objetosDe(ESCENA.capas[0].id).map((o) => (
+          <img
+            class="escenario__objeto"
+            data-objeto
+            data-x={o.x}
+            src={o.src}
+            alt=""
+            aria-hidden="true"
+            style={`--objeto-alto:${o.alto}; --objeto-base:${o.base};`}
+          />
+        ))
+      }
     </div>
 
     <div class="escenario__capa escenario__capa--media" data-capa={ESCENA.capas[1].id}>
+      {
+        objetosDe(ESCENA.capas[1].id).map((o) => (
+          <img
+            class="escenario__objeto"
+            data-objeto
+            data-x={o.x}
+            src={o.src}
+            alt=""
+            aria-hidden="true"
+            style={`--objeto-alto:${o.alto}; --objeto-base:${o.base};`}
+          />
+        ))
+      }
     </div>
 
     <div
@@ -53,10 +88,6 @@ const indices = Array.from({ length: NUM_CARTELERAS_PRUEBA }, (_, i) => i);
         ))
       }
       {indices.map((i) => <Cartelera indice={i} />)}
-    </div>
-
-    <div class="escenario__colectivo" data-colectivo aria-hidden="true">
-      <img src={RUTAS_CAPAS.colectivo} alt="" />
     </div>
 
     <Caminante />
@@ -118,18 +149,53 @@ const indices = Array.from({ length: NUM_CARTELERAS_PRUEBA }, (_, i) => i);
     height: 100%;
     will-change: transform;
     background-repeat: repeat-x;
-    background-position: 0 0;
-    background-size: auto 100%;
   }
 
-  .escenario__capa--lejana {
-    background-image: url('/capas/lejana.svg');
-  }
+  /*
+   * Las dos franjas de vereda son el mismo dibujo de Mica, a distinta
+   * altura: la de atrás arranca en y 75.9% y la delantera en y 82.5%
+   * (toca el borde inferior). El dibujo mide 11.16 de ancho por 1 de alto,
+   * así que con el alto fijo en 17.5% del escenario cada mosaqueo mide lo
+   * que mide su Escena (2110 px de referencia): se repite igual que ella
+   * lo dibujó.
+   *
+   * background-position va en % del espacio libre (altura de la capa menos
+   * alto de la imagen), así que:
+   *   atrás:    (100 - 17.5) × 92% = 75.9%
+   *   adelante: 100%               = 82.5%
+   *
+   * La capa lejana no lleva franja ni fondo: ahí se ve el cielo.
+   */
   .escenario__capa--media {
-    background-image: url('/capas/media.svg');
+    background-image: var(--fondo-vereda);
+    background-size: auto 17.5%;
+    background-position: 0 92%;
   }
+
   .escenario__capa--vereda {
-    background-image: url('/capas/vereda.svg');
+    background-image: var(--fondo-vereda);
+    background-size: auto 17.5%;
+    background-position: 0 100%;
+  }
+
+  /*
+   * Objetos decorativos (obelisco, cartel de calles). La posición
+   * horizontal la calcula escenario.js con la fórmula del parallax; acá
+   * sólo se les da altura y línea de apoyo, en px de referencia.
+   */
+  .escenario__objeto {
+    position: absolute;
+    /*
+     * Arranca fuera de pantalla: escenario.js lo ubica apenas arranca el
+     * motor. Así no aparece pegado al borde izquierdo en la primera
+     * pintada (el script es un módulo y corre después del HTML).
+     */
+    left: -9999px;
+    bottom: calc((1 - var(--objeto-base)) * 100%);
+    height: calc(var(--objeto-alto) * 1px * var(--escala, 1));
+    width: auto;
+    pointer-events: none;
+    user-select: none;
   }
 
   .escenario__mundo {
@@ -142,34 +208,6 @@ const indices = Array.from({ length: NUM_CARTELERAS_PRUEBA }, (_, i) => i);
     width: calc(70px * var(--escala));
     opacity: 0.9;
     pointer-events: none;
-  }
-
-  /* El colectivo pasa por detrás, con su propio ciclo. */
-  .escenario__colectivo {
-    position: absolute;
-    bottom: calc(12% * var(--escala));
-    left: 0;
-    width: calc(620px * var(--escala));
-    z-index: 1;
-    animation: pasar-colectivo 24s linear infinite;
-    pointer-events: none;
-  }
-
-  @keyframes pasar-colectivo {
-    from {
-      transform: translate3d(-60vw, 0, 0);
-    }
-    to {
-      transform: translate3d(110vw, 0, 0);
-    }
-  }
-
-  /* Menos movimiento: el colectivo queda parked y no arranca solo. */
-  @media (prefers-reduced-motion: reduce) {
-    .escenario__colectivo {
-      animation: none;
-      transform: translate3d(-20vw, 0, 0);
-    }
   }
 
   .escenario__debug {
@@ -225,7 +263,6 @@ const indices = Array.from({ length: NUM_CARTELERAS_PRUEBA }, (_, i) => i);
 
   html:not([data-motor='riel']) .escenario__cielo,
   html:not([data-motor='riel']) .escenario__capa:not([data-mundo]),
-  html:not([data-motor='riel']) .escenario__colectivo,
   /* La chica se renderiza en Caminante.astro: Astro no deja que un selector
      scoped mire adentro de otro componente, así que esa parte va con :global(). */
   html:not([data-motor='riel']) :global(.caminante),
