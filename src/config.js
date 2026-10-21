@@ -80,10 +80,15 @@ export const CAMINANTE = {
   y: 0.9,
   /**
    * Altura del personaje en px de referencia (se escala con --escala).
-   * Mica pidió (8/10) "un poco más grande": 260 → 300. Se probó 380 y
-   * volvió a 300 ("el tamaño está bien").
+   * Historia del número: 260 → 300 (Mica, 8/10, "un poco más grande").
+   * Se probó 380 y volvió a 300 ("el tamaño está bien"). El 21/10 Mica pidió
+   * "un poco más grande" otra vez: 300 → 340, un paso medido (+13%) y no
+   * el salto de 380 que ya había descartado.
+   *
+   * OJO: los pies quedan anclados a la línea de suelo (`y`), así que
+   * agrandarla la hace crecer hacia arriba y NO la levanta del piso.
    */
-  alto: 300,
+  alto: 340,
   /**
    * Segundos que tarda un paso. El sprite de caminata da la vuelta completa
    * (pose 1 → 2 → 3 → 2 → 1) en dos pasos: escenario.js publica
