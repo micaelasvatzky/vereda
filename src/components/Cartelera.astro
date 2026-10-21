@@ -6,8 +6,8 @@
  * afiche y poste vienen de una sola pieza en su dibujo, así que ya no hay
  * poste de CSS ni rectángulo verde pintado a mano. Lo único que se
  * superpone es el afiche, adentro del hueco que el propio SVG deja
- * (medido del dibujo: rect #0b100a en x 5.9%, y 18.2%, con 88.1% de
- * ancho y 42.6% de alto del cartel).
+ * (medido del dibujo actual: viewBox 8606 × 13382, y el afiche va de
+ * x 3470 a 5192 y de y 210 a 2536).
  *
  * PLACEHOLDER Fase 1: el hueco lleva sólo un TODO(Mica). Mica confirmó
  * que la preview del proyecto REEMPLAZA al afiche, así que cuando entre
@@ -105,8 +105,13 @@ const { indice } = Astro.props;
   .cartelera__cartel {
     position: relative;
     width: 100%;
-    /* Proporción del dibujo de Mica: CartelVerde.svg mide 702 × 1088. */
-    aspect-ratio: 702 / 1088;
+    /*
+     * Proporción del dibujo de Mica: CartelVerde.svg mide 8606 × 13382.
+     * (Antes decía 702 × 1088, que era del SVG anterior: la proporción
+     * casi no cambia, 0.6431 contra 0.6452, pero el número exacto evita
+     * que el afiche quede medio pixel desfasado.)
+     */
+    aspect-ratio: 8606 / 13382;
     /*
      * Sin sombra ni marco de CSS (pedido de Mica, 8/10): cualquier halo
      * rectangular queda como un recuadro alrededor del dibujo en vez de
@@ -129,16 +134,27 @@ const { indice } = Astro.props;
    * dibujo. El cartel es opaco, así que el contenido SÓLO puede ir encima
    * de este rectángulo — no por detrás.
    *
+   * OJO con estas medidas: son del SVG ACTUAL (viewBox 8606 × 13382), no
+   * del anterior. La caja que estaba antes (5.9% / 18.2% / 88.1% / 42.6%)
+   * venía del SVG viejo, y con el dibujo nuevo caía sobre el marco verde:
+   * la preview se iba a ver pegada al costado del cartel, no adentro del
+   * afiche. Se remedió midiendo el dibujo, no a ojo: se aislaron los 97
+   * paths que están dentro de la región del afiche (el resto del cartel se
+   * ocultó), se renderizó y se contó píxeles.
+   *
+   * El afiche real va de x 3470 a 5190 y de y 210 a 2536 en el viewBox:
+   *   left 40.33%   top 1.57%   width 20.00%   height 17.39%
+   *
    * Fondo transparente a propósito: Mica confirmó que la preview del
    * proyecto REEMPLAZA al afiche, y el fondo negro ya lo pinta su propio
    * dibujo. Cuando entre la Fase 2 acá va la imagen real del proyecto.
    */
   .cartelera__afiche {
     position: absolute;
-    left: 5.9%;
-    top: 18.2%;
-    width: 88.1%;
-    height: 42.6%;
+    left: 40.33%;
+    top: 1.57%;
+    width: 20%;
+    height: 17.39%;
     background: transparent;
     color: var(--afiche-texto);
     display: grid;
