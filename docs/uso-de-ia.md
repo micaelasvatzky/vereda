@@ -246,3 +246,48 @@ en el cartel).
 - El hueco del afiche (`.cartelera__afiche`) quedó con las medidas del rect `#0b100a`
   que Mica eliminó de su SVG — re-pensar cuando entre la Fase 2.
 - `npm run build` sin correr después de todo el 8/10 (regla de sesión).
+
+---
+
+## Fase 1 (continuación) — Verificación del repo y tamaño de la chica (21 de octubre de 2026)
+
+**Para qué se usó IA**
+
+Retomar el proyecto después de trece días sin sesiones: correr el build que faltaba,
+reparar un documento corrupto, proteger al repo de que se repita, y agrandar la chica como
+pidió Mica.
+
+**Qué generó el agente**
+
+- Build de control del estado del repo: pasa (1 página, 4.13 s).
+- `scripts/check-encoding.mjs` + `npm run check`: guard que falla nombrando los archivos de
+  texto del repo que no estén en UTF-8.
+- Reparación de `docs/pruebas.md`: la sección del 8/10 estaba grabada en Windows-1252.
+- `CAMINANTE.alto` 300 → 340, con los respaldos del CSS de `Caminante.astro` al día.
+- Los commits que la sesión anterior había dejado sin commitear, más los de este cambio.
+- Cuatro commits, con código y docs separados, como en las fases anteriores.
+
+**Revisó / adaptó / descartó Mica** *(lo completa ella)*
+
+- [ ] Revisado
+- [ ] Adaptado
+- [ ] Descartado
+
+**Problemas, errores o límites detectados por Mica**
+
+- "La chica tiene que ser un poco más grande que ahora" (21/10).
+
+**Decisiones tomadas por Mica**
+
+- Que la chica crezca. El agente eligió 340 y no repitió el salto a 380 que ella había
+  descartado el 8/10: "un poco más" es un paso medido, no un salto.
+- Después de esto van los links de los proyectos (Vercel y GitHub) y el orden en que van,
+  para poner las previews en el centro de los carteles. Es la entrada de la Fase 2.
+
+**Límites del agente que conviene registrar**
+
+- **El cambio de tamaño no se vio en pantalla.** Se verificó por cálculo (ancho de
+  referencia 122,7 → 139,1 px) y leyendo que los pies quedan anclados a la línea de suelo,
+  pero no con los ojos.
+- El build se corrió **antes** de los cambios de esta sesión: el agente no compila después
+  de tocar código (regla de sesión).

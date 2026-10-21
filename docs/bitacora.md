@@ -376,7 +376,22 @@ sabe qué es; si lo necesita, la Escena de Figma lo tiene).
 - **Reescribir la sección del 8/10 a mano desde cero**: funcionaba, pero se perdía el texto
   exacto que Mica ya había leído. Decodificar es más fiel y no inventa nada.
 
+**Ajustes de la tarde (21 de octubre de 2026)**
+
+- **La chica un poco más grande.** Mica pidió "un poco más grande": `CAMINANTE.alto` pasó de
+  300 a 340 px de referencia (+13 %). Es un paso medido a propósito: el 8/10 se probó 380 y
+  volvió a 300 ("el tamaño está bien"), así que no se repitió ese salto. Los pies quedan
+  anclados a la línea de suelo (`CAMINANTE.y = 0.9`), así que crecerla le sube la cabeza
+  sin levantarla del piso. El ancho de referencia pasa de 122,7 a 139,1 px.
+- **Los respaldos del CSS quedaron al día.** `Caminante.astro` tenía `260px`, `0.28` y
+  `0.82` como valores de respaldo, que ya no coincidían con `config.js`. Nunca se usaban
+  (el valor real siempre llega), pero dejaban un número viejo a la vista en el CSS.
+- **Se cerraron los commits que estaban pendientes** de la sesión anterior: el build del
+  21/10, el guard de encoding, la reparación de `docs/pruebas.md` y este ajuste de tamaño.
+
 **Qué queda pendiente**
 
 - Lo mismo que estaba pendiente: la confirmación visual de Mica, medir fps, la push a
   GitHub, la pregunta del cielo por horario y el rig de partes separadas de la chica.
+- **Los links de los proyectos** (Vercel y GitHub) y el orden en que van: es la entrada de
+  la Fase 2, con la preview de cada proyecto en el centro del cartel.

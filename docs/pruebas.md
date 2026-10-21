@@ -98,3 +98,11 @@ mide colores en screenshots):
 | `npm run build` después de todo el 8/10 | **OK** — corrido el 21/10: 1 página, 4.13 s, sin errores |
 | ¿`docs/pruebas.md` se lee bien? | **OK** — la sección del 8/10 estaba en Windows-1252 (codificación mixta) y las vocales acentuadas se veían como el rombo con signo de pregunta (U+FFFD). Reparada a UTF-8 el 21/10 |
 | `npm run check` (encoding de todo el repo) | **OK** — 0 archivos corruptos. Probado en negativo: con un archivo CP1252 devuelve código 1 y lo nombra |
+
+### Fase 1 (continuación) — 21 de octubre de 2026: verificación y tamaño
+
+| Prueba | Resultado |
+| --- | --- |
+| `npm run build` sobre el estado del repo | **OK** — 1 página, 4.13 s, sin errores (los cambios del 8/10 nunca se habían compilado) |
+| `npm run check` | **OK** — 0 archivos corruptos |
+| ¿La chica se ve bien con el tamaño nuevo (340)? | **Pendiente** — pedido de Mica el 21/10. Paso medido de 300 a 340 px de referencia; ver bitácora |

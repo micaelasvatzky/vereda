@@ -16,25 +16,32 @@ con scroll.
 
 **Fase 1 (motor del escenario) — abierta.** Mica vio la escena el 7/10: **parallax
 aprobado**; reportó flechas raras y afiches fuera de la vereda → bugs 9-11 arreglados el
-mismo día, **pendientes de su confirmación visual**. El build pasa, pero el último OK es
-anterior a la integración de ilustraciones y a esos arreglos: hay que correrlo antes de
-cerrar la fase. Falta también medir fps y que Mica confirme chica, caminata, hover y
-cartelera activa.
+mismo día. El 8/10 reportó que **las carteleras nunca se veían**: era el bug 12 (`calc()`
+inválido → ancho 0), ya arreglado y verificado por conteo de píxeles. **El build vuelve a
+pasar** (corrido el 21/10, después de todo lo del 8/10). Lo que falta es **la confirmación
+visual de Mica** y **medir fps**.
 
 Pendientes que bloquean o atrasan:
 
-- **Confirmar en navegador los fixes del 7/10 (tarde):** flechas (bug 9), carteleras sobre
-  la vereda (bug 10) y aparición progresiva. Detalle en `docs/bitacora.md`.
-- **Pregunta abierta sin responder:** si el cielo por horario de Buenos Aires se hace ahora
-  (adelantar la Fase 4) o en su fase. Hoy el cielo es fijo `--cielo-dia`; `cielo.js` no existe.
+- **Confirmar en navegador (nunca visto):** los fixes del 7/10 (flechas = bug 9, carteleras
+  sobre la vereda = bug 10, aparición progresiva) y los del 8/10 (carteleras visibles al
+  abrir, sin flash, chica en x 0.24 / alto 340, cartel sin marco). Detalle en
+  `docs/bitacora.md`.
+- **Medir fps en un celular de gama media.** Es el criterio de cierre de la fase.
+- **Pregunta abierta sin responder (desde el 7/10):** si el cielo por horario de Buenos
+  Aires se hace ahora (adelantar la Fase 4) o en su fase. Hoy el cielo es fijo
+  `--cielo-dia`; `cielo.js` no existe.
 - **Postergado a pedido de Mica:** rig de partes separadas para animar la chica (SVG con
   capas nombradas y pivotes en las articulaciones). Ella manda el SVG partido cuando vuelva.
+- **Entran los links de los proyectos** (Vercel y GitHub) y el orden en que van: es la
+  entrada de la Fase 2, con la preview de cada proyecto en el centro del cartel.
 - **Falta una foto del cartel verde icónico de Buenos Aires.** Dos búsquedas web no dieron
-  una forma documentada y no se inventó. El `Cartelera.astro` usa un rectángulo con sombra
-  como placeholder.
+  una forma documentada y no se inventó. Hoy el marco es el SVG que dibujó Mica
+  (`public/img/CartelVerde.svg`), así que la forma ya no está bloqueada: lo que falta es
+  decidir si hace falta más referencia.
 - Las capas de fondo siguen siendo SVG placeholder; las cuatro ilustraciones de la chica ya
   están integradas en `public/caminante/`.
-- El repo es local: la push a GitHub la hace Mica (**4 commits sin subir** al cerrar el 7/10).
+- El repo es local: la push a GitHub la hace Mica (**11 commits sin subir** al 21/10).
 
 ## Reglas no negociables
 
@@ -87,6 +94,9 @@ nombres técnicos genéricos en inglés.
 - Open-Meteo no pide clave. Tabla WMO de `weather_code` verificada: los códigos de nieve
   son `71–77` y `85–86`, y hay que mapearlos explícitamente (si no caen en el default
   "nublado").
+- **`npm run check`** verifica que todos los archivos de texto del repo estén en UTF-8. Un
+  archivo en Windows-1252 (ANSI) no rompe nada visible — Git no avisa y el build pasa —
+  pero muestra rombos con signo de pregunta en vez de las tildes. Ya pasó una vez.
 
 ---
 
