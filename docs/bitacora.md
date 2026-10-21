@@ -389,6 +389,38 @@ sabe qué es; si lo necesita, la Escena de Figma lo tiene).
 - **Se cerraron los commits que estaban pendientes** de la sesión anterior: el build del
   21/10, el guard de encoding, la reparación de `docs/pruebas.md` y este ajuste de tamaño.
 
+**Bug 14 (21 de octubre de 2026): la caja del afiche era del SVG viejo**
+
+Estaba preparing la Fase 2 (las previews de los proyectos en el centro de los carteles) y
+apareció un problema de base: **la caja donde va la preview no coincide con el afiche**.
+
+- **Causa.** `Cartelera.astro` posicionaba el afiche con `left 5.9% / top 18.2% /
+  width 88.1% / height 42.6%`. Esas medidas eran del **SVG anterior** de Mica: cuando
+  reemplazó `CartelVerde.svg` por una versión nueva, el afiche cambió de lugar y de
+  tamaño, pero la caja del CSS se quedó con las medidas viejas. La bitácora del 8/10 ya
+  avisaba de esto ("el hueco del afiche sigue con las medidas del rect viejo"), pero no se
+  había medido cuánto importaba.
+- **Cuánto.** Medido con `isPointInFill()` sobre el dibujo (grilla de 300 × 300): la caja
+  vieja tapaba el **0,9 %** del afiche. O sea, la preview se iba a ver pegada al costado
+  del cartel, no adentro del afiche.
+- **Cómo se midió.** Se aisló el afiche: de los 818 paths del cartel, se conservaron los
+  97 que caen dentro de su región y se ocultó el resto (`opacity 0`). Después se renderizó
+  y se comparó cada celda de una grilla contra la caja, con la API SVG `isPointInFill()`.
+  Es geometría exacta del dibujo, no una aproximación por píxeles.
+- **Se resolvió** con las medidas del SVG **actual** (viewBox 8606 × 13382): el afiche va
+  de x 3470 a 5192 y de y 210 a 2536, o sea `left 40.33% / top 1.57% / width 20% /
+  height 17.39%`. Con esa caja, el **89,6 %** del afiche queda tapado: es el máximo que
+  puede dar un rectángulo, porque el afiche es un trapecio de bordes inclinados. El 10,4 %
+  que sobra se recorta con un `clip-path`, que es parte de la Fase 2.
+- De paso se corrigió `aspect-ratio` de `.cartelera__cartel`, que decía 702 / 1088 (el
+  SVG anterior) y ahora dice 8606 / 13382. La proporción casi no cambia (0,6431 contra
+  0,6452) pero el número exacto evita medio pixel de desfase.
+- **Lección de método (la tercera del mismo tipo).** El bug era invisible al leer el
+  código: la caja parecía razonable y nadie la había visto en pantalla porque el afiche
+  todavía no tiene nada adentro. Aparecer la Fase 2 forzó a medir la geometría real, y
+  apareció un error del 99 %. Un placeholder que ocupa el lugar equivocado esconde el
+  error hasta que le ponés el contenido de verdad.
+
 **Qué queda pendiente**
 
 - Lo mismo que estaba pendiente: la confirmación visual de Mica, medir fps, la push a

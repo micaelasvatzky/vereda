@@ -106,3 +106,18 @@ mide colores en screenshots):
 | `npm run build` sobre el estado del repo | **OK** — 1 página, 4.13 s, sin errores (los cambios del 8/10 nunca se habían compilado) |
 | `npm run check` | **OK** — 0 archivos corruptos |
 | ¿La chica se ve bien con el tamaño nuevo (340)? | **Pendiente** — pedido de Mica el 21/10. Paso medido de 300 a 340 px de referencia; ver bitácora |
+
+### Fase 1 (continuación) — 21 de octubre de 2026: la caja del afiche
+
+El bug 14 salió al preparar la Fase 2. Verificado por el agente con Edge headless y la
+API SVG `isPointInFill()` sobre el dibujo de Mica (geometría exacta, no conteo de
+píxeles). Para el detalle, ver la bitácora.
+
+| Prueba | Resultado |
+| --- | --- |
+| ¿La caja del afiche coincide con el afiche del SVG? | **No** — la caja vieja tapaba el **0,9 %** del afiche. Medidas del SVG anterior |
+| ¿La caja nueva (`left 40.33% / top 1.57% / width 20% / height 17.39%`)? | **OK** — tapa el **89,6 %** del afiche. Es el techo posible con un rectángulo: el afiche es un trapecio |
+| ¿El `aspect-ratio` del cartel era el correcto? | **No** — decía 702 / 1088 (SVG viejo). Corregido a 8606 / 13382 |
+| ¿Se ve el texto `TODO(Mica)` dentro del afiche? | **Pendiente de vista** — la caja ahora cae dentro del afiche, pero nadie lo vio en pantalla |
+| ¿El recorte trapezoidal (`clip-path`) del afiche? | **Pendiente** — es parte de la Fase 2, junto con la imagen real de la preview |
+
