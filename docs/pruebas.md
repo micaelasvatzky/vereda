@@ -70,28 +70,31 @@ Verificado por el agente (sin poder ver la pÃ¡gina):
 | Sin JavaScript: escenario estÃ¡tico y chica oculta | **Pendiente** â€” habÃ­a un selector muerto, corregido sin verlo en navegador |
 | Rotar el celular / cambiar el tamaÃ±o | **Pendiente** |
 | Fps en un celular de gama media | **Pendiente** â€” es el criterio de cierre de la fase |
-| `npm run build` despuÃ©s de integrar las ilustraciones y de los ajustes del 7/10 | **Pendiente** â€” no se corre build despuÃ©s de cambios (regla de sesiÃ³n); el Ãºltimo build OK es anterior a ambas |
-### Fase 1 (continuación) — 8 de octubre de 2026: carteleras, marcos y ajustes
+| `npm run build` despuÃ©s de integrar las ilustraciones y de los ajustes del 7/10 | **OK** â€” corrido el 21/10: 1 pÃ¡gina, sin errores |
 
-Verificado por el agente con Edge headless + conteo de píxeles (no puede ver la pantalla;
+### Fase 1 (continuaciÃ³n) â€” 8 de octubre de 2026: carteleras, marcos y ajustes
+
+Verificado por el agente con Edge headless + conteo de pÃ­xeles (no puede ver la pantalla;
 mide colores en screenshots):
 
 | Prueba | Resultado |
 | --- | --- |
-| ¿El SVG CartelVerde renderiza? | **OK** — 7079 píxeles #345238 al abrirlo directo; tras el fix del calc, 2621 en la escena (antes 466 = ruido) |
-| ¿La primera cartelera se ve al abrir sin scrollear? | **OK por píxeles** — `revelar()` ya no exige desplazamiento > 0 |
-| ¿El HTML/CSS servido es correcto? | **OK** — `data-motor="riel"` en `<html>`, `data-visible="true"` en la article, reglas compiladas presentes |
-| ¿Los 404 de `/stickers/*.svg`? | **Causa encontrada**: `public/stickers/` siempre vacía. `STICKERS = []` — sin 404 |
-| ¿Los marcos rectangulares del cartel? | **Quitados** (box-shadow + anillo blanco del activo), pedido de Mica |
-| ¿La chica en x 0.24 / alto 300? | **OK** — `CAMINANTE` en config.js, verificado con import de node |
+| Â¿El SVG CartelVerde renderiza? | **OK** â€” 7079 pÃ­xeles #345238 al abrirlo directo; tras el fix del calc, 2621 en la escena (antes 466 = ruido) |
+| Â¿La primera cartelera se ve al abrir sin scrollear? | **OK por pÃ­xeles** â€” `revelar()` ya no exige desplazamiento > 0 |
+| Â¿El HTML/CSS servido es correcto? | **OK** â€” `data-motor="riel"` en `<html>`, `data-visible="true"` en la article, reglas compiladas presentes |
+| Â¿Los 404 de `/stickers/*.svg`? | **Causa encontrada**: `public/stickers/` siempre vacÃ­a. `STICKERS = []` â€” sin 404 |
+| Â¿Los marcos rectangulares del cartel? | **Quitados** (box-shadow + anillo blanco del activo), pedido de Mica |
+| Â¿La chica en x 0.24 / alto 300? | **OK** â€” `CAMINANTE` en config.js, verificado con import de node |
 
-**Pendiente de Mica (confirmación visual):**
+**Pendiente de Mica (confirmaciÃ³n visual):**
 
 | Prueba | Resultado |
 | --- | --- |
-| ¿Se ven las carteleras al abrir y al caminar? | **Pendiente** — arreglado el bug 12 (calc con ancho 0), falta su vista |
-| ¿El flash "aparecen y desaparecen" desapareció? | **Pendiente** — fallback movido a `<noscript>` |
-| ¿La chica se ve bien en su nueva posición/tamaño? | **Pendiente** — 0.24 / 300 |
-| ¿El SVG nuevo de la cartelera se ve limpio, sin marco? | **Pendiente** |
-| Fallback sin JavaScript (carteleras apiladas) | **Sin probar en navegador** — `--headless` con scripts apagados no genera screenshots; verificado por selector y especificidad |
-| `npm run build` después de todo el 8/10 | **Pendiente** — regla de sesión: no se corre build después de cambios |
+| Â¿Se ven las carteleras al abrir y al caminar? | **Pendiente** â€” arreglado el bug 12 (calc con ancho 0), falta su vista |
+| Â¿El flash "aparecen y desaparecen" desapareciÃ³? | **Pendiente** â€” fallback movido a `<noscript>` |
+| Â¿La chica se ve bien en su nueva posiciÃ³n/tamaÃ±o? | **Pendiente** â€” 0.24 / 300 |
+| Â¿El SVG nuevo de la cartelera se ve limpio, sin marco? | **Pendiente** |
+| Fallback sin JavaScript (carteleras apiladas) | **Sin probar en navegador** â€” `--headless` con scripts apagados no genera screenshots; verificado por selector y especificidad |
+| `npm run build` despuÃ©s de todo el 8/10 | **OK** â€” corrido el 21/10: 1 pÃ¡gina, 4.13 s, sin errores |
+| Â¿`docs/pruebas.md` se lee bien? | **OK** â€” la secciÃ³n del 8/10 estaba en Windows-1252 (codificaciÃ³n mixta) y las vocales acentuadas se veÃ­an como el rombo con signo de pregunta (U+FFFD). Reparada a UTF-8 el 21/10 |
+| `npm run check` (encoding de todo el repo) | **OK** â€” 0 archivos corruptos. Probado en negativo: con un archivo CP1252 devuelve cÃ³digo 1 y lo nombra |

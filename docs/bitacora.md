@@ -331,3 +331,52 @@ sabe qué es; si lo necesita, la Escena de Figma lo tiene).
 - **Pregunta sigue abierta:** cielo por horario de Buenos Aires — ¿ahora o en la Fase 4?
 - **Build sin correr** (regla de sesión) y **push lo hace Mica**: quedan varios commits
   sin subir.
+
+---
+
+## Fase 1 — 21 de octubre de 2026 — Reanudación: build verificado y un documento corrupto
+
+**Qué se hizo**
+
+- **Build de control.** Después de trece días sin sesiones, se corrió `npm run build` sobre
+  el estado del repo: los cambios del 8/10 nunca se habían compilado. **Pasa: 1 página,
+  4.13 s, sin errores.** Con esto queda cerrado el último pendiente técnico de la Fase 1
+  que no dependía de la vista de Mica.
+- **Se reparó `docs/pruebas.md`.** Estaba con codificación mixta: la sección agregada el
+  8/10 se había escrito en Windows-1252 (ANSI) en vez de UTF-8, así que las vocales
+  acentuadas, el `¿` de apertura y los guiones largos se veían como el carácter de reemplazo
+  (U+FFFD). Se decodificó esa parte con CP1252 y se reescribió el archivo entero en UTF-8
+  sin BOM, con finales de línea LF como el resto del repo.
+- `AGENTS.md` y `CLAUDE.md` actualizados: el estado de la fase ya no decía "falta correr el
+  build" ni "4 commits sin subir" (son siete).
+- **Guard de codificación.** `scripts/check-encoding.mjs` con `npm run check`: recorre los
+  archivos de texto del repo y falla si alguno no es UTF-8 válido. Es la defensa contra el
+  bug 13, que es **silencioso**: Git no avisa, el build pasa, y el síntoma aparece días
+  después cuando alguien abre el documento. Probado: con un archivo en CP1252 devuelve
+  código 1 y lo nombra; con el repo limpio devuelve 0.
+
+**Problemas encontrados y cómo se resolvieron**
+
+13. **Documento corrupto por codificación.** La sección del 8/10 en `docs/pruebas.md` quedó
+    grabada en CP1252. Git no avisa: el archivo sigue siendo texto válido, sólo que con
+    bytes que no son UTF-8, y cualquier lector UTF-8 los muestra como el rombo con signo
+    de pregunta (U+FFFD). **Se resolvió** decodificando esa parte con CP1252 y
+    reescribiendo el archivo entero en UTF-8 sin BOM.
+
+    Lección de método (la misma se aplicó dos veces en un día): el problema no es Git ni
+    el editor de texto, es **cómo se escribe el archivo**. En Windows, `Set-Content` y
+    `Out-File` de PowerShell 5.1 escriben en ANSI por defecto, y una herramienta de
+    edición que armó la línea de comando con el texto se cae a ANSI cuando la cadena
+    contiene el carácter U+FFFD (justo el que se estaba documentando). **Regla: después
+    de tocar un doc con acentos, verificar los bytes** — y nunca escribir el carácter
+    U+FFFD literal dentro de un archivo, ni siquiera como ejemplo.
+
+**Alternativas descartadas**
+
+- **Reescribir la sección del 8/10 a mano desde cero**: funcionaba, pero se perdía el texto
+  exacto que Mica ya había leído. Decodificar es más fiel y no inventa nada.
+
+**Qué queda pendiente**
+
+- Lo mismo que estaba pendiente: la confirmación visual de Mica, medir fps, la push a
+  GitHub, la pregunta del cielo por horario y el rig de partes separadas de la chica.
