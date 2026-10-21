@@ -84,3 +84,62 @@ modifique un cálculo interno es una forma segura de perder el examen.
 **Motivo:** cargar desde un host externo agrega una dependencia de red de terceros y un
 pedido extra en el camino crítico. `@fontsource` trae los archivos al repo y son dos
 paquetes de dependencia sin código.
+
+## Content Collections para los proyectos
+
+**Elegido:** una colección `proyectos` con el loader `glob` sobre
+`src/content/proyectos/*.md`, y un `.md` por cartelera.
+
+**Alternativas:** un array de objetos en `config.js`; o un `.md` por proyecto con el
+frontmatter tipado a mano.
+
+**Motivo:** el proyecto es un portfolio: el contenido (qué proyectos son, en qué orden y
+con qué links) cambia más que el código. Con la colección, agregar o sacar un cartel es
+agregar o borrar un `.md`, y el schema garantiza que ningún `.md` se cuelgue con un link
+mal escrito o sin preview. El schema valida con `astro/zod`, que ya venía con Astro: no
+se agregó ninguna dependencia.
+
+**Ojo con la defensa:** el schema va en **`src/content.config.ts`** (en la raíz de `src`),
+no en `src/content/config.ts`, y el Zod se importa de `astro/zod`, no de `zod`.
+
+## Capturas optimizadas por Astro, no PNG sueltos
+
+**Elegido:** las previews viven en `src/assets/proyectos/` y se importan con el helper
+`image()` del schema, así que Astro las sirve en WebP y con `srcset`.
+
+**Alternativas:** dejar los PNG en `public/` y usar un `<img>` a pelo; o usar un `<iframe>`
+de cada proyecto desplegado.
+
+**Motivo:** con `public/` se bajan los PNG originales: 1,6 MB para cinco capturas, en un
+sitio donde la vereda es lo único que hay que cargar. Con `src/assets/`, Astro genera
+WebP en tres anchos (de 3 kB a 58 kB) y cada dispositivo baja el que le corresponde. No
+hace falta sharp en el `package.json`: ya viene con Astro. Y un `<iframe>` metería código
+de terceros en la vereda, con su propio peso y su propio scroll.
+
+## La preview en el hueco, y el botón de GitHub aparte
+
+**Elegido:** la captura llena el panel que el marco verde deja libre; la imagen entera es
+un link a Vercel y el botón de GitHub va encima, en la esquina inferior derecha.
+
+**Alternativas:** la preview en el rectángulo negro de arriba (es el "afiche", pero es
+opaco y Mica pidió el "hueco transparente"); un `<a>` anidado en otro `<a>` para el botón
+de GitHub; y una chapa con el nombre del proyecto sobre la foto.
+
+**Motivo:** el criterio de Mica fue literal —el hueco transparente— y hay dos rectángulos
+candidatos en el SVG: sólo uno es un hueco de verdad. Los links no se anidan porque en
+HTML no se puede y los navegadores lo resuelven cerrando el link de afuera; con dos `<a>`
+hermanos y `z-index` el clic va al botón de GitHub y no a Vercel. La chapa con el nombre
+la probó el agente y la descartó Mica: la foto manda.
+
+## Las medidas del cartel en `config.js`
+
+**Elegido:** `CARTEL.hueco` y `CARTEL.afiche` en `src/config.js`, publicados al CSS como
+variables desde el componente.
+
+**Alternativas:** hardcodear los porcentajes en el `<style>` del componente.
+
+**Motivo:** son números que dependen de un archivo que Mica puede cambiar en cualquier
+momento (el `CartelVerde.svg`). Si el dibujo cambia, los porcentajes quedan viejos y la
+preview se va de lugar: tenerlos en un solo archivo plano hace que el ajuste sea una
+edición de cuatro números, sin tocar el componente. Además sirve para la defensa: es un
+número centralizado y visible.

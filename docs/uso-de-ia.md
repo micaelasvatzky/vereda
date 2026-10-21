@@ -291,3 +291,64 @@ pidió Mica.
   pero no con los ojos.
 - El build se corrió **antes** de los cambios de esta sesión: el agente no compila después
   de tocar código (regla de sesión).
+
+---
+
+## Fase 2 — Las previews de los proyectos en los carteles (21 de octubre de 2026)
+
+**Para qué se usó IA**
+
+Implementar la Fase 2: una captura de cada proyecto dentro del hueco del cartel, con link
+a Vercel y un botón aparte para GitHub, y armar la fuente de contenido (los cinco
+proyectos con sus links y su orden).
+
+**Qué generó el agente**
+
+- `src/content.config.ts`: colección `proyectos` con el loader `glob` y el helper `image()`
+  del schema.
+- `src/content/proyectos/01..05-*.md`: los cinco proyectos con `titulo`, `orden`, `vercel`,
+  `github` y `preview`.
+- `src/assets/proyectos/*.png`: capturas de las cinco URLs de Vercel, sacadas con Edge
+  headless a 960 × 600. **Provisorias**: las de Mica las reemplazan.
+- `Cartelera.astro`: la preview en el hueco medido, el link principal a Vercel y el botón
+  de GitHub con `z-index` para que el clic no caiga en Vercel. `container-type: inline-size`
+  para que el botón escale con el cartel.
+- `Escenario.astro`: las carteleras salen de la colección en vez de ser seis de prueba.
+- `config.js`: `CARTEL.hueco` y `CARTEL.afiche`.
+- Dos commits de código.
+
+**Revisó / adaptó / descartó Mica** *(lo completa ella)*
+
+- [ ] Revisado
+- [ ] Adaptado
+- [ ] Descartado
+
+**Problemas, errores o límites detectados por Mica**
+
+- **"Sacale el cartel que dice el nombre del proyecto, pero después está perfecto"**: la
+  chapa verde con el nombre del proyecto, que el agente había puesto arriba a la izquierda
+  de la preview, no va. Se sacó entera (markup y CSS). El resto quedó como estaba.
+- Mica dejó claro que el link **prioritario es el de Vercel** y que el de GitHub necesita
+  su propio botón, visible pero sin competir.
+
+**Decisiones tomadas por Mica**
+
+- La preview va en el **hueco transparente** del cartel, "como si fueran el cartel".
+- Los links de los cinco proyectos y el orden en que van.
+- El de Vercel es el principal; el de GitHub va en un botón aparte.
+- La preview es una **captura de pantalla**, no un sitio incrustado (lo dijo al subir los
+  screens).
+
+**Límites del agente que conviene registrar**
+
+- **El agente no ve la pantalla.** Toda la verificación de esta fase fue por datos: render
+  del SVG con fondo transparente para medir el hueco, y render del sitio con Edge headless
+  para medir la caja de la preview y la posición del botón por conteo de píxeles. La
+  confirmación de que "se ve bien" es de Mica, y fue ella quien pidió el único cambio.
+- **Las capturas que se usarían en la defensa son provisionales** (las sacó el agente de
+  las URLs de Vercel). Si el sitio final usa las de Mica, hay que reemplazarlas y
+  recommitear los binarios.
+- **La consigna original no se encontró** en el repo, ni en el escritorio, ni en la web.
+  Sin ese texto no se puede confirmar el alcance del requisito de tomar datos de una API.
+- **La descripción de cada proyecto quedó como `TODO(Mica)`**: el agente no escribe
+  textos.

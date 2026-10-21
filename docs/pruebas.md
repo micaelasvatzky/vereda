@@ -121,3 +121,27 @@ píxeles). Para el detalle, ver la bitácora.
 | ¿Se ve el texto `TODO(Mica)` dentro del afiche? | **Pendiente de vista** — la caja ahora cae dentro del afiche, pero nadie lo vio en pantalla |
 | ¿El recorte trapezoidal (`clip-path`) del afiche? | **Pendiente** — es parte de la Fase 2, junto con la imagen real de la preview |
 
+### Fase 2 — 21 de octubre de 2026: las previews en los carteles
+
+Verificado por el agente con Edge headless y conteo de píxeles (no puede ver la pantalla).
+Para el detalle del método, ver la bitácora.
+
+| Prueba | Resultado |
+| --- | --- |
+| ¿Dónde está "el hueco transparente"? | **Medido**: hay dos rectángulos candidatos; sólo el del centro es transparente. Hueco = x 590..7996, y 2580..8011 → `left 6.86% / top 19.28% / width 86.05% / height 40.58%` |
+| ¿La preview llena el hueco? | **OK por píxeles** — la caja de la preview medida en el sitio da 295 × 222 (proporción 1,329) y 283 × 211 (1,341), contra 1,363 del hueco medido en el SVG. La diferencia es el borde del marco, que no es un rectángulo perfecto |
+| ¿El botón de GitHub está en la esquina de la preview? | **OK por píxeles** — a 1 px del marco verde a la derecha y abajo; 91 % de píxeles de foto en la región superior izquierda (o sea, la preview llega hasta el borde) |
+| ¿Los cinco links a Vercel y los cinco a GitHub están? | **OK** — en el HTML generado, en el orden pedido por Mica |
+| ¿La captura se recorta bien (no se deforma)? | **OK** — `object-fit: cover`, pegada al borde superior |
+| ¿Las capturas pesan? | **OK** — de 1,6 MB en PNG a 15 WebP (3 anchos × 5 proyectos) de 3 kB a 58 kB. Sin dependencias nuevas: `sharp` ya viene con Astro |
+| `npm run build` | **OK** — 1 página, 15 imágenes optimizadas |
+| `npm run check` | **OK** — 0 archivos corruptos |
+| ¿Se ve bien en pantalla? | **OK según Mica** (21/10): *"sacale el cartel que dice el nombre del proyecto, pero después está perfecto"*. La chapa con el nombre se sacó |
+| ¿El texto del `alt` y de los links? | **OK** — salen del `titulo` de cada `.md` |
+| ¿El botón de GitHub abre GitHub y no Vercel? | **Pendiente de prueba manual** — por construcción son dos `<a>` hermanos y el botón tiene `z-index` mayor, pero falta el clic real |
+| Las capturas son las de Mica | **Pendiente** — las del repo son provisionales (las sacó el agente de las URLs de Vercel) |
+| ¿La descripción de cada proyecto? | **Pendiente** — `TODO(Mica)` en el cuerpo de cada `.md` |
+| El `<dialog>` con la descripción | **Pendiente** — falta definir con Mica cuándo se abre |
+| Fps en un celular de gama media | **Pendiente** — sigue siendo el criterio de cierre de la Fase 1 |
+
+

@@ -427,3 +427,123 @@ apareció un problema de base: **la caja donde va la preview no coincide con el 
   GitHub, la pregunta del cielo por horario y el rig de partes separadas de la chica.
 - **Los links de los proyectos** (Vercel y GitHub) y el orden en que van: es la entrada de
   la Fase 2, con la preview de cada proyecto en el centro del cartel.
+
+---
+
+## Fase 2 — 21 de octubre de 2026 — Las previews en los carteles
+
+Mica pasó los links de los cinco proyectos y la instrucción clave: **"las previews van en
+el hueco transparente de la imagen, como si fueran el cartel"**. También pidió que el link
+prioritario sea el de Vercel y que el de GitHub tenga su propio botón, "en algún lado donde
+se pueda ver".
+
+**Qué se hizo**
+
+- **Colección de proyectos** (`src/content.config.ts` + `src/content/proyectos/*.md`). Un
+  `.md` por proyecto, con `titulo`, `orden`, `vercel`, `github` y `preview`. El schema usa
+  el helper `image()` de `astro:content`, así que la captura se importa como metadata y
+  Astro la sirve optimizada. `Escenario.astro` dejó de generar seis carteleras de prueba y
+  ahora recorre la colección, ordenada por `orden`. Agregar o sacar un proyecto es agregar
+  o borrar un `.md`: ni el motor ni los componentes se tocan.
+- **La preview va en el hueco del cartel.** `Cartelera.astro` pone la captura dentro del
+  rectángulo que el marco verde deja libre, con `object-fit: cover` y pegada al borde
+  superior (que es donde está el header de cada web). La imagen entera es un link a
+  Vercel.
+- **Botón de GitHub** en la esquina inferior derecha de la preview: un círculo negro con el
+  ícono, con `z-index` por encima del link principal para que el clic vaya a GitHub y no a
+  Vercel.
+- **Las medidas del cartel viven en `config.js`** (`CARTEL.hueco` y `CARTEL.afiche`), que
+  es el único lugar que hay que tocar si Mica cambia el dibujo. Es el mismo criterio que
+  ya se usaba para el resto de los números ajustables.
+- **Capturas provisionales.** Se sacaron con Edge headless de las cinco URLs de Vercel,
+  a 960 × 600. **Son provisorias**: Mica iba a subir sus propias capturas y las suyas
+  reemplazan a estas (mismo nombre de archivo en `src/assets/proyectos/`).
+
+**La decisión de fondo: cuál es "el hueco transparente"**
+
+El SVG de Mica tiene dos rectángulos candidatos y sólo uno es el que ella dijo:
+
+| | Qué es | Medidas (del viewBox 8606 × 13382) | ¿Transparente? |
+|---|---|---|---|
+| El de arriba | la ilustración de Mica sobre un rectángulo **negro** | x 3504..5158, y 268..2490 | **No**: es opaco |
+| El del centro | el panel que deja libre el marco verde | x 590..7996, y 2580..8011 | **Sí**: es un hueco |
+
+Mica dijo "hueco **transparente**", y el rectángulo negro es opaco: la preview va en el
+panel del centro. Es lo que además dice "como si fueran el cartel": la foto del proyecto
+*es* el cartel.
+
+**Problemas encontrados y cómo se resolvieron**
+
+15. **La medición del hueco falló a mayor resolución.** El primer método buscaba el
+    componente conexo de píxeles transparentes más grande, y a 430 px de render daba un
+    panel de 369 × 278 px. Al repetir la medición a 860 px, el panel se conectaba con el
+    exterior: el marco tiene uniones de un píxel y a esa resolución ya no cerraban.
+    **Se resolvió** midiendo por tramos horizontales (para cada fila, el tramo de
+    transparentes más largo, y después se agrupan las filas que comparten tramo), que no
+    depende de que el hueco cierre. El resultado: **x 590..7996, y 2580..8011**, o sea
+    `left 6.86% / top 19.28% / width 86.05% / height 40.58%`, con proporción 1,363.
+16. **Falsos positivos al buscar el botón por color.** Los píxeles oscuros de la vereda se
+    agrupaban en blobs parecidos a un círculo y uno de ellos pasó el filtro de "círculo
+    sólido". **Se resolvió** exigiendo que el blob llenara su bounding box y que fuera
+    casi perfectamente cuadrado.
+17. **La versión de Zod es 4.** `z.string().url()` está deprecado en Zod 4; el schema usa
+    `z.url()`. Se verificó la versión instalada (4.6.5) antes de escribir, no de memoria.
+18. **Las capturas en PNG pesaban 1,6 MB.** **Se resolvió** guardándolas en `src/assets/`:
+    Astro las convierte a WebP en tres anchos (3 kB a 58 kB cada una) y el `srcset` hace
+    que cada dispositivo baje la que le corresponde. Sin agregar dependencias: `sharp` ya
+    viene con Astro.
+
+**Verificación por datos (el modelo no ve pantallas)**
+
+- Se renderizó el sitio con Edge headless y se buscó el botón de GitHub por su color
+  (`#181717`): aparecen **2 en la primera pantalla** (el resto de las carteleras está fuera
+  de cuadro).
+- De cada botón se midió la caja de la preview buscando el marco verde a los cuatro lados:
+  **295 × 222 px (proporción 1,329)** y **283 × 211 px (1,341)**, contra 1,363 del hueco
+  medido en el SVG. La diferencia es el borde del marco, que no es un rectángulo perfecto.
+- El botón queda **a 1 píxel del marco verde** a la derecha y abajo, y en la región
+  superior izquierda hay **91 % de píxeles de foto** (no de marco). O sea: la preview
+  llega hasta el borde del hueco y el botón está en su esquina inferior derecha.
+- En el HTML generado aparecen los **cinco** links a Vercel y los **cinco** a GitHub, en el
+  orden pedido.
+- `npm run check` y `npm run build` pasan. El build genera 15 WebP (3 anchos × 5
+  proyectos).
+
+**Corrección de Mica**
+
+Mica vio la primera versión y pidió un cambio: **"sacale el cartel que dice el nombre del
+proyecto, pero después está perfecto"**. La chapa verde con el nombre (que el agente había
+puesto arriba a la izquierda de la preview) se sacó: no va nombre sobre la foto. El
+`titulo` sigue en el frontmatter y se usa en el `alt` de la imagen y en el texto
+accesible de los links.
+
+**Alternativas descartadas**
+
+- **La preview en el rectángulo negro de arriba.** Es el "afiche" en el sentido de la
+  consigna, pero es opaco y Mica dijo "hueco **transparente**". Además, con 20 % de ancho
+  del cartel una captura de web no se lee.
+- **Una chapa con el nombre del proyecto** sobre la preview: la probó el agente y la
+  descartó Mica. Sin ella la foto manda.
+- **Un `<a>` dentro de otro `<a>`** (el botón de GitHub adentro del link de Vercel): es
+  HTML inválido y los navegadores lo "arreglan" cerrando el link externo. **Se resolvió**
+  con dos `<a>` hermanos y `z-index`: el botón queda arriba y el clic va a él.
+- **Un `<iframe>` de cada proyecto en vez de una captura**: no se puede controlar el
+  tamaño, pesa el doble y mete código de terceros en la vereda. Además Mica iba a subir
+  capturas fijas.
+- **Dejar las previews como `string` en `public/`**: se pierden la conversión a WebP y el
+  `srcset`. Con el helper `image()` de Astro, el archivo fuente se optimiza solo.
+
+**Qué queda pendiente**
+
+- **Las capturas son provisorias.** Mica tiene que subir las suyas: se reemplazan los
+  archivos de `src/assets/proyectos/` y no hay que tocar código.
+- **La descripción de cada proyecto** es un `TODO(Mica)` en el cuerpo de cada `.md`. El
+  `grep -R "TODO(Mica)" src` no da vacío hasta que los escriba.
+- **El `<dialog>` con la descripción** (el comentario de `Cartelera.astro` lo dejaba para
+  esta fase) quedó para después: falta definir con Mica cuándo se abre.
+- **La consigna original no está en el repo.** Se buscó en el proyecto, en el escritorio y
+  en la web y no aparece. Mica tiene que pasar el PDF o el texto para confirmar el
+  alcance del requisito de tomar datos de una API.
+- **El cielo con Open-Meteo sigue sin implementarse** (Fase 4) y **los fps no se midieron**.
+- **Push lo hace Mica:** quedan commits sin subir.
+
