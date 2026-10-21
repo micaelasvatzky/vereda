@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import { ESCENA, RUTAS_CAPAS, STICKERS, OBJETOS } from '../config.js';
 import Caminante from './Caminante.astro';
 import Cartelera from './Cartelera.astro';
@@ -21,12 +22,13 @@ import Cartelera from './Cartelera.astro';
  * El motor vive en src/scripts/escenario.js. Este componente sólo pone las
  * piezas y le pasa los números que necesita.
  *
- * PLACEHOLDER Fase 2: hay 6 carteleras de prueba (Mica dijo "calculá 6").
- * La colección real de proyectos entra después.
+ * FASE 2: las carteleras ya no son de prueba. Salen de la colección de
+ * proyectos (src/content/proyectos/*.md), ordenadas por el campo `orden`.
+ * Para agregar o sacar un proyecto se agrega o saca un `.md`; ni este
+ * archivo ni el motor se tocan.
  */
 
-const NUM_CARTELERAS_PRUEBA = 6;
-const indices = Array.from({ length: NUM_CARTELERAS_PRUEBA }, (_, i) => i);
+const proyectos = (await getCollection('proyectos')).sort((a, b) => a.data.orden - b.data.orden);
 
 /** Objetos decorativos que viven dentro de una capa. */
 const objetosDe = (capaId) => OBJETOS.filter((o) => o.capa === capaId);
@@ -87,7 +89,7 @@ const franjaVereda = `url(${RUTAS_CAPAS.vereda})`;
           />
         ))
       }
-      {indices.map((i) => <Cartelera indice={i} />)}
+      {proyectos.map((proyecto, i) => <Cartelera indice={i} proyecto={proyecto} />)}
     </div>
 
     <Caminante />

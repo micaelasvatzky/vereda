@@ -1,27 +1,48 @@
 ---
 /*
- * Cartelera — un cartel de la vereda con su afiche.
+ * Cartelera — un cartel de la vereda con la preview de un proyecto.
  *
  * El cartel ES el SVG que dibujó Mica (/img/CartelVerde.svg): marco,
  * afiche y poste vienen de una sola pieza en su dibujo, así que ya no hay
- * poste de CSS ni rectángulo verde pintado a mano. Lo único que se
- * superpone es el afiche, adentro del hueco que el propio SVG deja
- * (medido del dibujo actual: viewBox 8606 × 13382, y el afiche va de
- * x 3470 a 5192 y de y 210 a 2536).
+ * poste de CSS ni rectángulo verde pintado a mano.
  *
- * PLACEHOLDER Fase 1: el hueco lleva sólo un TODO(Mica). Mica confirmó
- * que la preview del proyecto REEMPLAZA al afiche, así que cuando entre
- * la Fase 2 acá va la imagen real. El <dialog> y el afiche tipográfico
- * entran en esa misma fase.
+ * FASE 2 — la preview va en el HUECO TRANSPARENTE del marco (Mica: "las
+ * previews van en el hueco transparente de la imagen, como si fueran el
+ * cartel"). Ese hueco es un rectángulo dentro del marco verde, medido
+ * sobre el render del SVG actual (viewBox 8606 × 13382):
+ *
+ *   hueco:  x 590..7996   y 2580..8011
+ *           left 6.86%   top 19.28%   width 86.05%   height 40.58%
+ *
+ * OJO: el rectángulo NEGRO de arriba (x 3504..5158, y 268..2490) NO es el
+ * hueco: es opaco, es la ilustración de Mica. Por eso la preview no va
+ * ahí. Las medidas se sacaron de pixels, no a ojo: se renderizó el SVG
+ * con fondo transparente y se buscó el componente transparente cerrado
+ * más grande (ver docs/bitacora.md).
+ *
+ * Sobre la preview van dos links que NO se anidan (HTML no permite un
+ * <a> dentro de otro <a>):
+ *   - la imagen va a Vercel (el link principal, cubre toda la preview);
+ *   - el botón de GitHub va a GitHub, arriba de todo con z-index.
  */
 
-import { RUTAS_CARTEL } from '../config.js';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { RUTAS_CARTEL, CARTEL } from '../config.js';
+
+interface DatosProyecto {
+  titulo: string;
+  vercel: string;
+  github: string;
+  preview: ImageMetadata;
+}
 
 interface Props {
   indice: number;
+  proyecto?: { data: DatosProyecto };
 }
 
-const { indice } = Astro.props;
+const { indice, proyecto } = Astro.props;
 ---
 
 <article
@@ -31,7 +52,10 @@ const { indice } = Astro.props;
   data-activa="false"
   style={`--indice: ${indice};`}
 >
-  <div class="cartelera__cartel">
+  <div
+    class="cartelera__cartel"
+    style={`--hueco-left:${CARTEL.hueco.left}%; --hueco-top:${CARTEL.hueco.top}%; --hueco-width:${CARTEL.hueco.width}%; --hueco-height:${CARTEL.hueco.height}%;`}
+  >
     <img
       class="cartelera__arte"
       src={RUTAS_CARTEL.verde}
@@ -39,9 +63,45 @@ const { indice } = Astro.props;
       aria-hidden="true"
       decoding="async"
     />
-    <div class="cartelera__afiche">
-      <span class="todo-mica">TODO(Mica): #{indice + 1}</span>
-    </div>
+    {
+      proyecto && (
+        <div class="cartelera__preview">
+          <Image
+            class="cartelera__preview-img"
+            src={proyecto.data.preview}
+            alt={`Captura de ${proyecto.data.titulo}`}
+            widths={[320, 640, 960]}
+            sizes="(max-width: 768px) 40vw, 380px"
+            loading="eager"
+            decoding="async"
+          />
+          {/* Link principal: la preview entera lleva a Vercel. */}
+          <a
+            class="cartelera__link"
+            href={proyecto.data.vercel}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Ver ${proyecto.data.titulo} en Vercel`}
+          />
+          {/* Botón de GitHub: va arriba de todo, así el clic NO cae en el link de Vercel. */}
+          <a
+            class="cartelera__github"
+            href={proyecto.data.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Ver el código de ${proyecto.data.titulo} en GitHub`}
+            title="Ver el código en GitHub"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                fill="currentColor"
+                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+              />
+            </svg>
+          </a>
+        </div>
+      )
+    }
   </div>
 </article>
 
@@ -113,6 +173,15 @@ const { indice } = Astro.props;
      */
     aspect-ratio: 8606 / 13382;
     /*
+     * Con esto el cartel pasa a ser un "contenedor de consulta": las
+     * medidas del botón de GitHub se calculan con cqw (unidades
+     * relativas al ANCHO de este cartel). Así el botón se ve igual de
+     * proportionado esté el cartel a escala 0.5 (celular) o 1.2
+     * (pantalla grande), como si fuera parte del dibujo y no un widget
+     * de la interfaz.
+     */
+    container-type: inline-size;
+    /*
      * Sin sombra ni marco de CSS (pedido de Mica, 8/10): cualquier halo
      * rectangular queda como un recuadro alrededor del dibujo en vez de
      * ceñirse a su forma. Lo que "prende" la activa es sólo el scale.
@@ -130,38 +199,83 @@ const { indice } = Astro.props;
   }
 
   /*
-   * El hueco del afiche, medido sobre el SVG: es el rect #0b100a del
-   * dibujo. El cartel es opaco, así que el contenido SÓLO puede ir encima
-   * de este rectángulo — no por detrás.
+   * El hueco del cartel: el rectángulo que el marco verde deja libre.
+   * Las medidas salen de config.js (CARTEL.hueco), que es el único lugar
+   * donde hay que tocarlas si Mica cambia el dibujo:
+   *   hueco: x 590..7996   y 2580..8011  (viewBox 8606 × 13382)
+   *   left 6.86%   top 19.28%   width 86.05%   height 40.58%
    *
-   * OJO con estas medidas: son del SVG ACTUAL (viewBox 8606 × 13382), no
-   * del anterior. La caja que estaba antes (5.9% / 18.2% / 88.1% / 42.6%)
-   * venía del SVG viejo, y con el dibujo nuevo caía sobre el marco verde:
-   * la preview se iba a ver pegada al costado del cartel, no adentro del
-   * afiche. Se remedió midiendo el dibujo, no a ojo: se aislaron los 97
-   * paths que están dentro de la región del afiche (el resto del cartel se
-   * ocultó), se renderizó y se contó píxeles.
+   * Las medidas del afiche negro (CARTEL.afiche: 40.33% / 1.57% / 20% /
+   * 17.39%) NO sirven acá: ese rectángulo es opaco, es la ilustración de
+   * Mica. El hueco que aloja la preview es el del centro.
    *
-   * El afiche real va de x 3470 a 5190 y de y 210 a 2536 en el viewBox:
-   *   left 40.33%   top 1.57%   width 20.00%   height 17.39%
-   *
-   * Fondo transparente a propósito: Mica confirmó que la preview del
-   * proyecto REEMPLAZA al afiche, y el fondo negro ya lo pinta su propio
-   * dibujo. Cuando entre la Fase 2 acá va la imagen real del proyecto.
+   * El fondo es el color del afiche (#0b100a) para que, mientras carga
+   * la imagen, se vea el cartel en vez de un agujero blanco.
    */
-  .cartelera__afiche {
+  .cartelera__preview {
     position: absolute;
-    left: 40.33%;
-    top: 1.57%;
-    width: 20%;
-    height: 17.39%;
-    background: transparent;
-    color: var(--afiche-texto);
+    left: var(--hueco-left);
+    top: var(--hueco-top);
+    width: var(--hueco-width);
+    height: var(--hueco-height);
+    overflow: hidden;
+    background: #0b100a;
+  }
+
+  /*
+   * La captura entra "deWa" al hueco: se recorta por los lados para
+   * llenar el panel sin deformarse (object-fit: cover) y pegada al
+   * borde superior, que es donde está el header de cada web.
+   */
+  .cartelera__preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  /* El link principal: cubre toda la preview y lleva a Vercel. */
+  .cartelera__link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /*
+   * El botón de GitHub, en la esquina inferior derecha. Va con z-index
+   * más alto que el link principal: así el clic lo toma a él y NO
+   * dispara el link de Vercel. (Por eso los dos son <a> hermanos y no
+   * uno dentro del otro: en HTML no se puede anidar un <a> en otro <a>.)
+   */
+  .cartelera__github {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
     display: grid;
     place-items: center;
-    padding: 0.6rem;
-    text-align: center;
-    overflow: hidden;
+    width: max(8cqw, 26px);
+    height: max(8cqw, 26px);
+    background: #181717;
+    color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.45);
+    transition:
+      transform var(--duracion-prendido) var(--curva-prendido),
+      background var(--duracion-prendido) var(--curva-prendido);
+  }
+
+  .cartelera__github svg {
+    width: 62%;
+    height: 62%;
+    display: block;
+  }
+
+  .cartelera__github:hover,
+  .cartelera__github:focus-visible {
+    background: #303030;
+    transform: scale(1.08);
   }
 
   /* La cartelera activa se "prende": crece apenas y se levanta. Sin marco. */

@@ -140,6 +140,22 @@ export const RUTAS_CARTEL = {
 };
 
 /**
+ * Medidas del cartel, en porcentaje del viewBox del SVG (8606 × 13382).
+ *
+ * `hueco` es el rectángulo que el marco verde deja libre: ahí va la preview
+ * del proyecto. Se midió renderizando el SVG con fondo transparente y
+ * buscando el componente cerrado más grande (no a ojo). Si Mica cambia el
+ * dibujo del cartel, estos números son lo único que hay que volver a medir.
+ *
+ * `afiche` es el rectángulo NEGRO de arriba: la ilustración de Mica. No es
+ * el hueco (es opaco) y por eso la preview no va ahí.
+ */
+export const CARTEL = {
+  hueco: { left: 6.86, top: 19.28, width: 86.05, height: 40.58 },
+  afiche: { left: 40.33, top: 1.57, width: 20.0, height: 17.39 },
+};
+
+/**
  * Objetos sueltos del escenario. Van dentro de una capa y viajan con la
  * velocidad de esa capa (parallax). Todos los números están en px de
  * referencia (26.088 px de dibujo de la Escena = 1080 de referencia).
