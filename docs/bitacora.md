@@ -547,3 +547,16 @@ accesible de los links.
 - **El cielo con Open-Meteo sigue sin implementarse** (Fase 4) y **los fps no se midieron**.
 - **Push lo hace Mica:** quedan commits sin subir.
 
+**Cierre de sesión — 22 de octubre de 2026**
+
+Se cerró la sesión con el árbol de trabajo limpio y **18 commits sin subir**
+(`git rev-list --count origin/main..HEAD`). Para la próxima sesión, en orden:
+
+1. Mica pasa sus capturas → reemplazar los archivos de `src/assets/proyectos/` con el
+   mismo nombre y commitear (no se toca código).
+2. Mica escribe las descripciones de los cinco proyectos (los `TODO(Mica)` de cada `.md`).
+3. Mica pasa el PDF o el texto de la consigna para confirmar el requisito de la API.
+4. Definir cuándo se abre el `<dialog>` con la descripción.
+5. Medir fps en un celular de gama media (cierre de la Fase 1) y revisar el mobile.
+6. La push la hace Mica.
+
