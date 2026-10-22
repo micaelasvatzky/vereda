@@ -549,8 +549,9 @@ accesible de los links.
 
 **Cierre de sesión — 22 de octubre de 2026**
 
-Se cerró la sesión con el árbol de trabajo limpio y **18 commits sin subir**
-(`git rev-list --count origin/main..HEAD`). Para la próxima sesión, en orden:
+Se cerró la sesión con el árbol de trabajo limpio. Los commits de las fases 1 y 2 siguen
+**sin subir**: el número exacto lo da `git rev-list --count origin/main..HEAD` (no se anota
+acá porque cambia con cada commit). Para la próxima sesión, en orden:
 
 1. Mica pasa sus capturas → reemplazar los archivos de `src/assets/proyectos/` con el
    mismo nombre y commitear (no se toca código).
