@@ -545,13 +545,20 @@ accesible de los links.
   en la web y no aparece. Mica tiene que pasar el PDF o el texto para confirmar el
   alcance del requisito de tomar datos de una API.
 - **El cielo con Open-Meteo sigue sin implementarse** (Fase 4) y **los fps no se midieron**.
-- **Push lo hace Mica:** quedan commits sin subir.
 
 **Cierre de sesión — 22 de octubre de 2026**
 
-Se cerró la sesión con el árbol de trabajo limpio. Los commits de las fases 1 y 2 siguen
-**sin subir**: el número exacto lo da `git rev-list --count origin/main..HEAD` (no se anota
-acá porque cambia con cada commit). Para la próxima sesión, en orden:
+Se cerró la sesión con el árbol de trabajo limpio y **todo subido**: Mica pidió explícitamente
+que la push la hiciera el agente (*"pushealo vos, pusheame todo"*), así que se corrió
+`git push origin main` y `origin/main` quedó en `108568f`. Las fases 1 y 2 están en
+`https://github.com/micaelasvatzky/vereda.git` (rama `main`). El estado del repo va primero,
+pero para chequear si falta subir algo: `git rev-list --count origin/main..HEAD`.
+
+Lo que se verificó antes de subir: `origin` apunta al repo de Mica, `origin/main` era
+ancestro directo (sin divergencia, no hizo falta force), 41 archivos tocados en los 20
+commits y **cero coincidencias** de claves, tokens o `.env` en el diff.
+
+Para la próxima sesión, en orden:
 
 1. Mica pasa sus capturas → reemplazar los archivos de `src/assets/proyectos/` con el
    mismo nombre y commitear (no se toca código).
@@ -559,5 +566,4 @@ acá porque cambia con cada commit). Para la próxima sesión, en orden:
 3. Mica pasa el PDF o el texto de la consigna para confirmar el requisito de la API.
 4. Definir cuándo se abre el `<dialog>` con la descripción.
 5. Medir fps en un celular de gama media (cierre de la Fase 1) y revisar el mobile.
-6. La push la hace Mica.
 

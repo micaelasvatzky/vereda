@@ -40,7 +40,7 @@ Pendientes que bloquean o atrasan:
   decidir si hace falta mÃ¡s referencia.
 - Las capas de fondo siguen siendo SVG placeholder; las cuatro ilustraciones de la chica ya
   estÃ¡n integradas en `public/caminante/`.
-- El repo es local: la push a GitHub la hace Mica (los commits de las fases 1 y 2 sin subir al 22/10; lo cuenta `git rev-list --count origin/main..HEAD`).
+- **El repo vive en GitHub** (`https://github.com/micaelasvatzky/vereda.git`, rama `main`) y al 22/10 quedó sincronizado: las fases 1 y 2 ya están subidas. Para saber si falta subir algo: `git rev-list --count origin/main..HEAD`.
 
 **Fase 2 (21/10) â€” las previews en los carteles â€” abierta.** Mica pasÃ³ los links de los
 cinco proyectos y dijo: *"las previews van en el hueco transparente de la imagen, como si
@@ -84,7 +84,7 @@ la chapa con el nombre del proyecto (hecho). Lo que falta:
    de que Mica pueda hacerla.
 9. **Nunca** `git push --force`, nunca reescribir historial, nunca borrar archivos de
    `docs/`.
-10. **La push a GitHub la hace Mica.** El agente la guÃ­a con los comandos.
+10. **La push la hace Mica, salvo que pida explícitamente lo contrario.** El agente la guÃ­a con los comandos.
 
 ## Comandos de sesiÃ³n
 
