@@ -1,4 +1,4 @@
-﻿# VEREDA â€” reglas del proyecto
+# VEREDA â€” reglas del proyecto
 
 Este repo es el TP Final de ProgramaciÃ³n Multimedial IV (UMAI). Entregable: un portfolio
 web personal e interactivo. Defensa individual: hay que explicar el cÃ³digo y hacer una
@@ -40,7 +40,7 @@ Pendientes que bloquean o atrasan:
   decidir si hace falta mÃ¡s referencia.
 - Las capas de fondo siguen siendo SVG placeholder; las cuatro ilustraciones de la chica ya
   estÃ¡n integradas en `public/caminante/`.
-- El repo es local: la push a GitHub la hace Mica (**14 commits sin subir** al 21/10).
+- El repo es local: la push a GitHub la hace Mica (**17 commits sin subir** al 21/10).
 
 **Fase 2 (21/10) â€” las previews en los carteles â€” abierta.** Mica pasÃ³ los links de los
 cinco proyectos y dijo: *"las previews van en el hueco transparente de la imagen, como si
