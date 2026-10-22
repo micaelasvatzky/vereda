@@ -550,13 +550,40 @@ accesible de los links.
 
 Se cerró la sesión con el árbol de trabajo limpio y **todo subido**: Mica pidió explícitamente
 que la push la hiciera el agente (*"pushealo vos, pusheame todo"*), así que se corrió
-`git push origin main` y `origin/main` quedó en `108568f`. Las fases 1 y 2 están en
-`https://github.com/micaelasvatzky/vereda.git` (rama `main`). El estado del repo va primero,
-pero para chequear si falta subir algo: `git rev-list --count origin/main..HEAD`.
+`git push origin main` y `origin/main` quedó en `878e73a`. Las fases 1 y 2 están en
+`https://github.com/micaelasvatzky/vereda.git` (rama `main`). Para chequear si falta subir
+algo: `git rev-list --count origin/main..HEAD`.
 
 Lo que se verificó antes de subir: `origin` apunta al repo de Mica, `origin/main` era
 ancestro directo (sin divergencia, no hizo falta force), 41 archivos tocados en los 20
 commits y **cero coincidencias** de claves, tokens o `.env` en el diff.
+
+Después, Mica dejó nueva regla de cierre: **de ahora en más la push la hace el agente antes
+de terminar la sesión, pero primero le pregunta para que ella confirme** (*"a partir de
+ahora los push los hacés vos antes de terminar la sesión, primero me preguntás así te
+confirmo"*). Quedó en la regla 10 de `AGENTS.md`: sin OK no se pushea, y nunca `--force`.
+
+**Incidente de encoding — 22 de octubre de 2026**
+
+Al aplicar esa regla se descubrió que **`AGENTS.md` y `CLAUDE.md` estaban doblemente
+codificados**: 72 casos de `sesión` guardado como `sesiÃ³n`. Lo introdujo el propio agente en
+esta sesión con un `Get-Content -Raw | Set-Content -Encoding UTF8` en PowerShell 5.1, que
+lee UTF-8 sin BOM como ANSI. Se detectó porque un `edit` con acentos dejó de encontrar su
+texto. El `npm run check` **no lo vio**: el mojibake es UTF-8 válido.
+
+- Alcance: sólo esos dos archivos. El sitio, los componentes y el resto de `docs/` no se
+  tocaron.
+- Por qué no se reparó automáticamente: 26 caracteres ya estaban perdidos (guiones largos y
+  flechas convertidos en `?`), así que la conversión inversa habría inventado texto.
+- Solución: se restauró `AGENTS.md` desde `22f1a04` (la última versión sana, con 0 casos) y
+  se reaplicaron a mano los cambios de la Fase 2; `CLAUDE.md` se regeneró desde `AGENTS.md`
+  y se comparó con SHA-256.
+- Prevención: `scripts/check-encoding.mjs` tiene un segundo control que busca `Ã`/`Â`
+  seguidos de U+0080–U+00BF y **falla con exit 1**. Saltea el código inline, para poder
+  documentar el patrón sin falsos positivos. Se probó con un archivo corrupto de prueba:
+  lo detectó y salió con 1.
+- Lección: verificar que el archivo sea UTF-8 válido no alcanza; hay que mirar que el texto
+  diga lo que tiene que decir.
 
 Para la próxima sesión, en orden:
 
@@ -566,4 +593,5 @@ Para la próxima sesión, en orden:
 3. Mica pasa el PDF o el texto de la consigna para confirmar el requisito de la API.
 4. Definir cuándo se abre el `<dialog>` con la descripción.
 5. Medir fps en un celular de gama media (cierre de la Fase 1) y revisar el mobile.
+6. Al cerrar: preguntarle a Mica si se pushea (regla 10).
 
