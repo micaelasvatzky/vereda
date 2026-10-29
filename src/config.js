@@ -11,6 +11,11 @@
  * El mundo se mide en "px de referencia" sobre una pantalla de 1080 px de alto.
  * En cualquier dispositivo real se multiplica por `--escala` (ver `escenario.js`).
  */
+export const BIENVENIDA = {
+  titulo: 'Portfolio de Mica',
+  instrucciones: 'Recorré la vereda con las flechas ← → o haciendo scroll. Pasá el mouse por cada cartel para leer sobre el proyecto y hacé clic para visitar su web.',
+};
+
 export const ESCENA = {
   /** Alto de referencia del escenario, en px. Todo el mundo se expresa contra esto. */
   altoRef: 1080,
@@ -31,11 +36,14 @@ export const ESCENA = {
   carteleraAncho: 359,
   /** Cuánto scroll vertical hace falta por px de mundo. >1 = más lento. */
   ritmo: 1,
+  /** Velocidad con flechas sostenidas, en px de mundo de referencia por segundo. */
+  velocidadTeclado: 650,
   /**
    * Capas de fondo, de la más lejana a la más cercana.
    * factor = 0 la capa queda fija, factor = 1 se mueve a la velocidad del mundo.
    */
   capas: [
+    { id: 'fondo', factor: 0.1 },
     { id: 'lejana', factor: 0.2 },
     { id: 'media', factor: 0.55 },
     { id: 'vereda', factor: 1.0 },
@@ -59,9 +67,7 @@ export const ESCENA = {
 /**
  * La chica que camina por la vereda.
  *
- * Va siempre en el mismo lugar de la pantalla (no se mueve con el mundo):
- * lo que pasa es que el mundo se desplaza frente a ella. Así el personaje
- * es un ancla estable y no hay que perseguirlo con el scroll.
+ * Avanza entre x y xFinal mientras el mundo se desplaza frente a ella.
  */
 export const CAMINANTE = {
   /**
@@ -71,6 +77,8 @@ export const CAMINANTE = {
    * sólo este número.
    */
   x: 0.24,
+  /** Posición horizontal al terminar el recorrido. */
+  xFinal: 0.9,
   /**
    * Línea de suelo: fracción del alto donde tocan la baldosa los pies de la
    * chica. Va MÁS ABAJO que ESCENA.sueloCarteleras (0.86): ella camina por
@@ -131,7 +139,16 @@ export const STICKERS = [];
  * de abajo, cada uno con su posición en el mundo.
  */
 export const RUTAS_CAPAS = {
+  edificios: '/img/Edificios.svg',
   vereda: '/img/Vereda.svg',
+};
+
+/** El SVG de edificios ya tiene opacidad 0.8; no se vuelve a multiplicar. */
+export const EDIFICIOS = {
+  alto: 700,
+  base: 0.86,
+  opacidad: 0.8,
+  opacidadOriginal: 0.8,
 };
 
 /** Assets de las carteleras. El cartel es el SVG que dibujó Mica. */
@@ -169,12 +186,7 @@ export const CARTEL = {
  * - alto:  altura en px de referencia.
  * - base:  fracción del alto donde se apoya (su propia línea de suelo).
  *
- * Los dos edificios van a propósito EN LA ZONA DEL OBELISCO y no en la del
- * cartel de calles (pedido de Mica): misma x que el obelisco pero capas
- * distintas, así uno queda detrás suyo y el otro adelante, y al viajar a
- * velocidad distinta se despegan uno del otro. Los archivos son los
- * placeholders de la Fase 1; cuando Mica mande sus edificios se cambia
- * sólo el src.
+ * El fondo continuo de edificios se configura aparte en EDIFICIOS.
  */
 export const OBJETOS = [
   {
@@ -183,24 +195,6 @@ export const OBJETOS = [
     src: '/img/ObeliscoP.svg',
     x: 2534, // Escena: centro en x 1891 + 643
     alto: 825,
-    base: 0.86,
-  },
-  {
-    // Detrás del obelisco: misma capa (lejana) y misma x, se mueve con él.
-    id: 'edificio-trasero',
-    capa: 'lejana',
-    src: '/capas/lejana.svg', // PLACEHOLDER: silueta de edificios.
-    x: 2534,
-    alto: 700,
-    base: 0.86,
-  },
-  {
-    // Delante del obelisco: capa media, más cerca y más veloz que él.
-    id: 'edificio-delantero',
-    capa: 'media',
-    src: '/capas/media.svg', // PLACEHOLDER: locales y árboles.
-    x: 2534,
-    alto: 620,
     base: 0.86,
   },
   {

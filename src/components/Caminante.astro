@@ -4,9 +4,8 @@ import { CAMINANTE, RUTAS_CHICA } from '../config.js';
 /*
  * La chica que camina por la vereda.
  *
- * No se mueve con el mundo: queda siempre en el mismo lugar de la pantalla.
- * Lo que se mueve es el mundo, pasando frente a ella. Así el personaje es un
- * ancla estable y no hay que perseguirlo con el scroll.
+ * El mundo pasa frente a ella y el motor la hace avanzar desde CAMINANTE.x
+ * hasta CAMINANTE.xFinal según el progreso del recorrido.
  *
  * Sus cuatro ilustraciones (de Mica) comparten lienzo —las cuatro tienen
  * viewBox 0 0 209.25 511.5— y están apiladas una arriba de otra:
@@ -27,6 +26,7 @@ import { CAMINANTE, RUTAS_CHICA } from '../config.js';
   class="caminante"
   data-caminante
   data-caminando="false"
+  data-direccion="derecha"
   style={`--alto-caminante: ${CAMINANTE.alto}px;`}
   aria-hidden="true"
 >
@@ -51,7 +51,7 @@ import { CAMINANTE, RUTAS_CHICA } from '../config.js';
 <style>
   .caminante {
     position: absolute;
-    left: calc(var(--caminante-x, 0.24) * 100%);
+    left: 0;
     bottom: calc((1 - var(--caminante-y, 0.9)) * 100%);
     height: calc(var(--alto-caminante, 340px) * var(--escala, 1));
     /*
@@ -59,7 +59,9 @@ import { CAMINANTE, RUTAS_CHICA } from '../config.js';
      * viewBox y no hace falta calcular un ancho a mano.
      */
     aspect-ratio: 209.25 / 511.5;
-    transform: translateX(-50%);
+    transform: translate3d(calc(var(--caminante-x, 0.24) * 100vw - 50%), 0, 0)
+      scaleX(var(--orientacion, 1));
+    will-change: transform;
     pointer-events: none;
     z-index: 2;
   }
@@ -72,6 +74,10 @@ import { CAMINANTE, RUTAS_CHICA } from '../config.js';
     width: 100%;
     height: 100%;
     object-fit: contain;
+  }
+
+  .caminante[data-direccion='izquierda'] {
+    --orientacion: -1;
   }
 
   /*
@@ -200,7 +206,7 @@ import { CAMINANTE, RUTAS_CHICA } from '../config.js';
    * :has() lo soportan todos los navegadores actuales: Chrome 105+,
    * Safari 15.4+ y Firefox 121+. No hace falta ni una línea de JavaScript.
    */
-  :global(html:has(.cartelera__cartel:hover)) .caminante__pose--mira {
+  :global(html:has(.cartelera__cartel:hover)) .caminante:not([data-caminando='true']) .caminante__pose--mira {
     opacity: 1;
   }
 

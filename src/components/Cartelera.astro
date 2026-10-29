@@ -27,22 +27,18 @@
  */
 
 import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
+import { render, type CollectionEntry } from 'astro:content';
 import { RUTAS_CARTEL, CARTEL } from '../config.js';
-
-interface DatosProyecto {
-  titulo: string;
-  vercel: string;
-  github: string;
-  preview: ImageMetadata;
-}
 
 interface Props {
   indice: number;
-  proyecto?: { data: DatosProyecto };
+  proyecto?: CollectionEntry<'proyectos'>;
 }
 
 const { indice, proyecto } = Astro.props;
+const descripcion = proyecto ? await render(proyecto) : null;
+const Content = descripcion?.Content;
+const descripcionId = `descripcion-proyecto-${indice}`;
 ---
 
 <article
@@ -76,12 +72,18 @@ const { indice, proyecto } = Astro.props;
             decoding="async"
           />
           {/* Link principal: la preview entera lleva a Vercel. */}
+          {Content && (
+            <div class="cartelera__descripcion" id={descripcionId}>
+              <Content />
+            </div>
+          )}
           <a
             class="cartelera__link"
             href={proyecto.data.vercel}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Ver ${proyecto.data.titulo} en Vercel`}
+            aria-describedby={descripcionId}
           />
           {/* Botón de GitHub: va arriba de todo, así el clic NO cae en el link de Vercel. */}
           <a
@@ -236,6 +238,33 @@ const { indice, proyecto } = Astro.props;
   }
 
   /* El link principal: cubre toda la preview y lleva a Vercel. */
+  .cartelera__descripcion {
+    position: absolute;
+    inset: 0;
+    padding: var(--descripcion-espacio);
+    padding-bottom: var(--descripcion-reserva-boton);
+    background: var(--descripcion-fondo);
+    color: var(--afiche-texto);
+    font-family: var(--fuente-texto);
+    font-size: var(--descripcion-tamano);
+    line-height: var(--descripcion-interlineado);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .cartelera__descripcion :global(p) {
+    margin: 0;
+  }
+
+  .cartelera__descripcion :global(p + p) {
+    margin-top: var(--descripcion-separacion);
+  }
+
+  .cartelera__cartel:hover .cartelera__descripcion,
+  .cartelera__cartel:focus-within .cartelera__descripcion {
+    visibility: visible;
+  }
+
   .cartelera__link {
     position: absolute;
     inset: 0;

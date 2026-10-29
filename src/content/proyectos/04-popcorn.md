@@ -6,4 +6,6 @@ github: https://github.com/micaelasvatzky/popcorn.js
 preview: ../../assets/proyectos/popcorn.png
 ---
 
-TODO(Mica): contame de qué se trata Popcorn.js.
+**2025 · React · Next.js · Tailwind**
+
+Aplicación web de películas que obtiene información desde una API externa, ofreciendo un catálogo interactivo con detalles actualizados de cada film.

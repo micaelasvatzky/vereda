@@ -6,4 +6,6 @@ github: https://github.com/micaelasvatzky/devpath-frontend
 preview: ../../assets/proyectos/devpath.png
 ---
 
-TODO(Mica): contame de qué se trata DevPath.
+**2025 · React · Next.js · Node.js**
+
+Plataforma educativa orientada a la enseñanza de programación, con contenidos estructurados y una arquitectura pensada para crecer y escalar.

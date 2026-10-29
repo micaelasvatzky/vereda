@@ -133,6 +133,8 @@ class Escenario {
     const y = window.scrollY;
     const p = acotar(y / Math.max(1, this.recorridoScroll), 0, 1);
     this.desplazamiento = p * this.recorrido;
+    const xCaminante = CAMINANTE.x + (CAMINANTE.xFinal - CAMINANTE.x) * p;
+    this.caminante?.style.setProperty('--caminante-x', String(xCaminante));
 
     for (const capa of this.capas) {
       const factor = this.factorDe(capa);
@@ -144,7 +146,6 @@ class Escenario {
     this.revelar();
     this.marcarCaminando(y);
 
-    this.pintarDebug(p);
   }
 
   /** Marca la cartelera más cercana al centro de la pantalla. */
@@ -155,9 +156,10 @@ class Escenario {
     let mejor = null;
     let mejorDistancia = Infinity;
 
-    for (const cartelera of this.carteleras) {
-      const rect = cartelera.getBoundingClientRect();
-      const distancia = Math.abs(rect.left + rect.width / 2 - centro);
+    for (const [indice, cartelera] of this.carteleras.entries()) {
+      // Las posiciones ya se conocen: medir el DOM después de moverlo fuerza layout.
+      const x = this.xDeCartelera(indice) + ESCENA.carteleraAncho * this.escala / 2;
+      const distancia = Math.abs(x - centro);
       if (distancia < mejorDistancia) {
         mejorDistancia = distancia;
         mejor = cartelera;
@@ -167,10 +169,16 @@ class Escenario {
     const activa = mejor && mejorDistancia <= umbral ? mejor : null;
 
     for (const cartelera of this.carteleras) {
-      cartelera.dataset.activa = String(cartelera === activa);
+      const valor = String(cartelera === activa);
+      if (cartelera.dataset.activa !== valor) cartelera.dataset.activa = valor;
     }
 
     this.activa = activa;
+  }
+
+  /** Borde izquierdo de un cartel en pantalla, sin consultar la geometría del DOM. */
+  xDeCartelera(indice) {
+    return (ESCENA.margen + indice * ESCENA.separacion) * this.escala - this.desplazamiento;
   }
 
   /** Marca si estamos al principio, en el medio o al final del recorrido. */
@@ -206,7 +214,7 @@ class Escenario {
 
     const ancho = window.innerWidth;
     for (const cartelera of this.pendientes) {
-      if (cartelera.getBoundingClientRect().left < ancho) {
+      if (this.xDeCartelera(Number(cartelera.dataset.indice)) < ancho) {
         cartelera.dataset.visible = 'true';
         this.pendientes.delete(cartelera);
       }
@@ -223,7 +231,12 @@ class Escenario {
    * sola.
    */
   marcarCaminando(y) {
-    const moviendo = Math.abs(y - this.ultimoY) > 0.5;
+    const delta = y - this.ultimoY;
+    const moviendo = Math.abs(delta) > 0.5;
+    if (moviendo && this.caminante) {
+      const direccion = delta < 0 ? 'izquierda' : 'derecha';
+      if (this.caminante.dataset.direccion !== direccion) this.caminante.dataset.direccion = direccion;
+    }
     this.ultimoY = y;
 
     clearTimeout(this.freno);
@@ -261,31 +274,71 @@ class Escenario {
 
   /** Flechas y teclas de salto, siempre que el foco no las esté usando otro control. */
   prescribirTeclado() {
+    const teclas = new Set();
+    let cuadro = 0;
+    let anterior = 0;
+
+    const avanzar = (segundos) => {
+      const direccion = Number(teclas.has('ArrowRight')) - Number(teclas.has('ArrowLeft'));
+      const paso = direccion * ESCENA.velocidadTeclado * this.escala * ESCENA.ritmo * segundos;
+      window.scrollTo({ top: acotar(window.scrollY + paso, 0, this.recorridoScroll), behavior: 'instant' });
+    };
+
+    const mover = (ahora) => {
+      avanzar(Math.min((ahora - anterior) / 1000, 0.05));
+      anterior = ahora;
+      cuadro = requestAnimationFrame(mover);
+    };
+
+    const detener = () => {
+      teclas.clear();
+      cancelAnimationFrame(cuadro);
+      cuadro = 0;
+    };
+
     const alPresionar = (evento) => {
-      const etiqueta = evento.target instanceof HTMLElement ? evento.target.tagName : '';
-      if (['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'A'].includes(etiqueta)) return;
+      if (evento.ctrlKey || evento.altKey || evento.metaKey) return;
+      if (evento.target instanceof HTMLElement &&
+          (evento.target.isContentEditable || evento.target.closest('input, textarea, select, button'))) {
+        detener();
+        return;
+      }
 
       switch (evento.key) {
         case 'ArrowRight':
-          evento.preventDefault();
-          this.saltar(1);
-          break;
         case 'ArrowLeft':
           evento.preventDefault();
-          this.saltar(-1);
+          if (teclas.has(evento.key)) return;
+          teclas.add(evento.key);
+          // Un toque también mueve; sostener continúa sin depender de la repetición del teclado.
+          avanzar(1 / 60);
+          if (!cuadro) {
+            anterior = performance.now();
+            cuadro = requestAnimationFrame(mover);
+          }
           break;
         case 'Home':
           evento.preventDefault();
+          detener();
           this.irAInicio();
           break;
         case 'End':
           evento.preventDefault();
+          detener();
           this.irAFinal();
           break;
       }
     };
 
     window.addEventListener('keydown', alPresionar);
+    window.addEventListener('keyup', (evento) => {
+      teclas.delete(evento.key);
+      if (teclas.size === 0) detener();
+    });
+    window.addEventListener('blur', detener);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) detener();
+    });
   }
 
   /** Ir al principio del recorrido. */
@@ -342,11 +395,12 @@ class Escenario {
 
   /** Saltar a la parada siguiente o anterior. */
   saltar(delta) {
-    const actual = this.indiceCercano();
-    const siguiente = acotar(actual + delta, 0, this.carteleras.length - 1);
-
-    if (siguiente === actual) return;
-    this.irACartelera(siguiente);
+    const paradas = this.carteleras.map((_, i) => this.yDeCartelera(i));
+    // Los extremos también son destinos: se puede pasar el último cartel.
+    const destino = delta > 0
+      ? paradas.find((y) => y > window.scrollY + 4) ?? this.recorridoScroll
+      : paradas.reverse().find((y) => y < window.scrollY - 4) ?? 0;
+    window.scrollTo({ top: destino, behavior: this.comportamientoSuave() });
   }
 
   /** El scroll suave es un gusto, no una necesidad: si lo pidieron menos movimiento, no. */
@@ -374,21 +428,6 @@ class Escenario {
     });
   }
 
-  /** Números del motor a la vista, sólo en desarrollo. */
-  pintarDebug(p) {
-    const caja = this.escenario.querySelector('[data-debug]');
-    if (!caja) return;
-
-    const escribir = (selector, valor) => {
-      const nodo = caja.querySelector(selector);
-      if (nodo) nodo.textContent = valor;
-    };
-
-    escribir('[data-debug-p]', p.toFixed(3));
-    escribir('[data-debug-escala]', this.escala.toFixed(3));
-    escribir('[data-debug-recorrido]', Math.round(this.recorrido));
-    escribir('[data-debug-activa]', this.activa ? this.activa.dataset.indice : 'ninguna');
-  }
 }
 
 function iniciar() {

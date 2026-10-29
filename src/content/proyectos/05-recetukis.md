@@ -6,4 +6,6 @@ github: https://github.com/micaelasvatzky/recetukis-2025
 preview: ../../assets/proyectos/recetukis.png
 ---
 
-TODO(Mica): contame de qué se trata Recetukis.
+**2025 · React · API**
+
+Plataforma web de recetas que consume datos desde una API externa, permitiendo explorar distintas opciones gastronómicas de forma dinámica.

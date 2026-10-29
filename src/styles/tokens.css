@@ -9,11 +9,25 @@
   /* --- Afiche --------------------------------------------------------- */
   --afiche-fondo: #121212;
   --afiche-texto: #ffffff;
+  /* Descripción sobre la captura al pasar el mouse o enfocar sus links. */
+  --descripcion-opacidad: 88%;
+  --descripcion-fondo: color-mix(in srgb, var(--verde-cartelera) var(--descripcion-opacidad), transparent);
+  --descripcion-espacio: 4cqw;
+  --descripcion-reserva-boton: max(10cqw, 32px);
+  --descripcion-tamano: max(3.8cqw, 12px);
+  --descripcion-interlineado: 1.45;
+  --descripcion-separacion: 0.6em;
+  /* Bienvenida e instrucciones, arriba a la izquierda. */
+  --bienvenida-margen: 1rem;
+  --bienvenida-ancho: 21rem;
+  --bienvenida-titulo: 1.1rem;
+  --bienvenida-texto: 0.8rem;
 
   /* --- Tipografías --------------------------------------------------- */
   /* Archivo bold para los afiches (voces grandes, destreet). Inter para leer. */
   --fuente-titulo: 'Archivo', system-ui, sans-serif;
   --fuente-texto: 'Inter', system-ui, sans-serif;
+  --fuente-bienvenida: Georgia, 'Times New Roman', serif;
 
   /* --- Cielos -------------------------------------------------------- */
   /* Los degradés los aplica cielo.js según el momento del día y el clima.
