@@ -352,3 +352,60 @@ proyectos con sus links y su orden).
   Sin ese texto no se puede confirmar el alcance del requisito de tomar datos de una API.
 - **La descripción de cada proyecto quedó como `TODO(Mica)`**: el agente no escribe
   textos.
+
+### 29 de octubre de 2026 — descripciones con hover
+
+A pedido de Mica, el agente conectó el cuerpo Markdown de cada proyecto con una capa
+sobre su captura, visible con hover o foco de teclado. No escribió descripciones ni
+agregó dependencias. Consultó documentación oficial de Astro y Open-Meteo; la API del
+clima está prevista pero aún sin integrar. Falta la consigna para validar su alcance.
+### 29 de octubre de 2026 — revisión de la consigna original
+
+El agente leyó examen-final-portfolio.txt, aportado por Mica, y confirmó que Open-Meteo
+es una elección válida para el requisito de API externa o fuente dinámica. Distinguió
+esa elección de su implementación, todavía pendiente. Registró las exigencias de manejo
+de errores y documentación, responsive, componentes relevantes y entregables.
+### 29 de octubre de 2026 — edificios de fondo
+
+Mica aportó Edificios.svg y pidió un fondo continuo detrás del Obelisco al 80%.
+El agente agregó una capa con parallax más lento, respetó la proporción y la opacidad
+que ya trae el SVG y reemplazó el placeholder trasero. No generó ni modificó imágenes.
+La altura inicial usa los 700 px de referencia del placeholder; falta validarla con Mica.
+### 29 de octubre de 2026 — recorrido completo
+
+Mica pidió sacar edificios/árboles de prueba y que la nena llegue al final. El agente
+retiró el placeholder restante, hizo avanzar la posición horizontal con el scroll y
+corrigió los destinos de las flechas para alcanzar ambos extremos del recorrido.
+También evitó que el hover tape la caminata con la pose de mirar. La composición visual
+queda pendiente de revisión de Mica.
+### 29 de octubre de 2026 — descripciones escritas por Mica
+
+Mica escribió los textos, años y tecnologías de los cinco proyectos. El agente los
+incorporó a los Markdown y separó visualmente la ficha técnica de cada descripción.
+No escribió contenido sobre los proyectos. Check y build OK; revisión visual pendiente.
+### 29 de octubre de 2026 — controles y orientación
+
+Por pedido de Mica, el agente implementó giro horizontal al volver, flechas continuas
+y retiro del mensaje técnico que se mostraba siempre. Velocidad centralizada, sin
+librerías. Verificó lógica con eventos simulados y build; falta revisión en navegador.
+### 29 de octubre de 2026 — rendimiento y color del hover
+
+Mica reportó tirones y eligió verde para el fondo de las descripciones. El agente
+retiró lecturas de geometría intercaladas con escrituras por frame y aisló el movimiento
+de la chica mediante transform. Verificó la lógica con un entorno que falla si se mide
+el DOM; no midió rendimiento real. La mejora de fluidez queda pendiente de comprobación.
+### 29 de octubre de 2026 — texto de bienvenida autorizado
+
+Mica pidió expresamente que el agente escriba la bienvenida y las instrucciones a partir
+de su idea. Se redactó un texto breve que explica flechas/scroll, hover para leer y clic
+para visitar la web. No se agregaron datos personales. También pidió bajar la opacidad
+del fondo verde: se ajustó a 88%.
+### 29 de octubre de 2026 — bienvenida siempre visible
+
+Por corrección de Mica, el agente sacó la bienvenida del contenedor de la escena y la
+fijó a la ventana arriba a la izquierda. Aplicó serif Georgia y texto más grande.
+Check/build OK; falta confirmación visual de Mica.
+Ajuste 29/10: Mica eligió bienvenida más chica y sin fondo, sólo serif fija. El agente
+quitó el fondo y espaciado del recuadro y redujo los tamaños. Check/build OK.
+Cierre 29/10: Mica aprobó el último ajuste visual y autorizó commit y push. Las pruebas
+de lógica fueron simuladas y no reemplazan medición de fps ni revisión móvil.

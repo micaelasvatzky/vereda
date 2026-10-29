@@ -145,3 +145,59 @@ Para el detalle del método, ver la bitácora.
 | Fps en un celular de gama media | **Pendiente** — sigue siendo el criterio de cierre de la Fase 1 |
 
 
+
+### 29 de octubre de 2026 — descripciones
+
+- npm run check: OK, UTF-8 sin mojibake.
+- npm run build: OK, una página y quince imágenes.
+- git diff --check: OK.
+- Hover y foco de teclado: implementados en CSS; pendiente verificación en navegador.
+- Textos definitivos, lectura con descripciones largas e interacción móvil: pendientes.
+### 29 de octubre de 2026 — edificios de fondo
+
+- npm run check, npm run build y git diff --check: OK.
+- SVG: viewBox 47999 x 7984, fill-opacity 0.8; sin opacidad duplicada.
+- Capa fondo anterior en el DOM a lejana; factor 0.1 frente a 0.2 del Obelisco.
+- Cobertura: ancho de capa = viewport + recorrido * factor; repeat-x evita huecos.
+- Confirmación visual y rendimiento móvil: pendientes.
+### 29 de octubre de 2026 — recorrido completo
+
+- npm run check y npm run build: OK.
+- Métodos reales del motor ejecutados con entorno simulado: derecha recorre paradas
+  y llega al final; izquierda vuelve por paradas al inicio; repetir en límites no se pasa.
+- Posición horizontal: 24% al inicio, 57% a mitad, 90% al final: OK.
+- OBJETOS sin referencias a los placeholders de /capas/: OK.
+- Verificación visual y móvil: pendientes.
+### 29 de octubre de 2026 — textos definitivos
+
+- npm run check y npm run build: OK con las cinco descripciones de Mica.
+- Legibilidad y posible recorte en carteles pequeños: pendiente de revisión visual.
+### 29 de octubre de 2026 — controles y orientación
+
+- Check y build: OK.
+- Métodos reales con eventos simulados: toque y tecla sostenida mueven, repetición no
+  duplica ciclos, soltar/blur/pestaña oculta detienen, extremos no se sobrepasan: OK.
+- Dirección según desplazamiento y conservación al parar: OK.
+- Mensaje Sin JavaScript ausente en dist/index.html: OK.
+- Sensación de los controles y giro en navegador: pendiente de Mica.
+### 29 de octubre de 2026 — optimización de la caminata
+
+- Check/build: OK.
+- Métodos reales con getBoundingClientRect configurado para fallar: selección/aparición
+  sin mediciones del DOM en 12 combinaciones de escala y avance: OK.
+- Posición de la chica escrita localmente, sin invalidar variables en todo el escenario: OK.
+- Hover con token verde-cartelera: implementado.
+- Fps, fluidez y confirmación del arreglo en navegador: pendientes.
+### 29 de octubre de 2026 — bienvenida
+
+- Check y build: OK con bienvenida visible también en producción.
+- Se retiraron el panel de números y su actualización por frame.
+- Hover: opacidad del fondo verde 88%, texto sin transparencia.
+- Revisión visual: pendiente.
+### 29 de octubre de 2026 — bienvenida fija
+
+- Check y build: OK.
+- Bienvenida fuera del escenario/riel, position fixed, serif Georgia: implementado.
+- Visibilidad en navegador durante todo el recorrido: pendiente de Mica.
+Cierre 29/10: check/build de la última versión pasan. Bienvenida pequeña serif sin
+fondo aprobada por Mica. Siguen sin medición: fps, mejora real de tirones y mobile.

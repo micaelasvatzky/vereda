@@ -14,6 +14,17 @@ al repositorio. El fondo es el cielo, que cambia con la hora real de Buenos Aire
 avanza con las flechas del teclado o con scroll.
 
 ## Estado
+**Actualización 29/10/2026:** la consigna completa está en `examen-final-portfolio.txt`.
+Open-Meteo sirve para el requisito de API externa, pero todavía falta integrarla.
+Las cinco descripciones, años y tecnologías de Mica ya están en los Markdown y se ven
+con hover/foco sobre cada cartel (fondo verde al 88%). `Edificios.svg` es el fondo
+continuo detrás del Obelisco, al 80%; se retiraron los edificios/árboles placeholder.
+La chica avanza de x 0.24 a 0.9 y gira al volver. Las flechas son continuas al sostenerlas.
+Mica reportó tirones: se quitaron lecturas de geometría por frame y se usa transform;
+falta medir si la mejora alcanza. Bienvenida aprobada: pequeña, serif, sin fondo, fija
+arriba a la izquierda durante todo el recorrido. Pendientes: mobile/fps, capturas propias,
+API y completar README/créditos para entrega. El detalle histórico siguiente puede
+referirse a pendientes que esta actualización ya resuelve.
 
 **Fase 1 (motor del escenario) — abierta.** Mica vio la escena el 7/10: **parallax
 aprobado**; reportó flechas raras y afiches fuera de la vereda → bugs 9-11 arreglados el

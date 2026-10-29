@@ -67,8 +67,19 @@ el recorrido.
 
 ## Fuente dinámica
 
-Open-Meteo (clima y salida/puesta del sol de Buenos Aires). Se documenta completo en la
-Fase 4.
+Open-Meteo (clima y salida/puesta del sol de Buenos Aires), prevista para la Fase 4,
+todavía sin implementar. La consigna de `examen-final-portfolio.txt` confirma que sirve
+para el requisito de API externa o fuente dinámica: hay que consumir los datos y
+documentar la fuente, la información obtenida y el manejo de límites y errores.
+
+Las descripciones de los proyectos aparecen sobre la captura al pasar el mouse por su
+cartel o enfocar uno de sus links con el teclado. Los Markdown contienen las descripciones,
+el año y las tecnologías que escribió Mica. Falta revisar la interacción en celular y
+la legibilidad de esos textos en pantalla.
+
+Mica reportó tirones durante la caminata. Se quitaron las mediciones de geometría en
+cada avance y se pasó el movimiento de la chica a `transform`; falta medir la mejora
+en navegador y los fps en celular.
 
 ## Licencia y créditos
 

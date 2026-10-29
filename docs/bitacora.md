@@ -595,3 +595,144 @@ Para la próxima sesión, en orden:
 5. Medir fps en un celular de gama media (cierre de la Fase 1) y revisar el mobile.
 6. Al cerrar: preguntarle a Mica si se pushea (regla 10).
 
+
+### 29 de octubre de 2026 — descripciones al pasar por el cartel
+
+Mica definió que cada descripción se abra con hover en su propio cartel. Cartelera
+renderiza el cuerpo Markdown de su proyecto con render() de astro:content y lo muestra
+sobre la captura con :hover o :focus-within. Los links a Vercel y GitHub siguen siendo
+hermanos y reciben los clics. No se agregó un dialog ni dependencias. Los estilos
+ajustables están en tokens.css. Los textos siguen como TODO(Mica).
+
+Open-Meteo es una API y permite pedir clima, salida y puesta del sol. Su integración
+sigue pendiente; necesitamos la consigna para confirmar si cumple lo pedido por la
+cátedra. Documentación consultada: https://open-meteo.com/en/docs y las guías oficiales
+de componentes y Content Collections de Astro.
+
+Pendiente: revisión visual de Mica, textos definitivos e interacción en celular.
+### 29 de octubre de 2026 — consigna original recibida y revisada
+
+Mica agregó examen-final-portfolio.txt con la consigna completa. Esto resuelve la duda
+registrada en sesiones anteriores: Open-Meteo sirve como elección de API externa.
+El requisito pide consumir una API externa o trabajar con una fuente dinámica, documentar
+qué fuente se usa, qué información se obtiene y cómo se manejan límites y errores.
+No exige una API de proyectos ni una temática específica. El requisito todavía NO está
+cumplido: falta integrar Open-Meteo, usar sus datos y probar/documentar sus estados.
+
+Al implementarla: consultar clima y salida/puesta del sol de Buenos Aires para la escena;
+resolver carga, datos disponibles, error o ausencia de datos con un cielo de respaldo;
+documentar límites, caché y créditos. Cambiar el cielo sólo con la hora local no consume
+por sí mismo una API externa.
+
+La consigna también exige responsive usable y legible (no sólo reducir el escenario),
+al menos tres componentes relevantes con responsabilidad clara, navegación e interacción
+significativa, deploy accesible, repositorio con historial y README completo. En el cierre
+habrá que explicar los componentes, responsive, accesibilidad, limitaciones y créditos,
+y enlazar la evidencia de proceso y el registro de IA. Sigue pendiente la prueba móvil.
+Mica está buscando sus descripciones; no se inventaron textos ni se adelantó la Fase 4.
+### 29 de octubre de 2026 — fondo continuo de edificios
+
+Se integró public/img/Edificios.svg en una capa fondo, detrás del Obelisco, con factor
+parallax 0.1 (Obelisco: 0.2). Conserva la proporción 47999/7984 y se repite horizontalmente
+para cubrir el ancho completo que calcula el motor, incluso al final del recorrido.
+Se reemplazó el objeto placeholder edificio-trasero por esta franja. El placeholder de
+la capa media sigue pendiente de su ilustración definitiva.
+
+El SVG ya contiene fill-opacity=0.8. EDIFICIOS en config.js conserva esa opacidad efectiva
+sin multiplicarla otra vez: opacidad CSS = opacidad deseada / opacidad original.
+Altura de referencia 700 y base 0.86, ajustables ahí. Las capas ahora se identifican por
+nombre en Escenario, para que agregar fondo no desplace los índices de las anteriores.
+
+Verificación: npm run check, npm run build y git diff --check pasan. Falta confirmación
+visual de Mica de la altura y composición. No se alteró el dibujo original.
+### 29 de octubre de 2026 — sin decorado de prueba y caminata hasta el final
+
+A pedido de Mica se retiró edificio-delantero de OBJETOS, el último SVG placeholder
+con edificios y árboles. Se conservan sus ilustraciones, incluido el fondo Edificios.
+La chica avanza horizontalmente desde 24% a 90% de pantalla según el progreso del
+recorrido; ambos extremos están en CAMINANTE en config.js. La pose de mirar el cartel
+ahora sólo se activa estando quieta, para no tapar la caminata al pasar bajo el mouse.
+
+Las flechas buscan la próxima parada en la dirección pedida e incluyen inicio/final:
+la derecha ya no se detiene en el último cartel, ni la izquierda antes del inicio.
+Verificado con los métodos reales del motor: avance/retroceso por las paradas hasta
+ambos límites y posición de la chica en inicio, mitad y final. Check y build pasan.
+Pendiente: confirmación visual de Mica y prueba móvil.
+### 29 de octubre de 2026 — textos de los cinco proyectos
+
+Mica entregó las cinco descripciones, el año 2025 y las tecnologías. Se copiaron en
+los cuerpos Markdown, sin inventar contenido. Se actualizaron los títulos Studio 3
+Ecommerce y Rick & Morty. La línea de año/tecnologías va en negrita, separada del párrafo
+con un token CSS. No se agregó una chapa con el nombre sobre la captura.
+
+Check y build pasan. Ya no hay TODO(Mica) en src/content/proyectos. Falta confirmar
+legibilidad y espacio disponible con estos textos en navegador, sobre todo en móvil.
+### 29 de octubre de 2026 — giro de la chica y flechas continuas
+
+Mica pidió que al volver la chica mire hacia el otro lado, mejorar las flechas y sacar
+el texto técnico de Sin JavaScript. El motor toma la dirección del desplazamiento real
+(también con scroll) y Caminante refleja el dibujo con scaleX(-1) al ir a la izquierda.
+Al parar conserva su orientación.
+
+Las flechas izquierda/derecha ahora mueven de forma continua con requestAnimationFrame
+y tiempo transcurrido, sin depender de la repetición del teclado. La velocidad está en
+ESCENA.velocidadTeclado (650 px de referencia por segundo). Se frena al soltar, perder
+el foco de la ventana u ocultar la pestaña; respeta campos editables y modificadores.
+Home y End siguen llevando a los extremos. Se retiraron el párrafo Sin JavaScript y
+su CSS; la alternativa de carteles sin JavaScript sigue disponible.
+
+Check/build pasan. Prueba de los métodos reales con entorno simulado: toque, tecla
+sostenida/repetida, soltar, blur, pestaña oculta, límites y giro: OK. También se verificó
+que el HTML generado ya no contiene el texto retirado. Falta revisión visual de Mica.
+### 29 de octubre de 2026 — tirones reportados y hover verde
+
+Mica reportó que la caminata se traba mucho y pidió fondo verde en las descripciones.
+El fondo ahora usa el token verde-cartelera. Se detectó una fuente posible de tirones:
+el motor escribía posiciones y luego leía getBoundingClientRect en cada frame,
+forzando resolución de estilos/geometría. Se reemplazaron esas lecturas por posiciones
+calculadas desde configuración y desplazamiento, para selección y aparición de carteles.
+
+La chica ahora se mueve con translate3d, manteniendo el giro, en lugar de cambiar left.
+La variable horizontal se escribe sólo sobre la chica, no sobre todo el escenario.
+Los atributos de selección/dirección y los textos de debug sólo se reescriben si cambian.
+
+Check y build OK. Prueba con los métodos reales: 12 combinaciones de escala/avance
+seleccionan correctamente sin medir el DOM; el movimiento no escribe sobre el escenario.
+No se midieron fps ni se verificó fluidez en navegador: no se da por resuelto el tirón
+hasta comprobarlo. Falta confirmación visual y medición en el dispositivo de Mica.
+### 29 de octubre de 2026 — bienvenida y transparencia del hover
+
+Mica pidió bajar la opacidad del verde y reemplazar los números de depuración por una
+bienvenida con instrucciones, autorizando expresamente que el agente redacte ese texto.
+Se dejó el verde al 88% de opacidad (sólo el fondo, no las letras). La bienvenida dice:
+Portfolio de Mica. Recorré la vereda con las flechas izquierda/derecha o haciendo scroll.
+Pasá el mouse por cada cartel para leer sobre el proyecto y hacé clic para visitar su web.
+El texto real conserva los símbolos de flechas. Está centralizado en BIENVENIDA,
+config.js; estilos y opacidad en tokens.css. Se retiró también el código que actualizaba
+el debug en cada frame. La bienvenida se muestra en desarrollo y en el sitio publicado.
+
+Check y build: OK. Revisión visual de composición y transparencia: pendiente de Mica.
+### 29 de octubre de 2026 — bienvenida fija con serif
+
+Mica informó que no veía la bienvenida y pidió que quede fija arriba a la izquierda,
+siempre visible y con serif. Se movió fuera del escenario y del riel, se usó position:
+fixed con z-index 10 y Georgia (fuente del sistema, sin dependencia). Se aumentaron los
+tamaños a 1.6rem para título y 1rem para instrucciones, centralizados en tokens.css.
+No se atribuye la invisibilidad a una causa comprobada: falta verificarlo en su navegador.
+Check/build OK; confirmación visual pendiente.
+Ajuste posterior de Mica (29/10): bienvenida más chica, sin fondo, sólo texto serif.
+Se mantiene fija a la ventana durante todo el recorrido. Título 1.1rem, instrucciones
+0.8rem y ancho máximo 21rem, en tokens.css. Check/build OK; vista pendiente de Mica.
+### Cierre de sesión — 29 de octubre de 2026
+
+Mica dijo: perfecto por hoy, commit y push y cerramos. Esa instrucción autoriza el push
+de esta sesión sin otra confirmación. Se preparan para subir la escena actualizada, los
+textos de proyectos, la consigna aportada y el registro del proceso. La bienvenida
+pequeña, serif, fija y sin fondo quedó aprobada por Mica. No se cierran las fases 1/2:
+quedan pruebas visuales/mobile, fps y las capturas definitivas. La API queda para Fase 4.
+
+Para retomar: verificar fluidez con Mica (no hay medición de fps), resolver responsive
+y lectura de descripciones en móvil, integrar/documentar Open-Meteo y completar los
+pendientes de entrega de la consigna. No inventar textos personales; la redacción de
+bienvenida fue autorizada expresamente. El cierre y sus commits quedan reflejados en
+Engram después de verificar el push.
