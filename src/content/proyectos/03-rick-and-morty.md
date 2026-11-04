@@ -8,4 +8,4 @@ preview: ../../assets/proyectos/rick-and-morty.png
 
 **2025 · React · Next.js · Tailwind**
 
-Aplicación web basada en la serie Rick and Morty, que consume una API pública para mostrar personajes, episodios y sus características de forma dinámica.
+Personajes y episodios de Rick and Morty, desde una API pública.

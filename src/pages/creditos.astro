@@ -1,0 +1,32 @@
+---
+import Vereda from '../layouts/Vereda.astro';
+---
+
+<Vereda titulo="Créditos — Vereda">
+  <main class="creditos">
+    <a href="/">← Volver a la vereda</a>
+    <h1>Créditos</h1>
+    <h2>Datos del clima</h2>
+    <p>El cielo de Buenos Aires utiliza datos meteorológicos y horarios de salida y puesta
+      del sol de <a href="https://open-meteo.com/">Open-Meteo</a>, bajo licencia
+      <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+      Los datos se agrupan para representar el clima en la ilustración.</p>
+    <h2>Ilustraciones del cielo</h2>
+    <p>El sol, la luna y las nubes se generaron con apoyo de inteligencia artificial,
+      tomando como referencia la estética de la escena. Las nubes cambian de tono
+      según el clima.</p>
+  </main>
+</Vereda>
+
+<style>
+  :global(body) { background: var(--creditos-fondo); }
+  .creditos {
+    width: min(var(--creditos-ancho), calc(100% - 2 * var(--creditos-margen)));
+    margin: var(--creditos-margen) auto;
+    color: var(--verde-cartelera-oscuro);
+  }
+  h1, h2 { font-family: var(--fuente-bienvenida); margin: 1.5em 0 0.6em; }
+  h1 { font-size: var(--creditos-titulo); }
+  h2 { font-size: var(--creditos-subtitulo); }
+  a { color: inherit; text-underline-offset: 0.2em; }
+</style>

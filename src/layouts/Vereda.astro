@@ -5,6 +5,7 @@ import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-600.css';
 import '../styles/global.css';
 import { CAMINANTE } from '../config.js';
+import estilosLista from '../styles/lista.css?url';
 
 interface Props {
   titulo?: string;
@@ -21,6 +22,7 @@ const { titulo = 'Vereda — TODO(Mica): nombre final del sitio' } = Astro.props
     <meta name="description" content="TODO(Mica): descripción del sitio para buscadores." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{titulo}</title>
+    <noscript><link rel="stylesheet" href={estilosLista} /></noscript>
   </head>
   <body>
     <slot />
@@ -32,11 +34,10 @@ const { titulo = 'Vereda — TODO(Mica): nombre final del sitio' } = Astro.props
   define:vars={{
     'caminante-x': CAMINANTE.x,
     'caminante-y': CAMINANTE.y,
-    'ciclo-sprite': `${CAMINANTE.cicloPaso * 2}s`,
   }}
 >
   /*
-   * --caminante-x, --caminante-y y --ciclo-sprite salen de src/config.js.
+   * --caminante-x y --caminante-y salen de src/config.js.
    * Son el respaldo para la primera pintada, antes de que corra
    * escenario.js (ese recalcula con --escala y los publica sobre el
    * escenario, ganándole a este valor).

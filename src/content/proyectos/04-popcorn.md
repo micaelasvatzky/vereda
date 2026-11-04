@@ -8,4 +8,4 @@ preview: ../../assets/proyectos/popcorn.png
 
 **2025 · React · Next.js · Tailwind**
 
-Aplicación web de películas que obtiene información desde una API externa, ofreciendo un catálogo interactivo con detalles actualizados de cada film.
+Catálogo interactivo de películas con información de una API externa.

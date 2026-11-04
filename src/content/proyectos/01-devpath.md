@@ -8,4 +8,4 @@ preview: ../../assets/proyectos/devpath.png
 
 **2025 · React · Next.js · Node.js**
 
-Plataforma educativa orientada a la enseñanza de programación, con contenidos estructurados y una arquitectura pensada para crecer y escalar.
+Plataforma para aprender programación con contenidos estructurados.

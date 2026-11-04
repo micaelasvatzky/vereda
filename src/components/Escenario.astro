@@ -3,12 +3,14 @@ import { getCollection } from 'astro:content';
 import { BIENVENIDA, EDIFICIOS, RUTAS_CAPAS, STICKERS, OBJETOS } from '../config.js';
 import Caminante from './Caminante.astro';
 import Cartelera from './Cartelera.astro';
+import ClimaCiudad from './ClimaCiudad.astro';
+import ElementosCielo from './ElementosCielo.astro';
 
 /*
  * Escenario — el mundo por el que camina la chica.
  *
  * Estructura, de atrás hacia adelante:
- *   cielo        → color plano de la Escena de Mica (lo cambia cielo.js en la Fase 4)
+ *   cielo        → horario y clima de Buenos Aires, actualizados por cielo.js
  *   capa fondo   → edificios continuos, detrás del obelisco
  *   capa lejana  → el obelisco, se mueve poco (parallax lento)
  *   capa media   → el cartel de calles + la franja de vereda de atrás
@@ -38,9 +40,15 @@ const objetosDe = (capaId) => OBJETOS.filter((o) => o.capa === capaId);
 const franjaVereda = `url(${RUTAS_CAPAS.vereda})`;
 ---
 
+<header class="escenario__bienvenida" data-informacion>
+  <h1>{BIENVENIDA.titulo}</h1>
+  <p class="instrucciones-recorrido">{BIENVENIDA.instrucciones}</p>
+  <p class="instrucciones-lista">{BIENVENIDA.instruccionesLista}</p>
+</header>
+
 <div class="riel" data-riel>
   <div class="escenario" data-escenario data-posicion="inicio" style={`--fondo-vereda: ${franjaVereda}`}>
-    <div class="escenario__cielo" data-cielo></div>
+    <div class="escenario__cielo" data-cielo><ElementosCielo /></div>
 
     <div
       class="escenario__capa escenario__capa--fondo"
@@ -105,10 +113,8 @@ const franjaVereda = `url(${RUTAS_CAPAS.vereda})`;
   </div>
 </div>
 
-<header class="escenario__bienvenida">
-  <h1>{BIENVENIDA.titulo}</h1>
-  <p>{BIENVENIDA.instrucciones}</p>
-</header>
+
+<ClimaCiudad />
 
 <style>
   /*
@@ -124,14 +130,37 @@ const franjaVereda = `url(${RUTAS_CAPAS.vereda})`;
     position: sticky;
     top: 0;
     height: 100dvh;
-    overflow: hidden;
+    overflow: clip;
   }
 
   .escenario__cielo {
     position: absolute;
     inset: 0;
-    background: var(--cielo-dia);
-    transition: background var(--duracion-cielo) var(--curva-cielo);
+    /* Encierra sus elementos: el Obelisco y los edificios se dibujan por delante. */
+    isolation: isolate;
+    background-color: var(--cielo-inferior);
+    transition: background-color var(--duracion-cielo) var(--curva-cielo);
+  }
+
+  .escenario__cielo::before,
+  .escenario__cielo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .escenario__cielo::before {
+    background-color: var(--cielo-superior);
+    mask-image: linear-gradient(#000, transparent);
+    transition: background-color var(--duracion-cielo) var(--curva-cielo);
+  }
+
+  .escenario__cielo::after {
+    background: var(--cielo-veladura);
+    opacity: var(--nubes-opacidad);
+    transition: opacity var(--duracion-cielo) var(--curva-cielo);
+    z-index: 0;
   }
 
   /*
@@ -225,7 +254,7 @@ const franjaVereda = `url(${RUTAS_CAPAS.vereda})`;
     left: var(--bienvenida-margen);
     z-index: 10;
     width: min(var(--bienvenida-ancho), calc(100% - 2 * var(--bienvenida-margen)));
-    color: var(--verde-cartelera-oscuro);
+    color: var(--cielo-texto);
     font-family: var(--fuente-bienvenida);
     font-size: var(--bienvenida-texto);
     line-height: 1.5;
@@ -241,48 +270,8 @@ const franjaVereda = `url(${RUTAS_CAPAS.vereda})`;
     margin: 0;
   }
 
+  .instrucciones-lista { display: none; }
 
-  /*
-   * --- Sin JavaScript ---------------------------------------------------
-   * El motor pone `data-motor="riel"` en el `<html>` apenas arranca. Si no está,
-   * es que el script no corrió: en ese caso el escenario deja de ser fijo y las
-   * carteleras pasan a ser una fila que se puede desplazar a mano. Se leen
-   * todas, que es lo que importa: el sitio no queda en blanco.
-   */
-  html:not([data-motor='riel']) .riel {
-    height: auto;
-  }
 
-  html:not([data-motor='riel']) .escenario {
-    position: static;
-    height: auto;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 4rem 1.5rem 2rem;
-    background: var(--fondo);
-  }
 
-  html:not([data-motor='riel']) .escenario__cielo,
-  html:not([data-motor='riel']) .escenario__capa:not([data-mundo]),
-  /* La chica se renderiza en Caminante.astro: Astro no deja que un selector
-     scoped mire adentro de otro componente, así que esa parte va con :global(). */
-  html:not([data-motor='riel']) :global(.caminante),
-  html:not([data-motor='riel']) .escenario__sticker {
-    display: none;
-  }
-
-  html:not([data-motor='riel']) .escenario__mundo {
-    position: static;
-    height: auto;
-    width: auto;
-    background-image: none;
-    display: flex;
-    align-items: flex-end;
-    gap: 2rem;
-  }
-
-  /* Pistas de posición. Se muestran según data-posicion, más adelante en la Fase 3. */
-  [data-posicion] .pista {
-    display: none;
-  }
 </style>

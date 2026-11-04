@@ -1,51 +1,90 @@
 ---
-import { CAMINANTE, RUTAS_CHICA } from '../config.js';
+import { ARTICULACIONES as rig, CAMINANTE } from '../config.js';
 
-/*
- * La chica que camina por la vereda.
- *
- * El mundo pasa frente a ella y el motor la hace avanzar desde CAMINANTE.x
- * hasta CAMINANTE.xFinal según el progreso del recorrido.
- *
- * Sus cuatro ilustraciones (de Mica) comparten lienzo —las cuatro tienen
- * viewBox 0 0 209.25 511.5— y están apiladas una arriba de otra:
- *
- *   - camina-1, camina-2 y camina-3 forman el ciclo de caminata. El ciclo
- *     sólo avanza mientras el motor la marca como `data-caminando="true"`
- *     (ver `escenario.js`); si está quieta, el ciclo queda congelado.
-   *   - mira-al-cartel se asoma cuando alguien hace hover sobre el
-   *     cartel de una cartelera. Esa regla vive al final del bloque de
-   *     estilos.
- *
- * En reposo queda en la pose camina-1. Si alguna de las tres no sirve como
- * pose de parada, Mica manda una de reposo y se agrega al array.
- */
+// Rodillas y codos son hijos de su pierna/brazo: heredan el giro del padre.
+const piernas = [
+  { lado: 'Lejana', recorte: 'piernaLejana', mitad: rig.pivotes.rodillaLejana[1] },
+  { lado: 'Cercana', recorte: 'piernaCercana', mitad: rig.pivotes.rodillaCercana[1] },
+];
+const brazos = [
+  { lado: 'Lejano', recorte: 'brazoLejano', mitad: rig.pivotes.codoLejano[1] },
+  { lado: 'Cercano', recorte: 'brazoCercano', mitad: rig.pivotes.codoCercano[1] },
+];
 ---
 
-<div
-  class="caminante"
-  data-caminante
-  data-caminando="false"
-  data-direccion="derecha"
-  style={`--alto-caminante: ${CAMINANTE.alto}px;`}
-  aria-hidden="true"
->
-  {
-    RUTAS_CHICA.camina.map((src, i) => (
-      <img
-        class={`caminante__pose caminante__pose--camina-${i + 1}`}
-        src={src}
-        alt=""
-        decoding="async"
-      />
-    ))
-  }
-  <img
-    class="caminante__pose caminante__pose--mira"
-    src={RUTAS_CHICA.mira}
-    alt=""
-    decoding="async"
-  />
+<div class="caminante" data-caminante data-caminando="false"
+  data-direccion="derecha" data-mirando="false"
+  style={`--alto-caminante:${CAMINANTE.alto}px;`} aria-hidden="true">
+  <svg class="caminante__figura" viewBox={`0 0 ${rig.ancho} ${rig.alto}`} focusable="false">
+    <defs>
+      <image id="chica-dibujo" href={rig.base} width={rig.ancho} height={rig.alto} />
+      <image id="chica-imagen-mirada" href={rig.cabezaMirando} width={rig.ancho} height={rig.alto} />
+      {Object.entries(rig.recortes).map(([nombre, d]) => (
+        <clipPath id={`chica-${nombre}`}><path d={d} /></clipPath>
+      ))}
+      {[...piernas, ...brazos].map(({ recorte, mitad }) => (
+        <>
+          <clipPath id={`chica-${recorte}-arriba`}>
+            <rect x="0" y="0" width={rig.ancho} height={mitad + rig.solape} />
+          </clipPath>
+          <clipPath id={`chica-${recorte}-abajo`}>
+            <rect x="0" y={mitad - rig.solape} width={rig.ancho} height={rig.alto} />
+          </clipPath>
+        </>
+      ))}
+      {piernas.map(({ lado, recorte, mitad }) => (
+        <clipPath id={`chica-${recorte}-union`}>
+          <circle cx={rig.pivotes[`rodilla${lado}`][0]} cy={mitad} r={rig.radioRodilla} />
+        </clipPath>
+      ))}
+    </defs>
+    <g data-cuerpo>
+      {piernas.map(({ lado, recorte, mitad }) => (
+        <g data-articulacion={`cadera${lado}`}>
+          {lado === 'Cercana' && <path d={rig.caderaOculta} fill={rig.colorJean} />}
+          <g clip-path={`url(#chica-${recorte}-arriba)`}>
+            <use href="#chica-dibujo" clip-path={`url(#chica-${recorte})`} />
+          </g>
+          <use href="#chica-dibujo" clip-path={`url(#chica-${recorte}-union)`} />
+          <g data-articulacion={`rodilla${lado}`}>
+            <g clip-path={`url(#chica-${recorte}-abajo)`}>
+              <use href="#chica-dibujo" clip-path={`url(#chica-${recorte})`} />
+            </g>
+          </g>
+        </g>
+      ))}
+      <g data-articulacion="hombroLejano">
+        <g clip-path="url(#chica-brazoLejano-arriba)">
+          <use href="#chica-dibujo" clip-path="url(#chica-brazoLejano)" />
+        </g>
+        <g data-articulacion="codoLejano">
+          <g clip-path="url(#chica-brazoLejano-abajo)">
+            <use href="#chica-dibujo" clip-path="url(#chica-brazoLejano)" />
+          </g>
+        </g>
+      </g>
+      <!-- Completa el abrigo que estaba oculto por el brazo original. -->
+      <path d={rig.abrigoOculto}
+        fill={rig.colorAbrigo} stroke={rig.bordeAbrigo} stroke-width="1.5" />
+      <use href="#chica-dibujo" clip-path="url(#chica-torso)" />
+      <g data-articulacion="hombroCercano">
+        <g clip-path="url(#chica-brazoCercano-arriba)">
+          <use href="#chica-dibujo" clip-path="url(#chica-brazoCercano)" />
+        </g>
+        <g data-articulacion="codoCercano">
+          <g clip-path="url(#chica-brazoCercano-abajo)">
+            <use href="#chica-dibujo" clip-path="url(#chica-brazoCercano)" />
+          </g>
+        </g>
+      </g>
+      <g class="caminante__cabeza caminante__cabeza--frente">
+        <use href="#chica-dibujo" clip-path="url(#chica-cabeza)" />
+      </g>
+      <g class="caminante__cabeza caminante__cabeza--cartel" transform={rig.ajusteMirada}>
+        <use href="#chica-imagen-mirada" clip-path="url(#chica-mirada)" />
+      </g>
+    </g>
+  </svg>
 </div>
 
 <style>
@@ -53,11 +92,7 @@ import { CAMINANTE, RUTAS_CHICA } from '../config.js';
     position: absolute;
     left: 0;
     bottom: calc((1 - var(--caminante-y, 0.9)) * 100%);
-    height: calc(var(--alto-caminante, 340px) * var(--escala, 1));
-    /*
-     * Las cuatro ilustraciones comparten lienzo: la proporción sale del
-     * viewBox y no hace falta calcular un ancho a mano.
-     */
+    height: calc(var(--alto-caminante, 380px) * var(--escala, 1));
     aspect-ratio: 209.25 / 511.5;
     transform: translate3d(calc(var(--caminante-x, 0.24) * 100vw - 50%), 0, 0)
       scaleX(var(--orientacion, 1));
@@ -65,164 +100,10 @@ import { CAMINANTE, RUTAS_CHICA } from '../config.js';
     pointer-events: none;
     z-index: 2;
   }
-
-  /* Las cuatro ocupan exactamente el mismo lugar, apiladas en el DOM:
-     la que se ve es la última con opacidad > 0. */
-  .caminante__pose {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  .caminante[data-direccion='izquierda'] {
-    --orientacion: -1;
-  }
-
-  /*
-   * --- Ciclo de caminata -----------------------------------------------
-   *
-   * La vuelta es 1 → 2 → 3 → 2 → 1 (ida y vuelta), NO 1 → 2 → 3 → 1:
-   * de la pose 3 a la 1 directo no hay intermedia y se vería como un salto.
-   *
-   * Cada cruce dura 6% del ciclo (~75 ms con el ritmo por defecto) y va en
-   * dos tiempos, para que el fondo nunca se transparente a través del
-   * cuerpo: la pose que entra sube de 0 a 1 mientras la que sale sigue
-   * opaca (arriba o abajo, da igual: entre las dos siempre hay una con
-   * opacidad 1 tapando el fondo), y recién cuando la nueva llegó a 1 se
-   * baja la otra — que además queda escondida debajo, así que esa bajada
-   * no se ve. Lo que SÍ se ve son los cuatro fundidos por ciclo, de ~75 ms
-   * cada uno: 1→2, 2→3, 3→2 y 2→1.
-   *
-   * Los porcentajes están corridos para que el t=0 caiga en la pose 1 pura:
-   * así la animación pausada (chica quieta) se congela justamente en la
-   * pose de reposo, y lo que sigue es el primer fundido.
-   *
-   * El ciclo asume exactamente tres poses de caminata (las de
-   * RUTAS_CHICA.camina, en orden).
-   */
-  .caminante__pose--camina-1 {
-    opacity: 1;
-    animation: pose-camina-1 var(--ciclo-sprite, 1.24s) linear infinite;
-  }
-  .caminante__pose--camina-2 {
-    opacity: 0;
-    animation: pose-camina-2 var(--ciclo-sprite, 1.24s) linear infinite;
-  }
-  .caminante__pose--camina-3 {
-    opacity: 0;
-    animation: pose-camina-3 var(--ciclo-sprite, 1.24s) linear infinite;
-  }
-
-  /*
-   * La animación no se apaga: se pausa. Si la chica se queda quieta a mitad
-   * de un cruce, congela ese frame en vez de volver de golpe a la pose 1.
-   * La pausa arranca en t=0, que por los keyframes de arriba es la pose 1.
-   */
-  .caminante .caminante__pose--camina-1,
-  .caminante .caminante__pose--camina-2,
-  .caminante .caminante__pose--camina-3 {
-    animation-play-state: paused;
-  }
-
-  .caminante[data-caminando='true'] .caminante__pose--camina-1,
-  .caminante[data-caminando='true'] .caminante__pose--camina-2,
-  .caminante[data-caminando='true'] .caminante__pose--camina-3 {
-    animation-play-state: running;
-  }
-
-  /* Pose 1: quieta hasta el 13%, ahí entra la 2 por encima; se va entre el
-     13% y el 19% (tapada por la 2, que ya está a 1) y vuelve a entrar entre
-     el 82% y el 88%, también tapada, para el fundido final 2 → 1. */
-  @keyframes pose-camina-1 {
-    0%, 13% {
-      opacity: 1;
-    }
-    19%, 82% {
-      opacity: 0;
-    }
-    88%, 100% {
-      opacity: 1;
-    }
-  }
-
-  /* Pose 2: entra en el fundido 1 → 2 [7,13], se va tapada entre 38 y 44,
-     reaparece tapada entre 57 y 63, manda en el fundido 3 → 2 [63,69] y se
-     va sobre la 1 en el fundido 2 → 1 [88,94]. */
-  @keyframes pose-camina-2 {
-    0%, 7% {
-      opacity: 0;
-    }
-    13%, 38% {
-      opacity: 1;
-    }
-    44%, 57% {
-      opacity: 0;
-    }
-    63%, 88% {
-      opacity: 1;
-    }
-    94%, 100% {
-      opacity: 0;
-    }
-  }
-
-  /* Pose 3: entra sobre la 2 en [32,38], manda hasta el 63 y se va sobre
-     la 2 en el fundido 3 → 2 [63,69]. */
-  @keyframes pose-camina-3 {
-    0%, 32% {
-      opacity: 0;
-    }
-    38%, 63% {
-      opacity: 1;
-    }
-    69%, 100% {
-      opacity: 0;
-    }
-  }
-
-  /*
-   * --- Pose "mira al cartel" -------------------------------------------
-   *
-   * Vive arriba de las otras (última en el DOM) y arranca invisible. El
-   * trigger está abajo, en la regla con :has().
-   */
-  .caminante__pose--mira {
-    opacity: 0;
-    transition: opacity var(--duracion-mira, 0.2s) ease-out;
-  }
-
-  /*
-   * El hover sobre el cartel de CUALQUIER cartelera cambia la pose.
-   *
-   * Esta regla queda en este archivo (y no en Cartelera.astro) porque lo que
-   * importa acá es el estado de la chica. El `:global()` del principio es
-   * necesario y a propósito: `html` y el cartel pertenecen a otros
-   * componentes, y Astro no deja que un selector scoped cruce componentes
-   * (docs.astro.build/en/guides/styling). La pose, en cambio, es de este
-   * componente, así que esa parte sigue scoped.
-   *
-   * :has() lo soportan todos los navegadores actuales: Chrome 105+,
-   * Safari 15.4+ y Firefox 121+. No hace falta ni una línea de JavaScript.
-   */
-  :global(html:has(.cartelera__cartel:hover)) .caminante:not([data-caminando='true']) .caminante__pose--mira {
-    opacity: 1;
-  }
-
-  /*
-   * Menos movimiento: el ciclo no corre (queda la pose 1) y el cambio a
-   * "mira al cartel" pasa sin fundido. El hover en sí sigue funcionando:
-   * es un cambio de estado, no un movimiento.
-   */
-  @media (prefers-reduced-motion: reduce) {
-    .caminante__pose--camina-1,
-    .caminante__pose--camina-2,
-    .caminante__pose--camina-3 {
-      animation: none;
-    }
-    .caminante__pose--mira {
-      transition: none;
-    }
-  }
+  .caminante[data-direccion='izquierda'] { --orientacion: -1; }
+  .caminante__figura { display: block; width: 100%; height: 100%; overflow: visible; }
+  /* Sólo cambia la cabeza; el cuerpo sigue caminando. Sin fundir siluetas. */
+  .caminante__cabeza--cartel { visibility: hidden; }
+  .caminante[data-mirando='true'] .caminante__cabeza--frente { visibility: hidden; }
+  .caminante[data-mirando='true'] .caminante__cabeza--cartel { visibility: visible; }
 </style>

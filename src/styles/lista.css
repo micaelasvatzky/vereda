@@ -1,0 +1,75 @@
+/* Alternativa legible para pantallas bajas y para navegar sin JavaScript. */
+/* El selector compensa la especificidad de los estilos locales de Astro. */
+:root { --vista-lista: 1; }
+html:root body { background: var(--creditos-fondo); }
+html:root body .riel { height: auto !important; }
+html:root body .escenario {
+  position: static;
+  height: auto;
+  overflow: visible;
+  padding: var(--lista-espacio);
+}
+html:root body .escenario__cielo,
+html:root body .escenario__capa:not([data-mundo]),
+html:root body .caminante,
+html:root body .escenario__sticker { display: none; }
+html:root body .escenario__mundo {
+  position: static;
+  height: auto;
+  width: auto !important;
+  transform: none !important;
+  background: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--lista-tarjeta-ancho)), 1fr));
+  align-items: start;
+  gap: var(--lista-espacio);
+}
+html:root body .escenario__bienvenida {
+  position: static;
+  width: auto;
+  margin: var(--lista-espacio) var(--lista-espacio) 0;
+  color: var(--verde-cartelera-oscuro);
+}
+html:root body .escenario__bienvenida .instrucciones-recorrido { display: none; }
+html:root body .escenario__bienvenida .instrucciones-lista { display: block; }
+html:root body .clima-ciudad {
+  position: static;
+  max-width: none;
+  margin: 0 var(--lista-espacio) var(--lista-espacio);
+  text-align: left;
+  color: var(--verde-cartelera-oscuro);
+}
+html:root body .cartelera {
+  position: static;
+  width: 100%;
+  opacity: 1;
+  transform: none !important;
+  pointer-events: auto;
+  transition: none;
+}
+html:root body .cartelera__titulo {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0 0 var(--lista-titulo-espacio);
+  padding: 0;
+  clip: auto;
+  clip-path: none;
+  overflow: visible;
+  white-space: normal;
+  font-family: var(--fuente-bienvenida);
+  font-size: var(--lista-titulo-tamano);
+  color: var(--verde-cartelera-oscuro);
+}
+html:root body .cartelera__cartel { aspect-ratio: auto; transform: none !important; }
+html:root body .cartelera__arte { display: none; }
+html:root body .cartelera__preview { position: relative; inset: auto; width: auto; height: auto; }
+html:root body .cartelera__preview-img { height: auto; aspect-ratio: 1.363; }
+html:root body .cartelera__descripcion {
+  position: static;
+  visibility: visible;
+  padding: var(--lista-texto-espacio);
+  padding-bottom: var(--lista-reserva-boton);
+  font-size: var(--lista-texto-tamano);
+  background: var(--verde-cartelera-oscuro);
+}

@@ -13,7 +13,8 @@
  */
 export const BIENVENIDA = {
   titulo: 'Portfolio de Mica',
-  instrucciones: 'Recorré la vereda con las flechas ← → o haciendo scroll. Pasá el mouse por cada cartel para leer sobre el proyecto y hacé clic para visitar su web.',
+  instrucciones: 'Recorré la vereda con las flechas ← → o haciendo scroll. Acercate a cada cartel para leer sobre el proyecto y hacé clic para visitar su web.',
+  instruccionesLista: 'Explorá los proyectos y abrí sus webs o repositorios.',
 };
 
 export const ESCENA = {
@@ -34,6 +35,8 @@ export const ESCENA = {
    * 8.662 px de dibujo = 359 de referencia.
    */
   carteleraAncho: 359,
+  /** Mínimo en pantalla para que el texto no se achique en celulares bajos. */
+  carteleraAnchoMin: 250,
   /** Cuánto scroll vertical hace falta por px de mundo. >1 = más lento. */
   ritmo: 1,
   /** Velocidad con flechas sostenidas, en px de mundo de referencia por segundo. */
@@ -57,11 +60,12 @@ export const ESCENA = {
    * de los carteles), así nunca "pisa encima" de un cartel.
    */
   sueloCarteleras: 0.86,
-  /** Fracción del ancho de pantalla alrededor del centro que cuenta como "cerca" de una cartelera. */
-  umbralActiva: 0.25,
+  /** Parte del ancho de la chica que cuenta al entrar en contacto con un cartel. */
+  contactoCartel: 0.4,
   /** Escala mínima y máxima para que en un teléfono no se lea gigante ni en una pantalla enorme se vea chiquito. */
   escalaMin: 0.5,
   escalaMax: 1.2,
+  demoraResize: 150,
 };
 
 /**
@@ -92,20 +96,69 @@ export const CAMINANTE = {
    * Se probó 380 y volvió a 300 ("el tamaño está bien"). El 21/10 Mica pidió
    * "un poco más grande" otra vez: 300 → 340, un paso medido (+13%) y no
    * el salto de 380 que ya había descartado.
+   * El 4/11 pidió otro aumento leve: 340 → 360 (+6%).
+   * Después de aprobar el rig, pidió llegar con la cabeza a mitad del cartel: 380.
    *
    * OJO: los pies quedan anclados a la línea de suelo (`y`), así que
    * agrandarla la hace crecer hacia arriba y NO la levanta del piso.
    */
-  alto: 340,
-  /**
-   * Segundos que tarda un paso. El sprite de caminata da la vuelta completa
-   * (pose 1 → 2 → 3 → 2 → 1) en dos pasos: escenario.js publica
-   * `--ciclo-sprite` multiplicando esto por 2. Si la caminata se ve muy
-   * rápida o muy lenta, se toca sólo este número.
-   */
-  cicloPaso: 0.62,
-  /** Largo máximo de la caminata en px de referencia (1 = 100% de la velocidad del scroll). */
-  desfase: 0,
+  alto: 380,
+  /** Distancia por paso en px de referencia. */
+  largoPaso: 155,
+  /** Amplitudes en grados. Rodillas y codos acompañan a cadera y hombros. */
+  giroCadera: 19,
+  giroRodilla: 32,
+  giroHombro: 16,
+  giroCodo: 12,
+  /** Espera sin movimiento antes de frenar, en ms. */
+  demoraFreno: 110,
+  /** Tiempo para apoyar ambos pies al soltar las flechas o terminar el scroll. */
+  duracionReposo: 180,
+};
+
+/**
+ * Recortes y pivotes ajustados visualmente sobre camina-3.svg (209.25 × 511.5).
+ * Se reutiliza ese único dibujo: los grupos hijos heredan el giro del padre.
+ * Los pequeños solapes en rodillas/codos mantienen cerradas las uniones.
+ */
+export const ARTICULACIONES = {
+  ancho: 209.25,
+  alto: 511.5,
+  suelo: 457,
+  base: '/caminante/camina-3.svg',
+  cabezaMirando: '/caminante/mira-al-cartel.svg',
+  recortes: {
+    cabeza: 'M0 0H209.25V141H125L122 151L111 150L107 143L96 150L87 159L79 169L66 180H0Z',
+    mirada: 'M0 0H209.25V174H125L119 186L113 199L101 209L82 220H0Z',
+    torso: 'M0 182H80L91 157L99 158L88 179L87 221L101 266L101 271H0Z',
+    brazoLejano: 'M126 175L147 214L162 238L181 250V284H159L142 273L139 254L130 219Z',
+    brazoCercano: 'M96 146L113 146L125 169L131 214L140 249L137 296H111L98 273L90 250L84 219L84 179Z',
+    piernaLejana: 'M70 270L96 270L104 328L80 390L64 439L90 463H0V416L48 309Z',
+    piernaCercana: 'M80 268H100L111 287L115 299H133L145 332L189 414L209.25 413V468H140L97 329L82 288Z',
+  },
+  pivotes: {
+    caderaLejana: [83, 273],
+    caderaCercana: [87, 273],
+    rodillaLejana: [64, 357],
+    rodillaCercana: [131, 357],
+    hombroLejano: [115, 168],
+    hombroCercano: [102, 163],
+    codoLejano: [143, 235],
+    codoCercano: [113, 232],
+  },
+  /** Ángulo que endereza las piernas del dibujo original antes de animarlas. */
+  enderezarLejana: -23,
+  enderezarCercana: 24,
+  apoyoLejano: [37, 452],
+  apoyoCercano: [168, 452],
+  ajusteMirada: 'translate(10 -28)',
+  solape: 8,
+  radioRodilla: 18,
+  colorJean: '#8da2b3',
+  colorAbrigo: '#713f40',
+  bordeAbrigo: '#403331',
+  abrigoOculto: 'M83 156Q101 147 119 168L127 254Q113 271 72 269L62 214Z',
+  caderaOculta: 'M79 269L103 267L125 297L111 318L87 296Z',
 };
 
 /** Ciudad y datos del clima (Open-Meteo). Cambiar acá para mover la vereda a otro lugar. */
@@ -121,6 +174,16 @@ export const CIUDAD = {
   vigenciaCache: 30 * 60 * 1000,
   /** Clave de cache en localStorage. */
   claveCache: 'vereda:clima',
+  endpoint: 'https://api.open-meteo.com/v1/forecast',
+  /** Si la API falla, no mostrar como reciente un dato de hace varios días. */
+  maxEdadRespaldo: 6 * 60 * 60 * 1000,
+  /** Revisión del reloj local; la API se consulta como máximo cada 30 minutos. */
+  revisionReloj: 60 * 1000,
+  /** Minutos a cada lado de la salida/puesta del sol para los colores cálidos. */
+  margenCrepusculo: 45,
+  /** Horarios aproximados usados sólo si faltan los datos solares del día. */
+  amanecerRespaldo: 7,
+  atardecerRespaldo: 19,
 };
 
 /**
@@ -168,6 +231,7 @@ export const RUTAS_CARTEL = {
  * el hueco (es opaco) y por eso la preview no va ahí.
  */
 export const CARTEL = {
+  proporcion: 8606 / 13382,
   hueco: { left: 6.86, top: 19.28, width: 86.05, height: 40.58 },
   afiche: { left: 40.33, top: 1.57, width: 20.0, height: 17.39 },
 };
@@ -206,16 +270,3 @@ export const OBJETOS = [
     base: 0.81,
   },
 ];
-
-/**
- * Ilustraciones de la chica. Las tres de `camina` forman el ciclo de
- * caminata y tienen que ir en orden: el CSS las apila por índice
- * (camina-1, camina-2, camina-3). `mira` es la pose que se muestra cuando
- * alguien hace hover sobre el cartel de una cartelera.
- * Para cambiar las ilustraciones se reemplazan los archivos en
- * `public/caminante/` manteniendo los nombres, o se cambia solo acá.
- */
-export const RUTAS_CHICA = {
-  camina: ['/caminante/camina-1.svg', '/caminante/camina-2.svg', '/caminante/camina-3.svg'],
-  mira: '/caminante/mira-al-cartel.svg',
-};

@@ -8,4 +8,4 @@ preview: ../../assets/proyectos/ecommerce.png
 
 **2025 · React · Next.js · Tailwind**
 
-E-commerce para un estudio de diseño, enfocado en la venta de mockups y plantillas digitales. Consume datos de una API propia.
+Tienda de mockups y plantillas para un estudio de diseño, con API propia.

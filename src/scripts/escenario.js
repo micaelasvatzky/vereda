@@ -1,4 +1,5 @@
-import { ESCENA, CAMINANTE } from '../config.js';
+import { ESCENA, CAMINANTE, CARTEL } from '../config.js';
+import { Caminante } from './caminante.js';
 
 /**
  * Motor del escenario.
@@ -39,6 +40,9 @@ class Escenario {
     this.desplazamiento = 0;
     this.ultimoY = window.scrollY;
     this.caminando = false;
+    this.progreso = 0;
+    this.redimensionando = false;
+    this.animacionChica = new Caminante(this.caminante);
     this.freno = 0; // id del timer que frena la caminata (ver marcarCaminando)
     this.pendientes = new Set(this.carteleras); // carteleras aún escondidas (ver revelar)
 
@@ -46,6 +50,7 @@ class Escenario {
     this.publicar();
     this.prescribirAlScroll();
     this.prescribirTeclado();
+    this.prescribirFoco();
     this.prescribirResize();
 
     // Estado de arranque: posición, cartelera activa y carteleras visibles.
@@ -63,6 +68,12 @@ class Escenario {
     const ancho = window.innerWidth;
 
     this.escala = calcularEscala();
+    // Sólo se lee al medir/rotar la pantalla, nunca durante la caminata.
+    const estilo = getComputedStyle(document.documentElement);
+    this.modoLista = estilo.getPropertyValue('--vista-lista').trim() === '1';
+    document.documentElement.dataset.vista = this.modoLista ? 'lista' : 'recorrido';
+    this.ampliacionCartel = parseFloat(estilo.getPropertyValue('--cartel-activo-escala')) || 1;
+    this.margenCartel = parseFloat(estilo.getPropertyValue('--cartel-activo-margen')) || 0;
 
     const anchoMundo =
       (ESCENA.margen * 2 + ESCENA.separacion * (this.carteleras.length - 1)) * this.escala;
@@ -73,7 +84,27 @@ class Escenario {
     // El riel mide lo que se ve + lo que hay que scrollear para recorrer todo.
     // De ahí sale `recorridoScroll`, que es el rango útil de scrollY.
     this.recorridoScroll = this.recorrido * ESCENA.ritmo;
-    this.riel.style.height = `${alto + this.recorridoScroll}px`;
+    if (this.modoLista) this.riel.style.removeProperty('height');
+    else this.riel.style.height = `${alto + this.recorridoScroll}px`;
+    // El riel puede hacer aparecer la barra de scroll y reducir el ancho útil.
+    this.anchoVisible = document.documentElement.clientWidth;
+    this.anchoCartel = Math.min(
+      Math.max(ESCENA.carteleraAncho * this.escala, ESCENA.carteleraAnchoMin),
+      (this.anchoVisible - 2 * this.margenCartel) / this.ampliacionCartel,
+    );
+    this.ajusteVerticalCartel = 0;
+    if (!this.modoLista) {
+      const pieInformacion = Math.max(
+        document.querySelector('[data-informacion]')?.getBoundingClientRect().bottom ?? 0,
+        document.querySelector('[data-clima]')?.getBoundingClientRect().bottom ?? 0,
+      );
+      const altoCartel = this.anchoCartel / CARTEL.proporcion;
+      const elevacion = parseFloat(estilo.getPropertyValue('--cartel-activo-elevacion')) || 0;
+      const panelArriba = alto * ESCENA.sueloCarteleras - altoCartel -
+        altoCartel * (this.ampliacionCartel - 1) / 2 + elevacion * this.ampliacionCartel +
+        altoCartel * this.ampliacionCartel * CARTEL.hueco.top / 100;
+      this.ajusteVerticalCartel = Math.max(0, pieInformacion + this.margenCartel - panelArriba);
+    }
   }
 
   /** Publica los valores como variables CSS, para que CSS y JS no se contradigan. */
@@ -82,12 +113,11 @@ class Escenario {
     estilo.setProperty('--escala', String(this.escala));
     estilo.setProperty('--cartelera-separacion', String(ESCENA.separacion));
     estilo.setProperty('--cartelera-margen', String(ESCENA.margen));
-    estilo.setProperty('--cartelera-ancho', String(ESCENA.carteleraAncho));
+    estilo.setProperty('--cartelera-ancho', String(this.anchoCartel / this.escala));
+    estilo.setProperty('--cartel-activo-y', `${this.ajusteVerticalCartel.toFixed(2)}px`);
     estilo.setProperty('--caminante-x', String(CAMINANTE.x));
     estilo.setProperty('--caminante-y', String(CAMINANTE.y));
     estilo.setProperty('--suelo-carteleras', String(ESCENA.sueloCarteleras));
-    // La vuelta completa del sprite (1 → 2 → 3 → 2 → 1) son dos pasos.
-    estilo.setProperty('--ciclo-sprite', `${CAMINANTE.cicloPaso * 2}s`);
 
     // Cada capa tiene que ser más ancha que la pantalla para que al desplazarla
     // no aparezca fondo vacío: el ancho extra es justamente lo que viaja.
@@ -130,8 +160,10 @@ class Escenario {
 
 /** Convierte el scroll vertical en desplazamiento horizontal. */
   desplazar() {
+    if (this.modoLista || this.redimensionando) return;
     const y = window.scrollY;
     const p = acotar(y / Math.max(1, this.recorridoScroll), 0, 1);
+    this.progreso = p;
     this.desplazamiento = p * this.recorrido;
     const xCaminante = CAMINANTE.x + (CAMINANTE.xFinal - CAMINANTE.x) * p;
     this.caminante?.style.setProperty('--caminante-x', String(xCaminante));
@@ -148,17 +180,19 @@ class Escenario {
 
   }
 
-  /** Marca la cartelera más cercana al centro de la pantalla. */
+  /** Activa el cartel que toca la chica, también cuando ella llega a la derecha. */
   marcarActiva() {
-    const centro = window.innerWidth / 2;
-    const umbral = ESCENA.umbralActiva * window.innerWidth;
+    const progreso = this.desplazamiento / Math.max(1, this.recorrido);
+    const centro = (CAMINANTE.x + (CAMINANTE.xFinal - CAMINANTE.x) * progreso) * window.innerWidth;
+    const anchoChica = CAMINANTE.alto * (209.25 / 511.5) * this.escala;
+    const umbral = this.anchoCartel / 2 + anchoChica * ESCENA.contactoCartel;
 
     let mejor = null;
     let mejorDistancia = Infinity;
 
     for (const [indice, cartelera] of this.carteleras.entries()) {
       // Las posiciones ya se conocen: medir el DOM después de moverlo fuerza layout.
-      const x = this.xDeCartelera(indice) + ESCENA.carteleraAncho * this.escala / 2;
+      const x = this.xDeCartelera(indice) + this.anchoCartel / 2;
       const distancia = Math.abs(x - centro);
       if (distancia < mejorDistancia) {
         mejorDistancia = distancia;
@@ -168,12 +202,29 @@ class Escenario {
 
     const activa = mejor && mejorDistancia <= umbral ? mejor : null;
 
+    if (activa) {
+      // Mantiene el cartel ampliado dentro de la pantalla, también en celular.
+      const ancho = this.anchoCartel;
+      const anchoAmpliado = ancho * this.ampliacionCartel;
+      const izquierda = this.xDeCartelera(Number(activa.dataset.indice)) + (ancho - anchoAmpliado) / 2;
+      const ajuste = acotar(0, this.margenCartel - izquierda,
+        this.anchoVisible - this.margenCartel - izquierda - anchoAmpliado);
+      const valor = `${ajuste.toFixed(2)}px`;
+      if (activa.style.getPropertyValue('--cartel-activo-x') !== valor) {
+        activa.style.setProperty('--cartel-activo-x', valor);
+      }
+    }
+
     for (const cartelera of this.carteleras) {
       const valor = String(cartelera === activa);
       if (cartelera.dataset.activa !== valor) cartelera.dataset.activa = valor;
     }
 
     this.activa = activa;
+    const mirando = String(Boolean(activa));
+    if (this.caminante && this.caminante.dataset.mirando !== mirando) {
+      this.caminante.dataset.mirando = mirando;
+    }
   }
 
   /** Borde izquierdo de un cartel en pantalla, sin consultar la geometría del DOM. */
@@ -185,9 +236,8 @@ class Escenario {
   marcarPosicion() {
     const y = window.scrollY;
 
-    if (y <= 4) this.escenario.dataset.posicion = 'inicio';
-    else if (y >= this.recorridoScroll - 4) this.escenario.dataset.posicion = 'fin';
-    else this.escenario.dataset.posicion = 'medio';
+    const posicion = y <= 4 ? 'inicio' : y >= this.recorridoScroll - 4 ? 'fin' : 'medio';
+    if (this.escenario.dataset.posicion !== posicion) this.escenario.dataset.posicion = posicion;
   }
 
   /**
@@ -221,38 +271,33 @@ class Escenario {
     }
   }
 
-  /**
-   * El ciclo de pasos sólo corre mientras el mundo se está moviendo.
-   *
-   * El delta por sí solo no alcanza: el último scroll event de una rueda o
-   * de una flecha puede venir con un salto grande y no vuelve a dispararse,
-   * y entonces "caminando" quedaría en true para siempre. Por eso además
-   * del delta hay un freno: si pasan 140 ms sin scroll, la chica se para
-   * sola.
-   */
+  /** Los pasos siguen la distancia real, sin un reloj separado del recorrido. */
   marcarCaminando(y) {
     const delta = y - this.ultimoY;
-    const moviendo = Math.abs(delta) > 0.5;
-    if (moviendo && this.caminante) {
+    this.ultimoY = y;
+    if (Math.abs(delta) <= 0.01) return;
+
+    if (this.caminante) {
       const direccion = delta < 0 ? 'izquierda' : 'derecha';
       if (this.caminante.dataset.direccion !== direccion) this.caminante.dataset.direccion = direccion;
+      const avanceChica = (CAMINANTE.xFinal - CAMINANTE.x) * window.innerWidth /
+        Math.max(1, this.recorridoScroll);
+      const distancia = Math.abs(delta) * (1 / ESCENA.ritmo + avanceChica) / this.escala;
+      this.animacionChica.avanzar(Math.min(distancia, CAMINANTE.largoPaso / 2));
     }
-    this.ultimoY = y;
-
     clearTimeout(this.freno);
-    if (moviendo) {
-      this.freno = setTimeout(() => this.ponerCaminando(false), 140);
-      this.ponerCaminando(true);
-    } else {
-      this.ponerCaminando(false);
-    }
+    this.ponerCaminando(true);
+    this.freno = setTimeout(() => this.ponerCaminando(false), CAMINANTE.demoraFreno);
   }
 
   /** Prende o apaga `data-caminando` en el DOM, sólo cuando el estado cambia. */
   ponerCaminando(valor) {
     if (valor === this.caminando) return;
     this.caminando = valor;
-    if (this.caminante) this.caminante.dataset.caminando = String(valor);
+    if (this.caminante) {
+      this.caminante.dataset.caminando = String(valor);
+      if (!valor) this.animacionChica.detener();
+    }
   }
 
   /** El scroll recalcula en cada frame, no en cada evento. */
@@ -279,13 +324,20 @@ class Escenario {
     let anterior = 0;
 
     const avanzar = (segundos) => {
+      if (this.modoLista || this.redimensionando) return false;
       const direccion = Number(teclas.has('ArrowRight')) - Number(teclas.has('ArrowLeft'));
       const paso = direccion * ESCENA.velocidadTeclado * this.escala * ESCENA.ritmo * segundos;
-      window.scrollTo({ top: acotar(window.scrollY + paso, 0, this.recorridoScroll), behavior: 'instant' });
+      const destino = acotar(window.scrollY + paso, 0, this.recorridoScroll);
+      if (destino === window.scrollY) return false;
+      window.scrollTo({ top: destino, behavior: 'instant' });
+      return true;
     };
 
     const mover = (ahora) => {
-      avanzar(Math.min((ahora - anterior) / 1000, 0.05));
+      if (!avanzar(Math.min((ahora - anterior) / 1000, 0.05))) {
+        detener();
+        return;
+      }
       anterior = ahora;
       cuadro = requestAnimationFrame(mover);
     };
@@ -297,6 +349,7 @@ class Escenario {
     };
 
     const alPresionar = (evento) => {
+      if (this.modoLista) { detener(); return; }
       if (evento.ctrlKey || evento.altKey || evento.metaKey) return;
       if (evento.target instanceof HTMLElement &&
           (evento.target.isContentEditable || evento.target.closest('input, textarea, select, button'))) {
@@ -308,6 +361,7 @@ class Escenario {
         case 'ArrowRight':
         case 'ArrowLeft':
           evento.preventDefault();
+          if (evento.repeat) return;
           if (teclas.has(evento.key)) return;
           teclas.add(evento.key);
           // Un toque también mueve; sostener continúa sin depender de la repetición del teclado.
@@ -362,10 +416,13 @@ class Escenario {
     const margen = ESCENA.margen * this.escala;
 
     // Posición de la cartelera en coordenadas de mundo.
-    const xMundo = margen + indice * separacion + (ESCENA.carteleraAncho * this.escala) / 2;
-    const xPantalla = window.innerWidth / 2;
-
-    const desplazamiento = acotar(xMundo - xPantalla, 0, this.recorrido);
+    const xMundo = margen + indice * separacion + this.anchoCartel / 2;
+    // La chica también avanza sobre la pantalla: la parada tiene que alcanzarla a ella.
+    const avanceChica = window.innerWidth * (CAMINANTE.xFinal - CAMINANTE.x);
+    const desplazamiento = acotar(
+      (xMundo - window.innerWidth * CAMINANTE.x) / (1 + avanceChica / Math.max(1, this.recorrido)),
+      0, this.recorrido,
+    );
     return this.recorrido > 0 ? (desplazamiento / this.recorrido) * this.recorridoScroll : 0;
   }
 
@@ -408,24 +465,48 @@ class Escenario {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
   }
 
+  /** Tab y lectores de pantalla llevan el proyecto enfocado hasta la chica. */
+  prescribirFoco() {
+    this.escenario.addEventListener('focusin', (evento) => {
+      if (this.modoLista) return;
+      const cartelera = evento.target.closest('[data-cartelera]');
+      if (!cartelera || cartelera === this.activa) return;
+      const destino = this.yDeCartelera(Number(cartelera.dataset.indice));
+      window.scrollTo({ top: destino, behavior: 'instant' });
+      this.desplazar();
+    });
+  }
+
   /** Al cambiar el tamaño del navegador hay que recalcular, pero sin esperar cada pixel. */
   prescribirResize() {
     let temporizador = 0;
 
-    window.addEventListener('resize', () => {
+    const recalcular = () => {
+      this.redimensionando = true;
       clearTimeout(temporizador);
       temporizador = setTimeout(() => {
         // Guardamos la posición relativa para no perder el lugar del recorrido.
-        const p = acotar(window.scrollY / Math.max(1, this.recorridoScroll), 0, 1);
+        const p = this.progreso;
+        const eraLista = this.modoLista;
 
         this.medir();
         this.publicar();
 
-        window.scrollTo({ top: p * this.recorridoScroll, behavior: 'auto' });
+        if (!this.modoLista) window.scrollTo({ top: p * this.recorridoScroll, behavior: 'instant' });
+        else if (!eraLista) window.scrollTo({ top: 0, behavior: 'instant' });
 
+        this.ultimoY = window.scrollY;
+        this.ponerCaminando(false);
+        this.redimensionando = false;
         this.desplazar();
-      }, 150);
-    });
+      }, ESCENA.demoraResize);
+    };
+    window.addEventListener('resize', recalcular);
+    // El clima puede ocupar otra línea al terminar de cargar. Sólo se observa su tamaño.
+    this.observadorInformacion = new ResizeObserver(recalcular);
+    for (const elemento of document.querySelectorAll('[data-informacion], [data-clima]')) {
+      this.observadorInformacion.observe(elemento);
+    }
   }
 
 }

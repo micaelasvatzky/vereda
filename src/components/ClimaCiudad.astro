@@ -1,0 +1,42 @@
+---
+import { CIUDAD } from '../config.js';
+---
+
+<aside class="clima-ciudad" data-clima data-estado="cargando" aria-label="Cielo de Buenos Aires">
+  <a href="/creditos/" title="Fuente de los datos del clima">
+    <p data-clima-texto role="status">{CIUDAD.nombre} · consultando el cielo…</p>
+  </a>
+</aside>
+<noscript><style is:inline>.clima-ciudad { display: none; }</style></noscript>
+
+<style>
+  .clima-ciudad {
+    position: fixed;
+    top: var(--bienvenida-margen);
+    right: var(--bienvenida-margen);
+    z-index: 10;
+    max-width: var(--clima-ancho);
+    text-align: right;
+    color: var(--cielo-texto);
+    font-family: var(--fuente-bienvenida);
+    font-size: var(--clima-tamano);
+    line-height: 1.4;
+    transition: color var(--duracion-cielo) var(--curva-cielo);
+  }
+  p { margin: 0; }
+  a {
+    color: inherit;
+    text-decoration: none;
+    text-underline-offset: 0.15em;
+  }
+  a:hover, a:focus-visible { text-decoration: underline; }
+  @media (max-width: 767px) {
+    .clima-ciudad {
+      top: var(--clima-mobile-arriba);
+      left: var(--bienvenida-margen);
+      right: var(--bienvenida-margen);
+      max-width: none;
+      text-align: left;
+    }
+  }
+</style>

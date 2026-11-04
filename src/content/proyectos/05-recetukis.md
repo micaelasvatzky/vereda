@@ -8,4 +8,4 @@ preview: ../../assets/proyectos/recetukis.png
 
 **2025 · React · API**
 
-Plataforma web de recetas que consume datos desde una API externa, permitiendo explorar distintas opciones gastronómicas de forma dinámica.
+Explorador de recetas con datos de una API externa.

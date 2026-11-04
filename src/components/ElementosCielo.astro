@@ -1,0 +1,63 @@
+---
+import { Image } from 'astro:assets';
+import sol from '../assets/clima/sol.png';
+import luna from '../assets/clima/luna.png';
+import nube from '../assets/clima/nube.png';
+---
+
+<!-- Son decorativos; el estado del clima tiene su equivalente en texto. -->
+<div class="elementos-cielo" aria-hidden="true">
+  <Image class="astro-cielo astro-cielo--sol" src={sol} alt=""
+    widths={[160, 320]} sizes="(max-width: 767px) 100px, 160px" loading="eager" />
+  <Image class="astro-cielo astro-cielo--luna" src={luna} alt=""
+    widths={[160, 320]} sizes="(max-width: 767px) 100px, 160px" loading="eager" />
+  {[1, 2, 3].map((indice) => (
+    <Image class={`nube-cielo nube-cielo--${indice}`} src={nube} alt=""
+      widths={[320, 640]} sizes="(max-width: 767px) 180px, 320px" loading="eager" />
+  ))}
+</div>
+
+<style>
+  .elementos-cielo { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .astro-cielo, .nube-cielo {
+    position: absolute;
+    height: auto;
+    opacity: 0;
+    transition: opacity var(--duracion-cielo) var(--curva-cielo),
+      filter var(--duracion-cielo) var(--curva-cielo);
+  }
+  .astro-cielo {
+    width: var(--astro-ancho);
+    left: var(--astro-x);
+    top: var(--astro-y);
+    transform: translateX(-50%);
+  }
+  .astro-cielo--sol {
+    --astro-visibilidad: var(--sol-opacidad);
+    left: var(--sol-x);
+    top: var(--sol-y);
+  }
+  .nube-cielo { width: var(--nube-ancho); filter: var(--nube-filtro, none); }
+  .nube-cielo--1 { left: var(--nube-1-x); top: var(--nube-1-y); }
+  .nube-cielo--2 { right: var(--nube-2-x); top: var(--nube-2-y); }
+  .nube-cielo--3 { left: var(--nube-3-x); top: var(--nube-3-y); width: var(--nube-3-ancho); }
+
+  :global([data-cielo][data-momento='dia']) .astro-cielo--sol,
+  :global([data-cielo][data-momento='amanecer']) .astro-cielo--sol,
+  :global([data-cielo][data-momento='tarde']) .astro-cielo--sol,
+  :global([data-cielo][data-momento='noche']) .astro-cielo--luna { opacity: var(--astro-visibilidad, 1); }
+
+  :global([data-cielo][data-tiempo='parcial']) .nube-cielo--1,
+  :global([data-cielo][data-tiempo='parcial']) .nube-cielo--2,
+  :global([data-cielo][data-tiempo='nublado']) .nube-cielo,
+  :global([data-cielo][data-tiempo='lluvia']) .nube-cielo,
+  :global([data-cielo][data-tiempo='tormenta']) .nube-cielo,
+  :global([data-cielo][data-tiempo='niebla']) .nube-cielo,
+  :global([data-cielo][data-tiempo='nieve']) .nube-cielo { opacity: var(--nube-visibilidad); }
+
+  :global([data-cielo][data-tiempo='nublado']) .astro-cielo,
+  :global([data-cielo][data-tiempo='lluvia']) .astro-cielo,
+  :global([data-cielo][data-tiempo='tormenta']) .astro-cielo,
+  :global([data-cielo][data-tiempo='niebla']) .astro-cielo,
+  :global([data-cielo][data-tiempo='nieve']) .astro-cielo { opacity: 0; }
+</style>

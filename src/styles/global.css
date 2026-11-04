@@ -50,8 +50,9 @@ svg {
 
 /* Foco visible con buen contraste. Sólo aparece al navegar con teclado. */
 :focus-visible {
-  outline: 3px solid var(--verde-cartelera-claro);
-  outline-offset: 3px;
+  outline: var(--foco-grosor) solid var(--foco-oscuro);
+  outline-offset: var(--foco-margen);
+  box-shadow: 0 0 0 calc(var(--foco-grosor) + var(--foco-margen)) var(--foco-claro);
   border-radius: 2px;
 }
 

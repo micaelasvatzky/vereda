@@ -46,11 +46,15 @@ const descripcionId = `descripcion-proyecto-${indice}`;
   data-cartelera
   data-indice={indice}
   data-activa="false"
+  aria-labelledby={`titulo-proyecto-${indice}`}
   style={`--indice: ${indice};`}
 >
+  <h2 class="cartelera__titulo visualmente-oculto" id={`titulo-proyecto-${indice}`}>
+    {proyecto?.data.titulo}
+  </h2>
   <div
     class="cartelera__cartel"
-    style={`--hueco-left:${CARTEL.hueco.left}%; --hueco-top:${CARTEL.hueco.top}%; --hueco-width:${CARTEL.hueco.width}%; --hueco-height:${CARTEL.hueco.height}%;`}
+    style={`--cartel-proporcion:${CARTEL.proporcion}; --hueco-left:${CARTEL.hueco.left}%; --hueco-top:${CARTEL.hueco.top}%; --hueco-width:${CARTEL.hueco.width}%; --hueco-height:${CARTEL.hueco.height}%;`}
   >
     <img
       class="cartelera__arte"
@@ -82,7 +86,7 @@ const descripcionId = `descripcion-proyecto-${indice}`;
             href={proyecto.data.vercel}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Ver ${proyecto.data.titulo} en Vercel`}
+            aria-label={`Ver ${proyecto.data.titulo} en Vercel (se abre en otra pestaña)`}
             aria-describedby={descripcionId}
           />
           {/* Botón de GitHub: va arriba de todo, así el clic NO cae en el link de Vercel. */}
@@ -91,7 +95,7 @@ const descripcionId = `descripcion-proyecto-${indice}`;
             href={proyecto.data.github}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Ver el código de ${proyecto.data.titulo} en GitHub`}
+            aria-label={`Ver el código de ${proyecto.data.titulo} en GitHub (se abre en otra pestaña)`}
             title="Ver el código en GitHub"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -145,10 +149,9 @@ const descripcionId = `descripcion-proyecto-${indice}`;
    * HTML se pinta antes de que cargue el script, y eso era lo que Mica
    * veía como "aparecen un rato al recregar y después desaparecen".
    *
-   * El motor las da vuelta una por una con `data-visible`; el
-   * pointer-events: none es necesario sin eso, el hover de una cartelera
-   * escondida cambiaría la pose de la chica a "mira" hacia algo que no se
-   * ve. El fallback sin JavaScript vive en un <noscript> al final del
+   * El motor las muestra una por una con `data-visible`;
+   * pointer-events: none evita abrir links de carteles todavía ocultos.
+   * El fallback sin JavaScript vive en un <noscript> al final del
    * archivo: si estuviera acá, se aplicaría TAMBIÉN antes de que el
    * motor arranque y volvería el flash.
    */
@@ -173,7 +176,7 @@ const descripcionId = `descripcion-proyecto-${indice}`;
      * casi no cambia, 0.6431 contra 0.6452, pero el número exacto evita
      * que el afiche quede medio pixel desfasado.)
      */
-    aspect-ratio: 8606 / 13382;
+    aspect-ratio: var(--cartel-proporcion);
     /*
      * Con esto el cartel pasa a ser un "contenedor de consulta": las
      * medidas del botón de GitHub se calculan con cqw (unidades
@@ -260,8 +263,11 @@ const descripcionId = `descripcion-proyecto-${indice}`;
     margin-top: var(--descripcion-separacion);
   }
 
-  .cartelera__cartel:hover .cartelera__descripcion,
-  .cartelera__cartel:focus-within .cartelera__descripcion {
+  .cartelera__descripcion :global(p:first-child) {
+    font-size: var(--descripcion-ficha-tamano);
+  }
+
+  .cartelera[data-activa='true'] .cartelera__descripcion {
     visibility: visible;
   }
 
@@ -284,8 +290,8 @@ const descripcionId = `descripcion-proyecto-${indice}`;
     z-index: 3;
     display: grid;
     place-items: center;
-    width: max(8cqw, 26px);
-    height: max(8cqw, 26px);
+    width: max(8cqw, var(--boton-proyecto-tamano));
+    height: max(8cqw, var(--boton-proyecto-tamano));
     background: #181717;
     color: #fff;
     border-radius: 50%;
@@ -301,6 +307,13 @@ const descripcionId = `descripcion-proyecto-${indice}`;
     display: block;
   }
 
+  .cartelera__link:focus-visible,
+  .cartelera__github:focus-visible {
+    outline: var(--foco-grosor) solid var(--foco-claro);
+    outline-offset: calc(-1 * (var(--foco-grosor) + var(--foco-margen)));
+    box-shadow: inset 0 0 0 var(--foco-grosor) var(--foco-oscuro);
+  }
+
   .cartelera__github:hover,
   .cartelera__github:focus-visible {
     background: #303030;
@@ -309,7 +322,9 @@ const descripcionId = `descripcion-proyecto-${indice}`;
 
   /* La cartelera activa se "prende": crece apenas y se levanta. Sin marco. */
   .cartelera[data-activa='true'] .cartelera__cartel {
-    transform: scale(1.04) translateY(-10px);
+    transform: translateX(var(--cartel-activo-x, 0px))
+      translateY(var(--cartel-activo-y, 0px))
+      scale(var(--cartel-activo-escala)) translateY(var(--cartel-activo-elevacion));
   }
 
   /*
@@ -317,28 +332,9 @@ const descripcionId = `descripcion-proyecto-${indice}`;
    * data-visible), pero sin fundido ni desplazamiento.
    */
   @media (prefers-reduced-motion: reduce) {
-    html[data-motor='riel'] .cartelera {
+    html[data-motor='riel'] .cartelera,
+    .cartelera__cartel {
       transition: none;
     }
   }
 </style>
-
-<!--
-  Fallback sin JavaScript. Va en <noscript> con style is:inline (crudo,
-  sin scope de Astro) porque sólo tiene que aplicar cuando NO hay JS:
-  si el navegador corre scripts, este contenido ni se parsea y las
-  carteleras siguen ocultas hasta que el motor las revele — así no hay
-  flash de carteleras sueltas al cargar. Sin JS, en cambio, dejan de
-  estar posicionadas en el mundo y se apilan legibles.
--->
-<noscript>
-  <style is:inline>
-    html:not([data-motor='riel']) .cartelera {
-      position: static;
-      width: min(320px, 78vw);
-      opacity: 1;
-      transform: none;
-      pointer-events: auto;
-    }
-  </style>
-</noscript>
