@@ -1,0 +1,56 @@
+{
+  "entorno": "Edge headless, build de produccion, 390x844, disable-gpu; CPU 1x y 4x. No equivale a un telefono real.",
+  "duracionMuestraMs": 3500,
+  "antes": [
+    {
+      "rate": 1,
+      "frames": 211,
+      "fps": 60.00284373667006,
+      "p95": 16.700000000000728,
+      "framesMas33": 0,
+      "longTasks": 0,
+      "longTasksMs": 0,
+      "layoutCount": 225,
+      "layoutMs": 7.808,
+      "scriptMs": 43.261
+    },
+    {
+      "rate": 4,
+      "frames": 210,
+      "fps": 59.71847006967157,
+      "p95": 16.700000000000728,
+      "framesMas33": 0,
+      "longTasks": 0,
+      "longTasksMs": 0,
+      "layoutCount": 218,
+      "layoutMs": 46.720000000000006,
+      "scriptMs": 315.645
+    }
+  ],
+  "despues": [
+    {
+      "rate": 1,
+      "frames": 211,
+      "fps": 60.0028437366701,
+      "p95": 16.700000000000273,
+      "framesMas33": 0,
+      "longTasks": 0,
+      "longTasksMs": 0,
+      "layoutCount": 224,
+      "layoutMs": 8.942,
+      "scriptMs": 51.361
+    },
+    {
+      "rate": 4,
+      "frames": 202,
+      "fps": 57.44348073368407,
+      "p95": 16.800000000000182,
+      "framesMas33": 1,
+      "longTasks": 0,
+      "longTasksMs": 0,
+      "layoutCount": 210,
+      "layoutMs": 60.242999999999995,
+      "scriptMs": 376.75
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "touch": {
+    "y": 409,
+    "p": 0.1297723020804934,
+    "direccion": "derecha"
+  },
+  "rotation": {
+    "antes": 0.5498665024584231,
+    "despues": 0.5498665024584231
+  },
+  "githubTap": true,
+  "vercelTap": true,
+  "tab": [
+    {
+      "label": "Ver DevPath en Vercel (se abre en otra pestaña)",
+      "visible": true,
+      "activa": "true",
+      "descripcion": "visible",
+      "sceneX": 0,
+      "outline": "solid",
+      "focusVisible": true,
+      "project": "0"
+    },
+    {
+      "label": "Ver el código de DevPath en GitHub (se abre en otra pestaña)",
+      "visible": true,
+      "activa": "true",
+      "descripcion": "visible",
+      "sceneX": 0,
+      "outline": "solid",
+      "focusVisible": true,
+      "project": "0"
+    },
+    {
+      "label": "Ver Studio 3 Ecommerce en Vercel (se abre en otra pestaña)",
+      "visible": true,
+      "activa": "true",
+      "descripcion": "visible",
+      "sceneX": 0,
+      "outline": "solid",
+      "focusVisible": true,
+      "project": "1"
+    },
+    {
+      "label": "Ver el código de Studio 3 Ecommerce en GitHub (se abre en otra pestaña)",
+      "visible": true,
+      "activa": "true",
+      "descripcion": "visible",
+      "sceneX": 0,
+      "outline": "solid",
+      "focusVisible": true,
+      "project": "1"
+    },
+    {
+      "label": "Ver Rick & Morty en Vercel (se abre en otra pestaña)",
+      "visible": true,
+      "activa": "true",
+      "descripcion": "visible",
+      "sceneX": 0,
+      "outline": "solid",
+      "focusVisible": true,
+      "project": "2"
+    },
+    {
+      "label": "Ver el código de Rick & Morty en GitHub (se abre en otra pestaña)",
+      "visible": true,
+      "activa": "true",
+      "descripcion": "visible",
+      "sceneX": 0,
+      "outline": "solid",
+      "focusVisible": true,
+      "project": "2"
+    },
+    {
+      "label": "Ver Popcorn.js en Vercel (se abre en otra pestaña)",
+      "visible": true,
+      "activa": "true",
+      "descripcion": "visible",
+      "sceneX": 0,
+      "outline": "solid",
+      "focusVisible": true,
+      "project": "3"
+    },
+    {
+      "label": "Ver el código de Popcorn.js en GitHub (se abre en otra pestaña)",
+      "visible": true,
+      "activa": "true",
+      "descripcion": "visible",
+      "sceneX": 0,
+      "outline": "solid",
+      "focusVisible": true,
+      "project": "3"
+    },
+    {
+      "label": "Ver Recetukis en Vercel (se abre en otra pestaña)",
+      "visible": true,
+      "activa": "true",
+      "descripcion": "visible",
+      "sceneX": 0,
+      "outline": "solid",
+      "focusVisible": true,
+      "project": "4"
+    },
+    {
+      "label": "Ver el código de Recetukis en GitHub (se abre en otra pestaña)",
+      "visible": true,
+      "activa": "true",
+      "descripcion": "visible",
+      "sceneX": 0,
+      "outline": "solid",
+      "focusVisible": true,
+      "project": "4"
+    },
+    {
+      "label": "Buenos Aires · clima no disponible; cielo según horario",
+      "visible": true,
+      "descripcion": null,
+      "sceneX": 0,
+      "outline": "solid",
+      "focusVisible": true
+    }
+  ],
+  "shiftTab": true,
+  "homeEnd": true,
+  "reduced": {
+    "iguales": true,
+    "transicion": "1e-05s"
+  },
+  "nojs": {
+    "caminante": "none",
+    "grid": "grid",
+    "projects": [
+      {
+        "visible": "1",
+        "font": "16px",
+        "description": "visible",
+        "width": 328
+      },
+      {
+        "visible": "1",
+        "font": "16px",
+        "description": "visible",
+        "width": 328
+      },
+      {
+        "visible": "1",
+        "font": "16px",
+        "description": "visible",
+        "width": 328
+      },
+      {
+        "visible": "1",
+        "font": "16px",
+        "description": "visible",
+        "width": 328
+      },
+      {
+        "visible": "1",
+        "font": "16px",
+        "description": "visible",
+        "width": 328
+      }
+    ],
+    "scrollWidth": 360,
+    "width": 360
+  },
+  "contrasteProyectos": 4.930916400625263,
+  "clima": "Posicion y paleta anteriores restauradas a pedido de Mica; no se certifica contraste del cielo."
+}
