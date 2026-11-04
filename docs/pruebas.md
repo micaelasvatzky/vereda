@@ -1,5 +1,96 @@
 # Pruebas
 
+## Mobile, rendimiento y accesibilidad — 04/11/2026
+
+Al cerrar, Mica definió que la primera prueba de la próxima sesión será en un
+celular real. Check/build, once pruebas de clima y 55 casos de tamaños/proyectos
+quedan verificados; los resultados de hardware real todavía no existen.
+
+Se probó el build servido en `127.0.0.1:4322`, con Edge headless y DevTools Protocol.
+La API se bloqueó durante esta matriz para probar también la leyenda de error larga
+y evitar consultas repetidas. El clima real ya se verificó en la integración anterior.
+
+| Prueba | Resultado |
+| --- | --- |
+| 320×568, 360×640, 360×800, 390×844, 768×1024, 1280×720 y 1920×1080 | Recorrido, cinco proyectos: textos dentro del panel y botones de al menos 44 px |
+| 800×360, 844×390, 1280×360 y 320×480 | Lista legible con scroll normal y los cinco proyectos |
+| Scroll con eventos touch | Avanza la escena y cambia la dirección de la chica |
+| Toque en GitHub y en la preview | Cada uno identifica su URL correcta; se impidió abrir pestañas durante la prueba |
+| Girar de 390×844 a 844×390 y volver | Progreso conservado: aproximadamente 0,55 antes y después |
+| Tab, Shift+Tab | Diez links de proyectos y uno del clima; foco visible, cartel activo y sin scroll horizontal interno |
+| Home y End | Alcanzan ambos extremos |
+| Movimiento reducido | Articulaciones en reposo y transiciones reducidas |
+| Sin JavaScript | Cinco proyectos en grid, descripción visible y sin desborde horizontal |
+| Descripción blanca sobre verde al 88% | Contraste mínimo calculado 4,93:1, tomando una captura blanca detrás |
+| Clima al amanecer/atardecer y sobre ilustraciones | Diseño anterior restaurado a pedido de Mica; contraste global pendiente de revisar |
+| Teléfono real, Safari/iOS y lector de pantalla | Pendientes; la emulación no los reemplaza |
+
+La comparación de rendimiento usa 3,5 segundos de recorrido completo por muestra:
+FPS aproximado a partir de rAF, percentil 95 de intervalo y PerformanceObserver para
+tareas largas. CPU ×4 significa ralentización de esta PC, no un modelo de teléfono.
+Las muestras rondaron 57–60 fps, p95 alrededor de 16,7–16,8 ms, sin tareas de más de
+50 ms detectadas. En la última muestra ×4 hubo un intervalo entre frames de más de
+33,4 ms; no se atribuye su causa sin una traza adicional. No hay una mejora de FPS
+concluyente respecto de la muestra inicial;
+las correcciones se concentran en uso, foco y evitar trabajo redundante.
+
+Evidencia: `docs/capturas/pruebas-mobile-teclado-2026-11-04.json`, capturas `mobile-*`
+y `sin-javascript-2026-11-04.png`. Datos de la matriz y rendimiento en
+`matriz-mobile-2026-11-04.json` y `rendimiento-2026-11-04.json`, dentro de esa carpeta.
+Las capturas muestran momentos de las iteraciones;
+el indicador del clima se restauró a su ubicación anterior después de las primeras.
+
+## Clima y cielo dinámico — 04/11/2026
+
+- Respuesta real de Open-Meteo: HTTP 200, zona de Buenos Aires, temperatura/código
+  y horarios solares válidos. Lectura desde Edge: OK.
+- `node --test scripts/probar-clima.mjs`: 11 pruebas. Mapeo de nieve/precipitación
+  helada/tormenta, null y fechas inválidas, medianoche de Buenos Aires, crepúsculos,
+  caché fresca/vencida/demasiado vieja, almacenamiento bloqueado o corrupto,
+  HTTP 429/JSON vacío o roto y cancelación de una consulta colgada: OK.
+- Edge: despejado, parcial, nublado, tormenta, nieve, amanecer, atardecer, noche
+  despejada/nublada y sin conexión: estado, colores y opacidad de dibujos correctos.
+  Se usaron respuestas y fechas simuladas para recorrer los diez casos.
+- Dibujos cargados con transparencia y fuente sin leyenda «Clima por Open-Meteo».
+  El sol usa opacidad 0.78. Contexto del cielo aislado detrás de las capas: OK.
+- Vista 390×844: indicador debajo de la bienvenida, sin desborde. Ruta de créditos y
+  licencia: OK. La leyenda «Créditos» se retiró después, conservando el enlace en el clima.
+- Las últimas correcciones de posición del sol son ajustes de configuración; no se
+  consideran una prueba de rendimiento ni reemplazan la aprobación visual de Mica.
+
+Capturas: [clima real](capturas/cielo-real-2026-11-04.png),
+[nublado simulado](capturas/cielo-nublado-2026-11-04.png),
+[tormenta simulada](capturas/cielo-tormenta-2026-11-04.png) y
+[noche simulada](capturas/cielo-noche-2026-11-04.png).
+Se tomaron durante las iteraciones; la ubicación final del sol y el indicador puede variar.
+
+## 4 de noviembre de 2026 — figura articulada y carteles por contacto
+
+Ajuste posterior aprobado como pedido por Mica: alto 380, hombros 16° y codos 12°.
+Check/build/diff-check OK. Comparación geométrica a escala de referencia: coronilla
+en reposo y centro del cartel ampliado separados por 2,3 px aproximadamente.
+No se repitió la matriz de navegador para este ajuste de números; falta su vista.
+
+Probado en Edge headless con DevTools Protocol sobre el servidor de desarrollo.
+
+| Prueba | Resultado |
+| --- | --- |
+| `npm run check`, `npm run build` y `git diff --check` | OK sobre la versión final del cambio |
+| Flechas reales sostenidas, soltar y volver | OK: avanza, cambian los ocho pivotes, frena y gira |
+| Reposo | OK: las piernas se asientan; no queda congelada una mezcla de poses |
+| Ocho momentos del ciclo | Revisados visualmente en Edge; una sola figura, sin poses completas superpuestas |
+| Activación al contacto, incluidos proyectos 4 y 5 | OK en 360×800, 390×844, 768×1024, 1280×800 y 1920×1080: 25 casos |
+| Activación con la chica centrada sobre cada cartel | OK en los mismos 25 casos |
+| Texto y cabeza activados juntos | OK por estado/estilo computado, sin hover |
+| Textos abreviados dentro del panel | OK: límites de párrafos medidos en los 25 casos |
+| Cartel ampliado dentro del ancho visible | OK al contacto en los 25 casos, contando la barra de scroll |
+| Movimiento reducido | OK: articulaciones en reposo aunque se recorra la escena |
+| Aprobación de Mica y fps en un celular real | Pendiente |
+
+Capturas: [momentos del ciclo articulado](capturas/caminata-articulada-2026-11-04.png)
+y [último cartel activo en 390×844](capturas/cartel-mobile-2026-11-04.png).
+La emulación de tamaños no reemplaza la prueba táctil y de rendimiento en un teléfono.
+
 Matriz de pantallas, navegadores, qué se probó, resultado y correcciones.
 
 > Esto se completa a medida que avanzan las fases. Hoy hay entradas de las Fases 0 y 1

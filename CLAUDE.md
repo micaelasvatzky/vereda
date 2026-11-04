@@ -14,6 +14,22 @@ al repositorio. El fondo es el cielo, que cambia con la hora real de Buenos Aire
 avanza con las flechas del teclado o con scroll.
 
 ## Estado
+**Actualización 04/11/2026:** Mica aprobó la caminata articulada (una sola figura,
+caderas/rodillas/hombros/codos), el alto 380 y el balanceo de brazos. Los carteles
+se activan por cercanía a la chica: agrandado, descripción breve y giro de cabeza
+ocurren juntos, incluidos los últimos. Open-Meteo ya está integrado desde el navegador,
+con caché, errores y cielo por horario/clima de Buenos Aires. Sol/luna/nube generados
+con IA en `src/assets/clima/`, reemplazables; sol más arriba/derecha, opacidad 78%,
+detrás del Obelisco. Sólo se muestra el dato del clima, que enlaza a `/creditos/`.
+Faltan aprobación visual final del cielo y fps/touch en celular real. Ambas bitácoras
+se actualizan juntas y tienen una sola entrada por fecha.
+
+Revisión móvil del 04/11: foco por Tab lleva hasta el proyecto y abre su descripción;
+botones de 44 px, textos ampliados y lista en pantallas de hasta 500 px de alto/sin JS.
+La rotación conserva el recorrido. Pasaron 55 casos de tamaños/proyectos, touch,
+teclado y fallback. Rendimiento en emulación ~57–60 fps; falta celular real.
+Mica pidió restaurar el clima anterior: conservar su ubicación y paleta aprobadas.
+
 **Actualización 29/10/2026:** la consigna completa está en `examen-final-portfolio.txt`.
 Open-Meteo sirve para el requisito de API externa, pero todavía falta integrarla.
 Las cinco descripciones, años y tecnologías de Mica ya están en los Markdown y se ven
@@ -82,7 +98,7 @@ chapa con el nombre del proyecto (hecho). Lo que falta:
 2. **Dependencias mínimas.** Permitidas: `astro` y `@fontsource*`. Cualquier otra se consulta
    antes de agregar.
 3. **Trabajar por fases** (`docs/bitacora.md` describe el avance). Al cerrar cada fase:
-   `npm run build` pasa, commits chicos con sentido, se actualizan `docs/bitacora.md` y
+   `npm run build` pasa, commits chicos con sentido, se actualizan ambas bitácoras y
    `docs/uso-de-ia.md`, se explica a Mica en lenguaje simple qué se hizo y por qué, y se
    frena esperando su OK.
 4. **Código explicable.** Módulos chicos, nombres claros, comentarios en español sólo donde
@@ -104,12 +120,19 @@ chapa con el nombre del proyecto (hecho). Lo que falta:
     corre `git push origin main`. Sin OK, no se pushea. Nunca `--force`. Lo pidió Mica el
     22/10: *"a partir de ahora los push los hacés vos antes de terminar la sesión, primero
     me preguntás así te confirmo"*.
+11. **Actualizar siempre ambas bitácoras al registrar novedades.** `docs/bitacora.md`
+    conserva el detalle técnico; `docs/bitacora-mica.md` resume lo que no funcionó y
+    se cambió, con entradas por fecha y el estilo breve de Mica. Mantenerlas coherentes,
+    sin copiar todo el detalle técnico a la resumida. Pedido de Mica del 4/11/2026.
+    **Una sola entrada por fecha en cada bitácora**, en orden cronológico: juntar
+    todos los temas del día bajo esa entrada y agregar ahí las novedades de la misma
+    fecha. En la técnica se pueden usar subtítulos por tema, sin repetir la fecha.
 
 ## Comandos de sesión
 
 - `iniciar sesion` → cargar la memoria del proyecto con engram y recuperar el estado.
 - `cerrar sesion` → guardar todo en engram en condiciones para seguir la próxima sesión:
-  actualizar `docs/bitacora.md`, `docs/uso-de-ia.md` y `docs/pruebas.md`, commitear,
+  actualizar `docs/bitacora.md`, `docs/bitacora-mica.md`, `docs/uso-de-ia.md` y `docs/pruebas.md`, commitear,
   **mostrar qué falta subir y preguntar si se pushea**; con el OK, `git push origin main`;
   y al final llamar a `mem_save` + `mem_session_summary`. La sesión no se cierra con
   commits sin subir: o se suben, o queda anotado en la bitácora que Mica dijo que no.

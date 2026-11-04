@@ -1,5 +1,63 @@
 # Registro de uso de IA
 
+## Revisión móvil, rendimiento y accesibilidad — 04/11/2026
+
+Cierre: Mica pidió continuar la próxima sesión empezando por el celular real.
+El agente dejó esa prioridad en ambas bitácoras y preparó el guardado del estado
+y las pruebas, sin convertir la emulación en una validación de hardware real.
+
+El agente probó la versión construida con Edge headless, eventos touch, teclado y
+CPU ralentizada. Corrigió foco fuera de pantalla y scroll interno, aumentó textos y
+áreas de toque y reutilizó los contenidos en una lista para pantallas bajas/sin JS.
+Se conservaron las ilustraciones y la caminata aprobada, sin dependencias nuevas.
+
+Mica rechazó los cambios en la presentación del clima realizados en esta revisión;
+se restauraron ubicación y paleta anteriores. Las mediciones de emulación no se
+presentan como una prueba en un teléfono real ni como una auditoría WCAG completa.
+
+## Integración del clima y dibujos del cielo — 04/11/2026
+
+Mica pidió integrar Open-Meteo y luego agregar sol, luna y nubes con la estética de
+la escena. El agente implementó consulta, caché, estados de error y colores por
+horario/clima. Generó tres ilustraciones con la herramienta integrada `imagegen`,
+usando una captura del sitio como referencia de estilo. Los archivos finales y los
+prompts se documentan en `docs/ilustraciones-cielo.md`; no se modificaron los originales.
+
+Mica corrigió posición/opacidad del sol, pidió que quedara detrás del Obelisco y
+retiró las leyendas visibles de fuente y créditos. El agente aplicó esas decisiones;
+la atribución se conserva en una página accesible al pulsar el dato meteorológico.
+Se probaron datos reales y fallos simulados, sin presentar las simulaciones como
+observaciones del clima de Buenos Aires. No se agregaron librerías.
+
+## 4 de noviembre de 2026 — bitácora resumida
+
+Por pedido de Mica, el agente redactó `docs/bitacora-mica.md` a partir del historial
+del proyecto y de un ejemplo de escritura aportado por ella. El texto resume problemas
+y cambios con entradas breves por fecha. No agrega experiencias ni pruebas no realizadas.
+La bitácora técnica y este registro de asistencia se conservan por separado.
+
+## 4 de noviembre de 2026 — articulaciones y activación de carteles
+
+Feedback posterior: Mica aprobó la caminata y pidió más balanceo de brazos y algo
+más de altura. El agente ajustó sólo amplitudes de hombros/codos y tamaño desde
+la configuración, tomando la mitad del cartel como referencia para la cabeza.
+
+Mica definió el cambio: una sola chica articulada, algo más grande, lectura sin
+hover y giro de cabeza al alcanzar cada cartel. También autorizó acortar sus
+descripciones. El agente implementó recortes del dibujo existente y pivotes SVG,
+el cálculo de pasos por distancia y la activación desde la posición de la chica.
+No se generaron ilustraciones con IA ni se agregaron dependencias.
+
+Se descartaron la alternancia/fundido de poses completas y la selección respecto
+del centro de pantalla. Se corrigieron recortes y uniones tras inspeccionar capturas.
+La primera vista de Sharp tenía diferencias respecto del navegador: se validó con
+Edge. Se abreviaron los textos existentes, sin incorporar datos nuevos de proyectos.
+Mica todavía tiene que aprobar la apariencia. Rendimiento en celular real pendiente.
+
+Se consultaron las guías oficiales de componentes y estilos de Astro:
+https://docs.astro.build/en/basics/astro-components/ y
+https://docs.astro.build/en/guides/styling/.
+
 Por cada fase: **para qué se usó IA**, **qué generó el agente**, **qué revisó / adaptó /
 descartó Mica**, **qué problemas o límites se detectaron** y **qué decisiones tomó Mica**.
 

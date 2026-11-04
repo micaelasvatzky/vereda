@@ -1,9 +1,10 @@
 # Bitácora
 
-Registro cronológico del proyecto: qué se hizo, qué problema apareció, cómo se resolvió,
-qué alternativas se descartaron y qué queda pendiente.
+Registro técnico del proyecto, agrupado en una sola entrada por fecha.
 
-## Fase 0 — 5 de octubre de 2026 — Andamiaje
+## 05/10/2026
+
+### Fase 0 — Andamiaje
 
 **Qué se hizo**
 
@@ -42,9 +43,7 @@ documentado acá para no volver a buscarlo.
 
 **Mica todavía no revisó nada de esta fase.**
 
----
-
-## Fase 1 — 5 de octubre de 2026 — Prueba de concepto del escenario
+### Fase 1 — Prueba de concepto del escenario
 
 **Qué se hizo**
 
@@ -106,9 +105,9 @@ Cuatro bugs que aparecieron revisando el código, antes de que nadie los viera:
 
 **Mica todavía no revisó nada de esta fase.**
 
----
+## 07/10/2026
 
-## Fase 1 — 7 de octubre de 2026 — Las ilustraciones de Mica: caminata y mirada
+### Fase 1 — Las ilustraciones de Mica: caminata y mirada
 
 **Qué se hizo**
 
@@ -183,9 +182,7 @@ Sigue la numeración de los cuatro bugs de arriba:
 
 **Mica todavía no revisó nada de esta fase.**
 
----
-
-## Fase 1 — 7 de octubre de 2026 (tarde) — Ajustes sobre la primera revisión de Mica
+### Fase 1 — Ajustes sobre la primera revisión de Mica
 
 Mica vio la escena y reportó tres cosas: las flechas se movían raro, los afiches no estaban
 sobre la vereda y aparecían todos juntos al principio. El parallax, OK.
@@ -257,7 +254,9 @@ Sigue la numeración de los ocho bugs anteriores:
 **Mica revisó la escena el 7 de octubre: parallax aprobado; flechas y afiches reportados
 como mal (bugs 9 y 10). Los fixes quedan pendientes de su confirmación visual.**
 
-## Fase 1 — 8 de octubre de 2026 — Los carteles que nunca se vieron: un `calc()` inválido
+## 08/10/2026
+
+### Fase 1 — Los carteles que nunca se vieron: un `calc()` inválido
 
 Segundo reporte de Mica, con dos pistas que lo cambiaron todo: "los carteles verdes sigo sin
 verlos, es como que cuando recargo la página aparecen por un minuto y después desaparecen",
@@ -332,9 +331,9 @@ sabe qué es; si lo necesita, la Escena de Figma lo tiene).
 - **Build sin correr** (regla de sesión) y **push lo hace Mica**: quedan varios commits
   sin subir.
 
----
+## 21/10/2026
 
-## Fase 1 — 21 de octubre de 2026 — Reanudación: build verificado y un documento corrupto
+### Fase 1 — Reanudación: build verificado y un documento corrupto
 
 **Qué se hizo**
 
@@ -428,9 +427,7 @@ apareció un problema de base: **la caja donde va la preview no coincide con el 
 - **Los links de los proyectos** (Vercel y GitHub) y el orden en que van: es la entrada de
   la Fase 2, con la preview de cada proyecto en el centro del cartel.
 
----
-
-## Fase 2 — 21 de octubre de 2026 — Las previews en los carteles
+### Fase 2 — Las previews en los carteles
 
 Mica pasó los links de los cinco proyectos y la instrucción clave: **"las previews van en
 el hueco transparente de la imagen, como si fueran el cartel"**. También pidió que el link
@@ -546,7 +543,9 @@ accesible de los links.
   alcance del requisito de tomar datos de una API.
 - **El cielo con Open-Meteo sigue sin implementarse** (Fase 4) y **los fps no se midieron**.
 
-**Cierre de sesión — 22 de octubre de 2026**
+## 22/10/2026
+
+### Cierre de sesión
 
 Se cerró la sesión con el árbol de trabajo limpio y **todo subido**: Mica pidió explícitamente
 que la push la hiciera el agente (*"pushealo vos, pusheame todo"*), así que se corrió
@@ -563,7 +562,7 @@ de terminar la sesión, pero primero le pregunta para que ella confirme** (*"a p
 ahora los push los hacés vos antes de terminar la sesión, primero me preguntás así te
 confirmo"*). Quedó en la regla 10 de `AGENTS.md`: sin OK no se pushea, y nunca `--force`.
 
-**Incidente de encoding — 22 de octubre de 2026**
+### Incidente de encoding
 
 Al aplicar esa regla se descubrió que **`AGENTS.md` y `CLAUDE.md` estaban doblemente
 codificados**: 72 casos de `sesión` guardado como `sesiÃ³n`. Lo introdujo el propio agente en
@@ -595,8 +594,9 @@ Para la próxima sesión, en orden:
 5. Medir fps en un celular de gama media (cierre de la Fase 1) y revisar el mobile.
 6. Al cerrar: preguntarle a Mica si se pushea (regla 10).
 
+## 29/10/2026
 
-### 29 de octubre de 2026 — descripciones al pasar por el cartel
+### descripciones al pasar por el cartel
 
 Mica definió que cada descripción se abra con hover en su propio cartel. Cartelera
 renderiza el cuerpo Markdown de su proyecto con render() de astro:content y lo muestra
@@ -610,7 +610,8 @@ cátedra. Documentación consultada: https://open-meteo.com/en/docs y las guías
 de componentes y Content Collections de Astro.
 
 Pendiente: revisión visual de Mica, textos definitivos e interacción en celular.
-### 29 de octubre de 2026 — consigna original recibida y revisada
+
+### consigna original recibida y revisada
 
 Mica agregó examen-final-portfolio.txt con la consigna completa. Esto resuelve la duda
 registrada en sesiones anteriores: Open-Meteo sirve como elección de API externa.
@@ -630,7 +631,8 @@ significativa, deploy accesible, repositorio con historial y README completo. En
 habrá que explicar los componentes, responsive, accesibilidad, limitaciones y créditos,
 y enlazar la evidencia de proceso y el registro de IA. Sigue pendiente la prueba móvil.
 Mica está buscando sus descripciones; no se inventaron textos ni se adelantó la Fase 4.
-### 29 de octubre de 2026 — fondo continuo de edificios
+
+### fondo continuo de edificios
 
 Se integró public/img/Edificios.svg en una capa fondo, detrás del Obelisco, con factor
 parallax 0.1 (Obelisco: 0.2). Conserva la proporción 47999/7984 y se repite horizontalmente
@@ -645,7 +647,8 @@ nombre en Escenario, para que agregar fondo no desplace los índices de las ante
 
 Verificación: npm run check, npm run build y git diff --check pasan. Falta confirmación
 visual de Mica de la altura y composición. No se alteró el dibujo original.
-### 29 de octubre de 2026 — sin decorado de prueba y caminata hasta el final
+
+### sin decorado de prueba y caminata hasta el final
 
 A pedido de Mica se retiró edificio-delantero de OBJETOS, el último SVG placeholder
 con edificios y árboles. Se conservan sus ilustraciones, incluido el fondo Edificios.
@@ -658,7 +661,8 @@ la derecha ya no se detiene en el último cartel, ni la izquierda antes del inic
 Verificado con los métodos reales del motor: avance/retroceso por las paradas hasta
 ambos límites y posición de la chica en inicio, mitad y final. Check y build pasan.
 Pendiente: confirmación visual de Mica y prueba móvil.
-### 29 de octubre de 2026 — textos de los cinco proyectos
+
+### textos de los cinco proyectos
 
 Mica entregó las cinco descripciones, el año 2025 y las tecnologías. Se copiaron en
 los cuerpos Markdown, sin inventar contenido. Se actualizaron los títulos Studio 3
@@ -667,7 +671,8 @@ con un token CSS. No se agregó una chapa con el nombre sobre la captura.
 
 Check y build pasan. Ya no hay TODO(Mica) en src/content/proyectos. Falta confirmar
 legibilidad y espacio disponible con estos textos en navegador, sobre todo en móvil.
-### 29 de octubre de 2026 — giro de la chica y flechas continuas
+
+### giro de la chica y flechas continuas
 
 Mica pidió que al volver la chica mire hacia el otro lado, mejorar las flechas y sacar
 el texto técnico de Sin JavaScript. El motor toma la dirección del desplazamiento real
@@ -684,7 +689,8 @@ su CSS; la alternativa de carteles sin JavaScript sigue disponible.
 Check/build pasan. Prueba de los métodos reales con entorno simulado: toque, tecla
 sostenida/repetida, soltar, blur, pestaña oculta, límites y giro: OK. También se verificó
 que el HTML generado ya no contiene el texto retirado. Falta revisión visual de Mica.
-### 29 de octubre de 2026 — tirones reportados y hover verde
+
+### tirones reportados y hover verde
 
 Mica reportó que la caminata se traba mucho y pidió fondo verde en las descripciones.
 El fondo ahora usa el token verde-cartelera. Se detectó una fuente posible de tirones:
@@ -700,7 +706,8 @@ Check y build OK. Prueba con los métodos reales: 12 combinaciones de escala/ava
 seleccionan correctamente sin medir el DOM; el movimiento no escribe sobre el escenario.
 No se midieron fps ni se verificó fluidez en navegador: no se da por resuelto el tirón
 hasta comprobarlo. Falta confirmación visual y medición en el dispositivo de Mica.
-### 29 de octubre de 2026 — bienvenida y transparencia del hover
+
+### bienvenida y transparencia del hover
 
 Mica pidió bajar la opacidad del verde y reemplazar los números de depuración por una
 bienvenida con instrucciones, autorizando expresamente que el agente redacte ese texto.
@@ -712,7 +719,8 @@ config.js; estilos y opacidad en tokens.css. Se retiró también el código que 
 el debug en cada frame. La bienvenida se muestra en desarrollo y en el sitio publicado.
 
 Check y build: OK. Revisión visual de composición y transparencia: pendiente de Mica.
-### 29 de octubre de 2026 — bienvenida fija con serif
+
+### bienvenida fija con serif
 
 Mica informó que no veía la bienvenida y pidió que quede fija arriba a la izquierda,
 siempre visible y con serif. Se movió fuera del escenario y del riel, se usó position:
@@ -723,7 +731,8 @@ Check/build OK; confirmación visual pendiente.
 Ajuste posterior de Mica (29/10): bienvenida más chica, sin fondo, sólo texto serif.
 Se mantiene fija a la ventana durante todo el recorrido. Título 1.1rem, instrucciones
 0.8rem y ancho máximo 21rem, en tokens.css. Check/build OK; vista pendiente de Mica.
-### Cierre de sesión — 29 de octubre de 2026
+
+### Cierre de sesión
 
 Mica dijo: perfecto por hoy, commit y push y cerramos. Esa instrucción autoriza el push
 de esta sesión sin otra confirmación. Se preparan para subir la escena actualizada, los
@@ -736,3 +745,147 @@ y lectura de descripciones en móvil, integrar/documentar Open-Meteo y completar
 pendientes de entrega de la consigna. No inventar textos personales; la redacción de
 bienvenida fue autorizada expresamente. El cierre y sus commits quedan reflejados en
 Engram después de verificar el push.
+
+## 04/11/2026
+
+### caminata articulada y lectura por cercanía
+
+**Feedback posterior:** Mica aprobó la figura articulada y pidió un poco más de
+balanceo de brazos y que la cabeza llegue aproximadamente a mitad del cartel.
+Se ajustó el alto de 360 a 380 (+6%), hombros de 12° a 16° y codos de 9° a 12°.
+Se conservan el ritmo de piernas y los apoyos. Con la geometría de referencia,
+la coronilla en reposo queda a unos 2 px del centro vertical del cartel ampliado.
+Mica aprobó también este último ajuste de tamaño y brazos antes de retomar la lista.
+
+Mica dejó para después la lista de entrega y priorizó la caminata. Pidió una sola
+figura con articulaciones, sin superponer las poses; un aumento leve de tamaño;
+textos más cortos que aparezcan al agrandarse el cartel; y que la cabeza mire en
+ese mismo momento. También señaló que los últimos carteles reaccionaban tarde.
+
+- Se reemplazó el ciclo de imágenes por un esqueleto SVG: recortes de `camina-3.svg`
+  con caderas, rodillas, hombros y codos anidados. No se modificaron los originales.
+  Las partes ocultas del abrigo y de la cadera se completaron con formas simples.
+  La cabeza usa el recorte de `mira-al-cartel.svg` cuando hay un cartel activo;
+  el cuerpo sigue caminando. No hay fundidos entre siluetas completas.
+- `src/scripts/caminante.js` calcula los ángulos según distancia, flexiona la rodilla
+  que recupera el paso y calcula la altura del cuerpo desde los apoyos de los pies.
+  Al frenar asienta las piernas en 180 ms. Respeta movimiento reducido.
+- Alto de referencia 340 → 360 (+6%). Pivotes, recortes y amplitudes están en
+  `src/config.js`; escala y estilo del cartel activo, en `tokens.css`.
+- La selección ya no compara el cartel con el centro de la ventana: compara con
+  la posición de la chica y sus anchos. Agrandado, texto y cabeza comparten estado.
+  El cartel activo se desplaza lo necesario para entrar en el ancho visible, incluso
+  con barra de scroll. No hay mediciones de geometría durante el avance.
+- Se abreviaron las cinco descripciones originales a pedido de Mica, conservando
+  año y tecnologías. Bienvenida actualizada: acercarse al cartel, sin hover.
+- La primera prueba de recortes mostró cortes y uniones demasiado visibles; se
+  corrigieron máscaras y se reutilizó textura del pantalón en las rodillas. El
+  render de Sharp con `<use>` transformados no coincidía con Edge: la validación
+  visual final se hizo en el navegador, no con ese render de diagnóstico.
+
+Verificación: Edge con flechas reales, frenado y giro; cinco carteles en cinco
+tamaños al centrarlos y al primer contacto; textos dentro del panel; cartel ampliado
+dentro del ancho visible; movimiento reducido. Ver `docs/pruebas.md` y sus capturas.
+La caminata quedó aprobada por Mica; faltan fps en un celular real. Responsive completo,
+presentación, capturas definitivas, README/créditos generales, deploy y defensa siguen
+pendientes. La integración de API/cielo se registra a continuación.
+
+### Open-Meteo y elementos ilustrados del cielo
+
+Se integró la API de pronóstico desde el navegador, sin dependencias nuevas ni consultas
+en el build. `clima.js` solicita temperatura y código WMO actuales, salida y puesta del
+sol para las coordenadas de Buenos Aires. Se usa `timeformat=unixtime` y se formatea
+siempre en `America/Argentina/Buenos_Aires`: no depende de dónde esté el visitante.
+
+`cielo.js` aplica amanecer/día/tarde/noche usando los horarios solares del día, con
+45 minutos de crepúsculo a cada lado. Se distingue despejado, parcialmente nublado,
+nublado, niebla, lluvia, nieve y tormenta. Los códigos de nieve 71/73/75/77/85/86 tienen
+mapeo explícito. No se interpreta un dato nulo como cero ni como despejado.
+
+Se contemplaron carga, caché fresca de 30 minutos, error de red/HTTP/JSON, datos
+incompletos, cancelación a los 6 segundos y almacenamiento bloqueado. Si falla la API
+se conserva un dato de hasta 6 horas, marcado como guardado; sin él se informa la ausencia
+de clima y se usa un horario aproximado de 7–19 h. Un dato viejo no vuelve a ganar
+vigencia por abrir otra pestaña. Se revisa el reloj cada minuto, sin consultar en una
+pestaña oculta y sin afectar el motor de scroll.
+
+Mica pidió sol, luna y nubes con la estética de las ilustraciones existentes. Se usó
+la skill `imagegen` para generar tres PNG transparentes a partir de una captura de
+referencia. Se guardaron en `src/assets/clima/`; Astro sirve variantes WebP. La nube
+se reutiliza con filtros para lluvia y tormenta. Referencia, prompts y procedencia
+en `docs/ilustraciones-cielo.md`.
+
+Correcciones sobre la primera vista: se retiró la leyenda «Clima por Open-Meteo» y,
+después, la palabra «Créditos». Sólo queda el dato meteorológico visible; ese texto
+enlaza a `/creditos/`, donde se atribuyen la fuente y la licencia CC BY 4.0. El sol
+se subió, se movió a la derecha y se dejó al 78% de opacidad. Se aisló el contexto de
+apilamiento del cielo: sus elementos no pueden pasar por delante del Obelisco ni
+de los edificios. Posiciones, colores y opacidad están en `tokens.css`.
+
+Verificado: respuesta real HTTP 200 de Open-Meteo y lectura en Edge; once pruebas de
+datos/errores/reloj; diez escenarios de cielo simulados en navegador; carga de los
+dibujos, vista móvil y página de créditos. Las primeras simulaciones del navegador
+no estaban aplicando los datos de prueba porque faltaba habilitar el dominio Page
+de DevTools; se corrigió la herramienta de prueba y se repitieron los escenarios.
+Las capturas de tormenta/noche representan simulaciones, no el clima real de ese día.
+La aprobación final de esta parte visual y el rendimiento en celular real siguen pendientes.
+
+Fuentes oficiales consultadas: https://open-meteo.com/en/docs,
+https://open-meteo.com/en/terms y guías de scripts, imágenes, estilos y rutas de Astro.
+
+### Mobile, rendimiento y navegación accesible
+
+La revisión inicial detectó focos en proyectos fuera de pantalla, descripciones que
+no se abrían al enfocarlos y desplazamiento horizontal interno del escenario durante
+Tab. Se cambió el recorte a `overflow: clip` y se agregó navegación por `focusin`:
+la parada se calcula contra la posición de la chica, no contra el centro del viewport.
+Los encabezados de proyectos quedan disponibles para tecnologías de asistencia y
+los links avisan que abren otra pestaña. El título principal precede a los proyectos.
+
+Se ampliaron los botones a 44 px y el texto de descripción a 14 px antes de la
+ampliación del cartel. Se agregó un ancho mínimo de cartel y se calcula al medir la
+pantalla, acotado a su ancho útil. El panel activo reserva espacio para bienvenida y
+clima: sus medidas se leen al redimensionar o cambiar de tamaño esos textos, nunca
+durante cada frame. Un ResizeObserver también contempla que el clima pase a dos
+líneas al resolver la carga o un error. El foco usa un borde interior de alto contraste
+que no queda recortado por la preview.
+
+Para pantallas de hasta 500 px de alto, `lista.css` muestra los mismos proyectos en
+tarjetas con texto de 16 px y scroll normal. La misma hoja se carga con `noscript`;
+se reemplazó el fallback anterior que podía achicar los carteles en una fila. Al volver
+al recorrido se recupera el progreso guardado, evitando perderlo si el navegador
+recorta scrollY durante la rotación. En lista no se interceptan las flechas ni se
+actualiza el motor del escenario.
+
+Se detiene el ciclo de teclado al alcanzar un extremo o cambiar de modo. Las
+articulaciones no reescriben atributos que ya tienen el valor correcto, especialmente
+con movimiento reducido. La medición en producción, Edge headless, 390×844 y CPU
+normal/ralentizada ×4 se mantuvo entre aproximadamente 57 y 60 fps, sin tareas largas detectadas.
+No demuestra rendimiento en un celular de gama media: esa prueba sigue pendiente.
+
+Mica rechazó la redistribución del clima y los ajustes de paleta realizados durante
+esta revisión. Se restauraron su ubicación fija y los colores anteriores, conservando
+Open-Meteo, los dibujos y los ajustes aprobados del sol. No se afirma conformidad de
+contraste del indicador en todos los fondos. El contraste de las descripciones sobre
+verde y del foco sí se comprobó por separado.
+
+Pruebas: matriz de 11 tamaños por cinco proyectos; gestos touch y toque diferenciando
+Vercel/GitHub; rotación sin pérdida del progreso; once posiciones de Tab y Shift+Tab;
+Home/End; movimiento reducido; cinco proyectos legibles sin JavaScript. Se corrigió
+la prueba táctil para usar eventos touch reales del protocolo: el gesto sintético de
+scroll no movía la página en este entorno. La prueba de contraste también se separó
+del cambio de estilos para esperar al navegador y no medir el estado anterior.
+Resultados y límites en `docs/pruebas.md`.
+
+### Cierre y próxima sesión
+
+Mica dio por terminada la sesión. La próxima empieza por probar el sitio en un
+celular real: abrir el recorrido, caminar con gestos, leer y tocar los cinco proyectos,
+girar la pantalla y comprobar si se perciben tirones. Esa prueba tiene prioridad
+sobre el resto de la lista de entrega. No dar por medidos los fps de un teléfono
+a partir de la emulación de esta PC.
+
+Se detuvieron el servidor de desarrollo y el preview de pruebas. Check, build,
+once pruebas de clima y la matriz de 55 casos pasaron. Se preparan commits de código,
+pruebas y documentación. La subida se hace únicamente con la confirmación de Mica,
+según la regla de cierre; el resultado final se guarda en Engram.
