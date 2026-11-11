@@ -73,3 +73,49 @@ Con el teclado, algunos links recibían foco fuera de pantalla y la escena se de
 Durante estas pruebas se cambiaron la ubicación del clima y algunos colores del cielo, pero no me convencieron. Se dejaron como estaban antes. Se probó la fluidez en una emulación de celular y no se detectaron pausas largas; sigue pendiente comprobarlo en un teléfono real.
 
 Se cerró el trabajo del día dejando esa prueba como primera tarea para la próxima sesión: recorrer la web desde un celular, tocar los proyectos, girar la pantalla y revisar si la caminata se traba.
+
+## 8. Volver al recorrido en pantallas bajas — 11/11
+
+Pedí sacar la sección blanca que aparecía al principio. Se quitó el cambio automático a una lista con fondo claro en pantallas bajas para mantener la vereda. Falta confirmar visualmente que fuera eso lo que veía.
+
+Confirmé que era esa sección y quedó bien. Después pedí que la nena caminara un poquito más lento con las flechas: se bajó la velocidad aproximadamente un 15%.
+
+Elegí el nombre La vereda de Mica y sumé qué estudio y qué me gusta hacer. Se mantuvo la tipografía, se destacó el título y se separaron presentación e instrucciones. Falta ver si me convence cómo queda; en celular se hizo lugar debajo para el clima.
+
+No me gustó la estética de la presentación: las instrucciones quedaban arriba de los edificios y el clima se veía aburrido. Se achicó el bloque de presentación, se movieron las instrucciones abajo sobre la vereda y se probó un cartelito verde para el clima. Esta propuesta todavía no está aprobada.
+
+Las instrucciones todavía aparecían arriba con una franja blanca. Se corrigió la carga de la alternativa sin JavaScript y se pusieron las instrucciones dentro de la escena, abajo y sin recuadro. Falta confirmar en pantalla que ya no aparezca la franja.
+
+La franja quedó resuelta. Pedí dejar solamente Caminá con las flechas o hacé scroll y agrandar apenas esa frase.
+
+A pedido de Mica, se agregaron los símbolos ← → después de la palabra flechas en las instrucciones.
+
+En celular, los carteles parecían caminar al lado de la nena mientras los miraba. Era un ajuste que los mantenía dentro de la pantalla: se quitó para que conserven su lugar en la vereda. Siguen agrandándose y mostrando la descripción. Falta comprobarlo en el teléfono.
+
+Los carteles ya se ven mejor. Pedí caminar menos hasta el primero sólo en celular: se acortó el tramo inicial, conservando la distancia entre los proyectos y el recorrido de escritorio.
+
+Mica aportó una captura nueva de DevPath en public/img/devpath.png. Se revisó la imagen y se reemplazó src/assets/proyectos/devpath.png para usarla en el cartel con la optimización existente de Astro; se conserva el original aportado en img. Los enlaces y el hueco del marco no cambian.
+
+Pedí agregar Pegatina como primer proyecto y que las capturas se corten menos. Se ajustaron para mostrarse completas dentro del cartel; pueden quedar franjas libres. Falta ubicar la imagen de Pegatina para terminar de sumarlo.
+
+Subí la captura de Pegatina y se agregó como primer cartel, con mi descripción y los links a la web y GitHub. Los otros cinco siguen detrás en el mismo orden. No me gustaron las franjas negras de las imágenes, así que se volvió al encuadre anterior.
+
+Mica definió el texto breve de Pegatina: Marketplace de stickers de ilustradores argentinos independientes. Se agregó arriba la ficha 2026 · React · Next.js · TypeScript, con el mismo formato de los otros proyectos.
+
+A pedido de Mica, el nombre de cada proyecto aparece arriba de su año y tecnologías dentro de la descripción activa. Sale del título del Markdown, sin duplicarlo a mano ni agregar una chapa permanente sobre la captura. Tamaño centralizado en tokens.css.
+
+Se completó el README con la propuesta, el público que aprobamos, cómo ejecutar el sitio, qué hace cada componente y cómo funciona el clima. Se enlazaron las bitácoras y el uso de IA. Faltan confirmar la URL publicada y los créditos de las ilustraciones; quedaron anotados.
+
+Aclaré que las ilustraciones las generé con ChatGPT usando referencias de estilo de Pinterest, pero no guardé los links. Se agregó esa información al README y a los créditos del sitio.
+
+Pedí que el README fuera menos técnico y más formal. Se simplificaron las explicaciones y se pasó a primera persona, conservando lo que pide la consigna.
+
+Agregué acceso a /creditos/ desde el título La vereda de Mica, conservando su apariencia y mostrando subrayado al pasar el mouse o recibir foco de teclado.
+
+Confirmé que el portfolio está publicado en https://vereda-portfolio.vercel.app/ y que corregí por mi cuenta los pendientes del primer párrafo de limitaciones. Se agregó el enlace al README y se dejó sólo el párrafo de los carteles, comenzando con Queda pendiente. Esta actualización registra mi confirmación; no agrega nuevas mediciones del agente.
+
+Agregué Mi nombre es Micaela Svatzky al inicio de la presentación. El enlace del título queda explícitamente verde también después de visitarlo; conserva el subrayado al pasar el mouse o navegar con teclado.
+
+Se completó la descripción para buscadores con mi nombre, diseño/desarrollo front end y el recorrido por Buenos Aires. Ya no quedan marcadores de texto pendiente en src.
+
+Se preparó la publicación de los cambios de esta sesión y se comprobó que el sitio y el repositorio responden. Se corrigió el dominio de la configuración y pasaron las pruebas del clima. Falta mi confirmación para subir el commit.

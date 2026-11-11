@@ -1,6 +1,6 @@
 ---
 titulo: DevPath
-orden: 1
+orden: 2
 vercel: https://devpath-2025.vercel.app/
 github: https://github.com/micaelasvatzky/devpath-frontend
 preview: ../../assets/proyectos/devpath.png

@@ -68,6 +68,7 @@ class Escenario {
     const ancho = window.innerWidth;
 
     this.escala = calcularEscala();
+    this.margenInicio = ancho <= ESCENA.anchoMobile ? ESCENA.margenInicioMobile : ESCENA.margen;
     // Sólo se lee al medir/rotar la pantalla, nunca durante la caminata.
     const estilo = getComputedStyle(document.documentElement);
     this.modoLista = estilo.getPropertyValue('--vista-lista').trim() === '1';
@@ -76,7 +77,7 @@ class Escenario {
     this.margenCartel = parseFloat(estilo.getPropertyValue('--cartel-activo-margen')) || 0;
 
     const anchoMundo =
-      (ESCENA.margen * 2 + ESCENA.separacion * (this.carteleras.length - 1)) * this.escala;
+      (this.margenInicio + ESCENA.margen + ESCENA.separacion * (this.carteleras.length - 1)) * this.escala;
 
     // Cuánto se puede desplazar el mundo en horizontal.
     this.recorrido = Math.max(0, anchoMundo - ancho);
@@ -112,7 +113,7 @@ class Escenario {
     const estilo = this.escenario.style;
     estilo.setProperty('--escala', String(this.escala));
     estilo.setProperty('--cartelera-separacion', String(ESCENA.separacion));
-    estilo.setProperty('--cartelera-margen', String(ESCENA.margen));
+    estilo.setProperty('--cartelera-margen', String(this.margenInicio));
     estilo.setProperty('--cartelera-ancho', String(this.anchoCartel / this.escala));
     estilo.setProperty('--cartel-activo-y', `${this.ajusteVerticalCartel.toFixed(2)}px`);
     estilo.setProperty('--caminante-x', String(CAMINANTE.x));
@@ -202,19 +203,6 @@ class Escenario {
 
     const activa = mejor && mejorDistancia <= umbral ? mejor : null;
 
-    if (activa) {
-      // Mantiene el cartel ampliado dentro de la pantalla, también en celular.
-      const ancho = this.anchoCartel;
-      const anchoAmpliado = ancho * this.ampliacionCartel;
-      const izquierda = this.xDeCartelera(Number(activa.dataset.indice)) + (ancho - anchoAmpliado) / 2;
-      const ajuste = acotar(0, this.margenCartel - izquierda,
-        this.anchoVisible - this.margenCartel - izquierda - anchoAmpliado);
-      const valor = `${ajuste.toFixed(2)}px`;
-      if (activa.style.getPropertyValue('--cartel-activo-x') !== valor) {
-        activa.style.setProperty('--cartel-activo-x', valor);
-      }
-    }
-
     for (const cartelera of this.carteleras) {
       const valor = String(cartelera === activa);
       if (cartelera.dataset.activa !== valor) cartelera.dataset.activa = valor;
@@ -229,7 +217,7 @@ class Escenario {
 
   /** Borde izquierdo de un cartel en pantalla, sin consultar la geometría del DOM. */
   xDeCartelera(indice) {
-    return (ESCENA.margen + indice * ESCENA.separacion) * this.escala - this.desplazamiento;
+    return (this.margenInicio + indice * ESCENA.separacion) * this.escala - this.desplazamiento;
   }
 
   /** Marca si estamos al principio, en el medio o al final del recorrido. */
@@ -413,7 +401,7 @@ class Escenario {
   /** Calcula qué scrollY deja una cartelera centrada en pantalla. */
   yDeCartelera(indice) {
     const separacion = ESCENA.separacion * this.escala;
-    const margen = ESCENA.margen * this.escala;
+    const margen = this.margenInicio * this.escala;
 
     // Posición de la cartelera en coordenadas de mundo.
     const xMundo = margen + indice * separacion + this.anchoCartel / 2;

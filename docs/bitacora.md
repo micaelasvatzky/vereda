@@ -889,3 +889,49 @@ Se detuvieron el servidor de desarrollo y el preview de pruebas. Check, build,
 once pruebas de clima y la matriz de 55 casos pasaron. Se preparan commits de código,
 pruebas y documentación. La subida se hace únicamente con la confirmación de Mica,
 según la regla de cierre; el resultado final se guarda en Engram.
+
+## 11/11/2026
+
+Mica pidió sacar la sección blanca del inicio y recuperar la presentación anterior. Se retiró la importación automática de lista.css para ventanas de hasta 500 px de alto: la vereda conserva el recorrido también en horizontal. La lista queda sólo sin JavaScript. Se requiere confirmación visual de que éste era el elemento reportado y nueva revisión en celular horizontal. Check de codificación OK.
+
+Mica confirmó que la lista clara era el elemento reportado y aprobó retirarla. Luego pidió caminar un poquito más lento con flechas: velocidadTeclado pasó de 650 a 550 px de referencia por segundo (aproximadamente 15% menos), sin cambiar el scroll. Build anterior OK; este ajuste se verificó con check de codificación y sintaxis.
+
+Presentación: Mica eligió el nombre La vereda de Mica y contó que estudia la Licenciatura en Tecnología Multimedial y le interesa diseño/desarrollo web front end. Pidió ajustar texto, tamaños y ubicaciones conservando la serif. Se agregó presentación y especialidad, título fluido más grande y de peso normal, instrucciones separadas y menores. Los parámetros quedan en tokens.css y los textos en config.js. En móvil se bajó el clima para reservar lugar al bloque ampliado. Se actualizó el título de pestaña. Check/build OK; falta revisión visual, especialmente en pantallas bajas y con zoom.
+
+Mica rechazó la estética de la presentación ampliada: las instrucciones quedaban sobre los edificios y el clima resultaba aburrido. Se compactó la bienvenida, quitó la línea redundante de especialidad y acortó el texto sin cambiar sus datos. Las instrucciones ahora son un rótulo verde fijo al borde inferior, fuera del header. El clima usa un rótulo verde con borde doble, ciudad en mayúsculas y datos debajo; conserva el link a créditos y los estados de API. Ajustes centralizados en tokens.css. Check/build OK; pendiente revisión visual de esta propuesta en escritorio, móvil y horizontal. Sustituye la propuesta anterior, que no fue aprobada.
+
+Corrección posterior: Mica reportó que la ayuda seguía arriba y aparecía una franja blanca al scrollear. La respuesta HTTP del dev incluía lista.css?url como módulo y un style con export default. Se eliminó ese mecanismo; lista.css se importa normalmente y todas sus reglas se protegen con @media (scripting: none), evitando activar el fondo claro con JS. Las instrucciones se trasladaron dentro de escenario, con posición absoluta al borde inferior, sin fondo ni caja. Check/build OK y revisión de HTML servido por HTTP; falta confirmación visual. No se afirma haber reproducido visualmente la franja.
+
+Mica confirmó que la corrección anterior funcionó. A su pedido, la ayuda queda únicamente como Caminá con las flechas o hacé scroll, aumentando apenas de 0.8 a 0.9 rem.
+
+A pedido de Mica, se agregaron los símbolos ← → después de la palabra flechas en las instrucciones.
+
+Mobile: Mica detectó que los carteles parecían caminar junto a la chica al mirarlos. Causa: marcarActiva recalculaba --cartel-activo-x en cada desplazamiento para mantener el cartel ampliado dentro del viewport. Se retiró esa compensación horizontal del motor y del transform CSS; se conservan ampliación, ajuste vertical y mirada. Ahora el cartel sigue anclado al mundo y puede salir parcialmente por el borde al pasar, como el resto de la escena. Check/build OK. Simulación de ida/vuelta a ancho 390: 3010 posiciones de los cinco carteles sin corrección horizontal y mirada conservada. Falta prueba visual en celular real; las pruebas anteriores que exigían contener todo el cartel activo ya no describen este comportamiento.
+
+Mica confirmó la mejora de los carteles anclados y pidió reducir el camino inicial sólo en mobile. Se agregó margenInicioMobile=350 para anchos hasta anchoMobile=767 en config.js, frente a 1000 de escritorio. El motor usa el mismo margen al posicionar, calcular recorrido y navegar por foco; el margen final y la separación entre proyectos se conservan. Se recalcula al redimensionar. Check/build OK; falta confirmación visual de la nueva distancia.
+
+Mica aportó una captura nueva de DevPath en public/img/devpath.png. Se revisó la imagen y se reemplazó src/assets/proyectos/devpath.png para usarla en el cartel con la optimización existente de Astro; se conserva el original aportado en img. Los enlaces y el hueco del marco no cambian.
+
+Mica pidió sumar Pegatina primero (demo pegatina-app.vercel.app, repo micaelasvatzky/pegatina) y aportó su descripción. Falta ubicar su captura: todavía no hay un archivo de Pegatina en el repo y se consultó a Mica dónde lo guardó. Para evitar recortes en las capturas existentes, se cambió object-fit de cover a contain y se centró la imagen en el hueco medido, conservando proporciones y completando las franjas con el fondo existente. Ajustable con --preview-encuadre en tokens.css. Check/build OK de este cambio; pendiente revisión visual.
+
+Pegatina terminado: Mica subió public/img/pegatina.png; se revisó y copió a assets/proyectos. Se agregó 00-pegatina.md con orden 1, enlaces y descripción exacta de Mica, sin inventar año ni tecnologías. Los cinco proyectos anteriores pasan a orden 2–6. Mica rechazó las franjas del encuadre contain: se restauró cover y alineación superior. Build OK con seis carteles y captura optimizada de Pegatina. La captura la aportó Mica; el intento de captura automática no pudo completarse por bloqueo del control del navegador.
+
+Mica definió el texto breve de Pegatina: Marketplace de stickers de ilustradores argentinos independientes. Se agregó arriba la ficha 2026 · React · Next.js · TypeScript, con el mismo formato de los otros proyectos.
+
+A pedido de Mica, el nombre de cada proyecto aparece arriba de su año y tecnologías dentro de la descripción activa. Sale del título del Markdown, sin duplicarlo a mano ni agregar una chapa permanente sobre la captura. Tamaño centralizado en tokens.css.
+
+README: con el público aprobado por Mica, se reescribió la guía con propuesta, recorrido, instalación/build, decisiones, responsabilidades de cinco componentes, seis proyectos, API/estados, responsive/accesibilidad y enlaces al proceso/IA. Se verificaron comandos con la CLI instalada y documentación oficial de Astro; licencias de Archivo e Inter con los paquetes locales (OFL 1.1). No se inventó URL de deploy ni licencia de ilustraciones. Quedan explícitos esos pendientes, meta descripción, defensa y repetición de pruebas de seis proyectos. Check y diff --check OK; cambio documental, sin nueva ejecución de build.
+
+Créditos: Mica aclaró que tomó referencias de estilo de Pinterest y generó las ilustraciones de la escena con ChatGPT; no conserva los enlaces. Se actualizó README y la página de créditos con esa procedencia, selección/dirección visual de Mica y la imposibilidad de identificar a los autores de las referencias. No se atribuyen como dibujos originales de Mica ni se presume licencia o permiso. Esta aclaración corrige las menciones históricas a dibujos propios de Mica.
+
+README: pedí una redacción menos técnica y casi formal, sin referencias a mí en tercera persona. Se reescribió en primera persona, manteniendo todos los apartados de la consigna y los comandos necesarios. Los detalles del código quedan en la documentación técnica enlazada. También se corrigió la atribución visible en créditos para usar primera persona.
+
+Agregué acceso a /creditos/ desde el título La vereda de Mica, conservando su apariencia y mostrando subrayado al pasar el mouse o recibir foco de teclado.
+
+Confirmé que el portfolio está publicado en https://vereda-portfolio.vercel.app/ y que corregí por mi cuenta los pendientes del primer párrafo de limitaciones. Se agregó el enlace al README y se dejó sólo el párrafo de los carteles, comenzando con Queda pendiente. Esta actualización registra mi confirmación; no agrega nuevas mediciones del agente.
+
+Agregué Mi nombre es Micaela Svatzky al inicio de la presentación. El enlace del título queda explícitamente verde también después de visitarlo; conserva el subrayado al pasar el mouse o navegar con teclado.
+
+Revisión de placeholders: se reemplazó la meta descripción pendiente por una síntesis de la presentación y el recorrido, guardada en BIENVENIDA.descripcion en config.js. Se retiró una mención antigua al marcador en un comentario CSS. La búsqueda literal de TODO(Mica) en src no devuelve resultados. Check/build OK.
+
+Preparación para publicar: comprobé las URL públicas de Vercel y GitHub (HTTP 200), corregí site en astro.config.mjs con el dominio publicado y pasaron las once pruebas de clima. Se prepara el commit de los cambios de esta sesión: presentación, controles/móvil, Pegatina y capturas, créditos y documentación. La actualización del sitio queda pendiente del push y del despliegue; el push requiere confirmación previa.

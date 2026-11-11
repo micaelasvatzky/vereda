@@ -12,8 +12,11 @@
  * En cualquier dispositivo real se multiplica por `--escala` (ver `escenario.js`).
  */
 export const BIENVENIDA = {
-  titulo: 'Portfolio de Mica',
-  instrucciones: 'Recorré la vereda con las flechas ← → o haciendo scroll. Acercate a cada cartel para leer sobre el proyecto y hacé clic para visitar su web.',
+  titulo: 'La vereda de Mica',
+  descripcion: 'Portfolio de Micaela Svatzky: diseño y desarrollo web front end. Recorré una vereda de Buenos Aires para conocer mis proyectos.',
+  presentacion: 'Mi nombre es Micaela Svatzky. Estudio Tecnología Multimedial y me gusta darle forma a la web: desde el diseño hasta el desarrollo front end.',
+  especialidad: 'Diseño y desarrollo web · Front end',
+  instrucciones: 'Caminá con las flechas ← → o hacé scroll',
   instruccionesLista: 'Explorá los proyectos y abrí sus webs o repositorios.',
 };
 
@@ -29,6 +32,9 @@ export const ESCENA = {
   separacion: 633,
   /** Espacio antes de la primera y después de la última cartelera, en px de referencia. */
   margen: 1000,
+  /** Tramo inicial más corto sólo en celulares; no cambia la distancia entre proyectos. */
+  margenInicioMobile: 350,
+  anchoMobile: 767,
   /**
    * Ancho de una cartelera, en px de referencia. El motor lo usa para
    * centrar el salto. También sale de la Escena: cada cartel mide
@@ -40,7 +46,7 @@ export const ESCENA = {
   /** Cuánto scroll vertical hace falta por px de mundo. >1 = más lento. */
   ritmo: 1,
   /** Velocidad con flechas sostenidas, en px de mundo de referencia por segundo. */
-  velocidadTeclado: 650,
+  velocidadTeclado: 550,
   /**
    * Capas de fondo, de la más lejana a la más cercana.
    * factor = 0 la capa queda fija, factor = 1 se mueve a la velocidad del mundo.

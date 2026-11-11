@@ -1,6 +1,6 @@
 ---
 titulo: Rick & Morty
-orden: 3
+orden: 4
 vercel: https://rickandmortyapp2025.vercel.app/
 github: https://github.com/micaelasvatzky/rickandmortyapp
 preview: ../../assets/proyectos/rick-and-morty.png

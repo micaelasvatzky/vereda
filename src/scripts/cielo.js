@@ -47,15 +47,15 @@ function iniciarCielo() {
     document.documentElement.dataset.tiempo = cielo.dataset.tiempo;
     indicador.dataset.estado = estado;
 
-    let mensaje = `${CIUDAD.nombre} · consultando el cielo…`;
+    let mensaje = 'Consultando el cielo…';
     if (datos) {
-      mensaje = `${CIUDAD.nombre} · ${Math.round(datos.temperatura)} °C · ${tiempo.texto.toLowerCase()}`;
+      mensaje = `${Math.round(datos.temperatura)} °C · ${tiempo.texto.toLowerCase()}`;
       if (estado === 'guardado') mensaje += ' · último dato guardado';
       indicador.title = `Dato de ${new Intl.DateTimeFormat('es-AR', {
         timeZone: CIUDAD.zonaHoraria, dateStyle: 'short', timeStyle: 'short',
       }).format(new Date(datos.observado))} (Buenos Aires)`;
     } else if (estado !== 'cargando') {
-      mensaje = `${CIUDAD.nombre} · clima no disponible; cielo según horario`;
+      mensaje = 'Clima no disponible; cielo según horario';
       indicador.title = 'Sin datos del clima. Los colores siguen el horario aproximado de Buenos Aires.';
     }
     if (texto.textContent !== mensaje) texto.textContent = mensaje;

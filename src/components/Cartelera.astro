@@ -78,6 +78,7 @@ const descripcionId = `descripcion-proyecto-${indice}`;
           {/* Link principal: la preview entera lleva a Vercel. */}
           {Content && (
             <div class="cartelera__descripcion" id={descripcionId}>
+              <h3 class="cartelera__nombre">{proyecto.data.titulo}</h3>
               <Content />
             </div>
           )}
@@ -228,14 +229,13 @@ const descripcionId = `descripcion-proyecto-${indice}`;
   }
 
   /*
-   * La captura entra "deWa" al hueco: se recorta por los lados para
-   * llenar el panel sin deformarse (object-fit: cover) y pegada al
-   * borde superior, que es donde está el header de cada web.
+   * La captura llena el hueco sin deformarse, recortando el sobrante.
+   * Se prioriza el borde superior, donde suele estar el encabezado.
    */
   .cartelera__preview-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--preview-encuadre);
     object-position: center top;
     display: block;
   }
@@ -259,11 +259,18 @@ const descripcionId = `descripcion-proyecto-${indice}`;
     margin: 0;
   }
 
+  .cartelera__nombre {
+    margin: 0 0 var(--descripcion-separacion);
+    font-family: inherit;
+    font-size: var(--descripcion-nombre-tamano);
+    line-height: inherit;
+  }
+
   .cartelera__descripcion :global(p + p) {
     margin-top: var(--descripcion-separacion);
   }
 
-  .cartelera__descripcion :global(p:first-child) {
+  .cartelera__descripcion :global(h3 + p) {
     font-size: var(--descripcion-ficha-tamano);
   }
 
@@ -322,8 +329,7 @@ const descripcionId = `descripcion-proyecto-${indice}`;
 
   /* La cartelera activa se "prende": crece apenas y se levanta. Sin marco. */
   .cartelera[data-activa='true'] .cartelera__cartel {
-    transform: translateX(var(--cartel-activo-x, 0px))
-      translateY(var(--cartel-activo-y, 0px))
+    transform: translateY(var(--cartel-activo-y, 0px))
       scale(var(--cartel-activo-escala)) translateY(var(--cartel-activo-elevacion));
   }
 

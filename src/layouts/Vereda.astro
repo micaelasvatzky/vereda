@@ -4,14 +4,14 @@ import '@fontsource/archivo/latin-800.css';
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-600.css';
 import '../styles/global.css';
-import { CAMINANTE } from '../config.js';
-import estilosLista from '../styles/lista.css?url';
+import { BIENVENIDA, CAMINANTE } from '../config.js';
+import '../styles/lista.css';
 
 interface Props {
   titulo?: string;
 }
 
-const { titulo = 'Vereda — TODO(Mica): nombre final del sitio' } = Astro.props;
+const { titulo = 'La vereda de Mica' } = Astro.props;
 ---
 
 <html lang="es" data-motor="desconocido">
@@ -19,10 +19,9 @@ const { titulo = 'Vereda — TODO(Mica): nombre final del sitio' } = Astro.props
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content="TODO(Mica): descripción del sitio para buscadores." />
+    <meta name="description" content={BIENVENIDA.descripcion} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{titulo}</title>
-    <noscript><link rel="stylesheet" href={estilosLista} /></noscript>
   </head>
   <body>
     <slot />

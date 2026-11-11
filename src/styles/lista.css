@@ -1,5 +1,6 @@
 /* Alternativa legible para pantallas bajas y para navegar sin JavaScript. */
 /* El selector compensa la especificidad de los estilos locales de Astro. */
+@media (scripting: none) {
 :root { --vista-lista: 1; }
 html:root body { background: var(--creditos-fondo); }
 html:root body .riel { height: auto !important; }
@@ -31,6 +32,7 @@ html:root body .escenario__bienvenida {
   color: var(--verde-cartelera-oscuro);
 }
 html:root body .escenario__bienvenida .instrucciones-recorrido { display: none; }
+html:root body .instrucciones-recorrido { display: none; }
 html:root body .escenario__bienvenida .instrucciones-lista { display: block; }
 html:root body .clima-ciudad {
   position: static;
@@ -72,4 +74,5 @@ html:root body .cartelera__descripcion {
   padding-bottom: var(--lista-reserva-boton);
   font-size: var(--lista-texto-tamano);
   background: var(--verde-cartelera-oscuro);
+}
 }

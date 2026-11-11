@@ -41,8 +41,8 @@ const franjaVereda = `url(${RUTAS_CAPAS.vereda})`;
 ---
 
 <header class="escenario__bienvenida" data-informacion>
-  <h1>{BIENVENIDA.titulo}</h1>
-  <p class="instrucciones-recorrido">{BIENVENIDA.instrucciones}</p>
+  <h1><a href="/creditos/" title="Ver créditos">{BIENVENIDA.titulo}</a></h1>
+  <p class="escenario__presentacion">{BIENVENIDA.presentacion}</p>
   <p class="instrucciones-lista">{BIENVENIDA.instruccionesLista}</p>
 </header>
 
@@ -109,6 +109,7 @@ const franjaVereda = `url(${RUTAS_CAPAS.vereda})`;
     </div>
 
     <Caminante />
+    <p class="instrucciones-recorrido">{BIENVENIDA.instrucciones}</p>
 
   </div>
 </div>
@@ -263,11 +264,52 @@ const franjaVereda = `url(${RUTAS_CAPAS.vereda})`;
   .escenario__bienvenida h1 {
     font-family: inherit;
     font-size: var(--bienvenida-titulo);
-    margin: 0 0 0.4em;
+    margin: 0 0 var(--bienvenida-titulo-espacio);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+  }
+
+  .escenario__bienvenida h1 a,
+  .escenario__bienvenida h1 a:visited {
+    color: var(--verde-cartelera-oscuro);
+    text-decoration: none;
+    text-underline-offset: 0.15em;
+  }
+
+  .escenario__bienvenida h1 a:hover,
+  .escenario__bienvenida h1 a:focus-visible {
+    text-decoration: underline;
   }
 
   .escenario__bienvenida p {
     margin: 0;
+  }
+
+  .escenario__bienvenida .escenario__especialidad {
+    font-size: var(--bienvenida-etiqueta);
+    margin-bottom: var(--bienvenida-separacion);
+    letter-spacing: 0.035em;
+  }
+
+  .escenario__bienvenida .escenario__presentacion {
+    margin-bottom: var(--bienvenida-separacion);
+    text-wrap: pretty;
+  }
+
+  .instrucciones-recorrido {
+    position: absolute;
+    bottom: var(--recorrido-ayuda-borde);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: max-content;
+    max-width: calc(100% - 2 * var(--bienvenida-margen));
+    margin: 0;
+    color: var(--verde-cartelera-oscuro);
+    font-family: var(--fuente-bienvenida);
+    font-size: var(--bienvenida-instrucciones);
+    line-height: 1.4;
+    text-align: center;
   }
 
   .instrucciones-lista { display: none; }

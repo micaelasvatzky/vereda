@@ -467,3 +467,49 @@ Ajuste 29/10: Mica eligió bienvenida más chica y sin fondo, sólo serif fija. 
 quitó el fondo y espaciado del recuadro y redujo los tamaños. Check/build OK.
 Cierre 29/10: Mica aprobó el último ajuste visual y autorizó commit y push. Las pruebas
 de lógica fueron simuladas y no reemplazan medición de fps ni revisión móvil.
+
+### 11 de noviembre de 2026 — presentación en pantallas bajas
+
+El agente retiró la activación automática de la lista sobre fondo claro, interpretando el reporte de Mica sobre una sección blanca inicial. Conservó la alternativa sin JavaScript y actualizó README y ambas bitácoras. Falta confirmar visualmente la identificación del elemento.
+
+Ajuste del mismo día: Mica confirmó que se había retirado la sección correcta. A su pedido, el agente bajó velocidadTeclado de 650 a 550 en config.js; el scroll conserva su comportamiento.
+
+Presentación: a partir de los datos que dio Mica, el agente propuso una redacción breve y ajustó la jerarquía visual de la bienvenida conservando Georgia, sin fondo. Título, presentación e instrucciones tienen tamaños y espacios distintos. Check/build OK; pendiente aprobación visual de Mica.
+
+Mica descartó la primera jerarquía visual. El agente compactó la presentación y trasladó las instrucciones al borde inferior. Propuso señalética verde para clima y ayuda, con la ciudad separada de los datos dinámicos. Build/check OK; sin validación visual de la nueva propuesta todavía.
+
+Se revisó el HTML servido por localhost sin abrir Chrome, a pedido de Mica. Se retiró la importación CSS por URL de la lista alternativa, se limitó a navegación sin scripts y se ubicó la ayuda dentro del escenario, sin fondo. Check/build OK. Verificación visual todavía pendiente.
+
+Ajuste final de ayuda solicitado por Mica: texto reducido a su frase y tamaño de 0.8 a 0.9 rem, sin cambiar ubicación.
+
+A pedido de Mica, se agregaron los símbolos ← → después de la palabra flechas en las instrucciones.
+
+Corrección móvil: a partir del reporte de Mica, el agente identificó y retiró la compensación horizontal continua del cartel activo. Verificó check/build y una simulación de 3010 posiciones de ida y vuelta; no reemplaza validación visual en teléfono.
+
+A pedido de Mica, el agente acortó el margen inicial móvil de 1000 a 350 unidades de referencia, centralizado en config.js con umbral 767 px. Se sincronizaron posiciones, foco y longitud de recorrido. Check/build OK; pendiente aprobación de la distancia.
+
+Mica aportó una captura nueva de DevPath en public/img/devpath.png. Se revisó la imagen y se reemplazó src/assets/proyectos/devpath.png para usarla en el cartel con la optimización existente de Astro; se conserva el original aportado en img. Los enlaces y el hueco del marco no cambian.
+
+El agente cambió el encuadre de las capturas a contain, sin alterar las imágenes originales ni las medidas del marco. Mica aportó links y descripción de Pegatina para sumarlo primero; se está esperando la ubicación de su captura. Check/build OK del encuadre.
+
+Pegatina: la captura final la subió Mica, porque el control del navegador bloqueó el intento automático. El agente la integró, agregó el Markdown con sus textos y enlaces y ordenó los seis proyectos. A pedido de Mica se revirtió contain a cover, sin franjas. Build OK.
+
+Mica definió el texto breve de Pegatina: Marketplace de stickers de ilustradores argentinos independientes. Se agregó arriba la ficha 2026 · React · Next.js · TypeScript, con el mismo formato de los otros proyectos.
+
+A pedido de Mica, el nombre de cada proyecto aparece arriba de su año y tecnologías dentro de la descripción activa. Sale del título del Markdown, sin duplicarlo a mano ni agregar una chapa permanente sobre la captura. Tamaño centralizado en tokens.css.
+
+README: el agente redactó la documentación técnica a partir del código, las decisiones registradas y los datos/público aprobados por Mica. Verificó ayuda de la CLI, referencia oficial de Astro y licencias de fuentes locales. Conservó pendientes de deploy y atribuciones sin inventar autoría ni validaciones. Check/diff OK.
+
+Aclaración de procedencia de Mica: la chica, edificios, vereda, Obelisco y carteles fueron generados con ChatGPT tomando referencias de estilo de Pinterest. No conserva enlaces ni se conocen los autores de esas referencias. Mica seleccionó y dirigió lo visual. Esta aclaración reemplaza las atribuciones anteriores a dibujos propios, sin inventar prompts, permisos o fuentes. Se incorporó al README y créditos visibles.
+
+Pedí usar primera persona y un tono casi formal en el README. La IA asistió en la reescritura, reduciendo jerga sin quitar instalación, tecnologías, componentes, API/errores, accesibilidad, límites, proceso y créditos.
+
+Agregué acceso a /creditos/ desde el título La vereda de Mica, conservando su apariencia y mostrando subrayado al pasar el mouse o recibir foco de teclado.
+
+Confirmé que el portfolio está publicado en https://vereda-portfolio.vercel.app/ y que corregí por mi cuenta los pendientes del primer párrafo de limitaciones. Se agregó el enlace al README y se dejó sólo el párrafo de los carteles, comenzando con Queda pendiente. Esta actualización registra mi confirmación; no agrega nuevas mediciones del agente.
+
+Agregué Mi nombre es Micaela Svatzky al inicio de la presentación. El enlace del título queda explícitamente verde también después de visitarlo; conserva el subrayado al pasar el mouse o navegar con teclado.
+
+La IA revisó los marcadores pendientes y redactó la meta descripción usando únicamente mi nombre, intereses y concepto ya definidos. La descripción quedó centralizada en config.js. Búsqueda sin marcadores en src y check/build OK.
+
+Preparación de publicación: la IA asistió en la revisión del diff, comprobación HTTP del sitio y repositorio y corrección del dominio configurado. Once pruebas de clima OK. Se prepara un commit revisable; el push queda sujeto a mi confirmación.
