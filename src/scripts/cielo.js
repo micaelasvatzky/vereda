@@ -50,7 +50,6 @@ function iniciarCielo() {
     let mensaje = 'Consultando el cielo…';
     if (datos) {
       mensaje = `${Math.round(datos.temperatura)} °C · ${tiempo.texto.toLowerCase()}`;
-      if (estado === 'guardado') mensaje += ' · último dato guardado';
       indicador.title = `Dato de ${new Intl.DateTimeFormat('es-AR', {
         timeZone: CIUDAD.zonaHoraria, dateStyle: 'short', timeStyle: 'short',
       }).format(new Date(datos.observado))} (Buenos Aires)`;

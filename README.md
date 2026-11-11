@@ -23,7 +23,7 @@ del proyecto: nombre, año, tecnologías y una descripción breve. La imagen per
 visitar el sitio publicado y el botón de GitHub lleva a su repositorio.
 
 También es posible recorrer los enlaces con la tecla Tab. El cielo acompaña el clima
-y el horario de Buenos Aires, y desde el título del proyecto se accede a los créditos.
+y el horario de Buenos Aires.
 
 ## Instalación y ejecución
 

@@ -49,11 +49,11 @@
   --recorrido-ayuda-espacio: 0.5rem 1rem;
   --recorrido-ayuda-radio: 0.3rem;
   --rotulo-texto: #fff5d9;
-  --clima-rotulo-espacio: 0.65rem 0.9rem;
-  --clima-rotulo-radio: 0.3rem;
-  --clima-ciudad-tamano: 0.65rem;
+  --clima-rotulo-espacio: var(--recorrido-ayuda-espacio);
+  --clima-rotulo-radio: var(--recorrido-ayuda-radio);
+  --clima-ciudad-tamano: var(--bienvenida-instrucciones);
   --clima-rotulo-separacion: 0.3rem;
-  --clima-rotulo-interletra: 0.12em;
+  --clima-rotulo-interletra: normal;
 
   /* --- Tipografías --------------------------------------------------- */
   /* Archivo bold para los afiches (voces grandes, destreet). Inter para leer. */
@@ -73,11 +73,13 @@
   --cielo-superior: #a1e3e4;
   --cielo-inferior: #a1e3e4;
   --cielo-texto: var(--verde-cartelera-oscuro);
+  --cielo-texto-oscuro: #000000;
+  --cielo-texto-claro: #ffffff;
   --nube-color: #f3f0df;
   --cielo-veladura: #b0bfc0;
   --nubes-opacidad: 0;
   --clima-ancho: 21rem;
-  --clima-tamano: 1rem;
+  --clima-tamano: var(--bienvenida-instrucciones);
   --clima-mobile-arriba: 8.5rem;
   --astro-ancho: clamp(95px, 12vw, 170px);
   --astro-x: 70%;
@@ -128,17 +130,19 @@
 }
 
 html[data-momento='amanecer'] {
+  --cielo-texto: var(--cielo-texto-oscuro);
   --cielo-superior: #b47c8b;
   --cielo-inferior: #f5ce9b;
 }
 html[data-momento='tarde'] {
+  --cielo-texto: var(--cielo-texto-oscuro);
   --cielo-superior: #946b88;
   --cielo-inferior: #efb073;
 }
 html[data-momento='noche'] {
   --cielo-superior: #0d1b2e;
   --cielo-inferior: #2b3a55;
-  --cielo-texto: #fff0d6;
+  --cielo-texto: var(--cielo-texto-claro);
   --nube-color: #46576b;
   --cielo-veladura: #1c2a3c;
 }
@@ -170,7 +174,9 @@ html[data-momento='noche'] {
   --cielo-superior: #c2cdce;
   --cielo-inferior: #e4e8df;
 }
-html[data-tiempo='tormenta'] { --cielo-texto: #fff0d6; }
+html[data-momento='dia'][data-tiempo='tormenta'] {
+  --cielo-texto: var(--cielo-texto-claro);
+}
 [data-cielo][data-tiempo='lluvia'] { --nube-filtro: brightness(0.7) saturate(0.5); }
 [data-cielo][data-tiempo='tormenta'] { --nube-filtro: brightness(0.48) saturate(0.4); }
 [data-cielo][data-tiempo='niebla'] { --nube-visibilidad: 0.55; }
