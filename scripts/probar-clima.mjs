@@ -65,6 +65,14 @@ test('salida/puesta reales, crepúsculos y datos solares del día anterior', () 
   assert.equal(momentoDelDia(Date.parse('2026-11-05T03:10:00Z'), datos), 'noche');
 });
 
+test('la noche empieza quince minutos después de la puesta, también sin API', () => {
+  const datos = leerRespuesta(respuesta());
+  assert.equal(momentoDelDia(datos.atardecer + 14 * 60000, datos), 'tarde');
+  assert.equal(momentoDelDia(datos.atardecer + 15 * 60000, datos), 'noche');
+  assert.equal(momentoDelDia(Date.parse('2026-11-04T23:00:00Z'), datos), 'noche');
+  assert.equal(momentoDelDia(Date.parse('2026-11-04T23:00:00Z')), 'noche');
+});
+
 test('consulta realista y caché fresca: una sola solicitud, datos iguales', async () => {
   almacenamiento();
   let llamadas = 0;

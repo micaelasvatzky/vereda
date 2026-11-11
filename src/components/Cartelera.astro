@@ -198,6 +198,9 @@ const descripcionId = `descripcion-proyecto-${indice}`;
   /* El arte de Mica ocupa todo el cartel. */
   .cartelera__arte {
     position: absolute;
+    /* El marco y el óvalo quedan delante sin interceptar los enlaces. */
+    z-index: 2;
+    pointer-events: none;
     inset: 0;
     width: 100%;
     height: 100%;
@@ -220,6 +223,7 @@ const descripcionId = `descripcion-proyecto-${indice}`;
    */
   .cartelera__preview {
     position: absolute;
+    z-index: 1;
     left: var(--hueco-left);
     top: var(--hueco-top);
     width: var(--hueco-width);

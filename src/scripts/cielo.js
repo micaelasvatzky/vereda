@@ -16,7 +16,8 @@ export function momentoDelDia(ahora, datos = null) {
   }
   const margen = CIUDAD.margenCrepusculo * 60000;
   if (Math.abs(ahora - amanecer) <= margen) return 'amanecer';
-  if (Math.abs(ahora - atardecer) <= margen) return 'tarde';
+  if (ahora >= atardecer - margen &&
+      ahora < atardecer + CIUDAD.minutosNocheTrasPuesta * 60000) return 'tarde';
   return ahora > amanecer && ahora < atardecer ? 'dia' : 'noche';
 }
 
@@ -24,6 +25,7 @@ function iniciarCielo() {
   const cielo = document.querySelector('[data-cielo]');
   const indicador = document.querySelector('[data-clima]');
   const texto = document.querySelector('[data-clima-texto]');
+  const hora = document.querySelector('[data-hora-ciudad]');
   if (!cielo || !indicador || !texto) return;
 
   let datos = null;
@@ -34,6 +36,11 @@ function iniciarCielo() {
 
   function pintar() {
     const ahora = Date.now();
+    if (hora) {
+      hora.textContent = ` · ${new Intl.DateTimeFormat('es-AR', {
+        timeZone: CIUDAD.zonaHoraria, hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+      }).format(new Date(ahora))}`;
+    }
     // Un dato que envejeció mientras la pestaña estaba abierta deja de usarse.
     if (datos && ahora - datos.observado > CIUDAD.maxEdadRespaldo) {
       datos = null;

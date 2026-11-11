@@ -14,7 +14,11 @@
 export const BIENVENIDA = {
   titulo: 'La vereda de Mica',
   descripcion: 'Portfolio de Micaela Svatzky: diseño y desarrollo web front end. Recorré una vereda de Buenos Aires para conocer mis proyectos.',
-  presentacion: 'Mi nombre es Micaela Svatzky. Estudio Tecnología Multimedial y me gusta darle forma a la web: desde el diseño hasta el desarrollo front end.',
+  presentacion: {
+    rol: 'Diseñadora y desarrolladora web.',
+    gusto: 'Me gusta darle forma a las ideas, desde el primer boceto hasta verlas funcionar.',
+    invitacion: 'Te invito a caminar por mis proyectos.',
+  },
   especialidad: 'Diseño y desarrollo web · Front end',
   instrucciones: 'Caminá con las flechas ← → o hacé scroll',
   instruccionesLista: 'Explorá los proyectos y abrí sus webs o repositorios.',
@@ -187,6 +191,8 @@ export const CIUDAD = {
   revisionReloj: 60 * 1000,
   /** Minutos a cada lado de la salida/puesta del sol para los colores cálidos. */
   margenCrepusculo: 45,
+  /** Después de la puesta, el cielo cálido da paso a la noche más rápido. */
+  minutosNocheTrasPuesta: 15,
   /** Horarios aproximados usados sólo si faltan los datos solares del día. */
   amanecerRespaldo: 7,
   atardecerRespaldo: 19,

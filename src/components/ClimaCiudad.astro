@@ -4,7 +4,7 @@ import { CIUDAD } from '../config.js';
 
 <aside class="clima-ciudad" data-clima data-estado="cargando" aria-label="Cielo de Buenos Aires">
   <div class="clima-ciudad__rotulo">
-    <span class="clima-ciudad__nombre">{CIUDAD.nombre}</span>
+    <span class="clima-ciudad__nombre">{CIUDAD.nombre}<span data-hora-ciudad></span></span>
     <p data-clima-texto role="status">Consultando el cielo…</p>
   </div>
 </aside>
