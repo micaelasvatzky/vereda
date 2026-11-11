@@ -513,3 +513,5 @@ Agregué Mi nombre es Micaela Svatzky al inicio de la presentación. El enlace d
 La IA revisó los marcadores pendientes y redactó la meta descripción usando únicamente mi nombre, intereses y concepto ya definidos. La descripción quedó centralizada en config.js. Búsqueda sin marcadores en src y check/build OK.
 
 Preparación de publicación: la IA asistió en la revisión del diff, comprobación HTTP del sitio y repositorio y corrección del dominio configurado. Once pruebas de clima OK. Se prepara un commit revisable; el push queda sujeto a mi confirmación.
+
+Con mi confirmación, el agente subió los cambios a main y comprobó la actualización pública mediante HTTP: Pegatina y mi nombre completo ya aparecen. Esta comprobación confirma publicación del contenido, no una nueva prueba visual o de rendimiento.

@@ -935,3 +935,5 @@ Agregué Mi nombre es Micaela Svatzky al inicio de la presentación. El enlace d
 Revisión de placeholders: se reemplazó la meta descripción pendiente por una síntesis de la presentación y el recorrido, guardada en BIENVENIDA.descripcion en config.js. Se retiró una mención antigua al marcador en un comentario CSS. La búsqueda literal de TODO(Mica) en src no devuelve resultados. Check/build OK.
 
 Preparación para publicar: comprobé las URL públicas de Vercel y GitHub (HTTP 200), corregí site en astro.config.mjs con el dominio publicado y pasaron las once pruebas de clima. Se prepara el commit de los cambios de esta sesión: presentación, controles/móvil, Pegatina y capturas, créditos y documentación. La actualización del sitio queda pendiente del push y del despliegue; el push requiere confirmación previa.
+
+Publicación confirmada: con mi OK se subió 5befe8e a origin/main. Vercel respondió HTTP 200 y el HTML público ya incluye Pegatina y la presentación con mi nombre completo. Se registra este resultado en un commit documental de seguimiento.

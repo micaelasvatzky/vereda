@@ -119,3 +119,5 @@ Agregué Mi nombre es Micaela Svatzky al inicio de la presentación. El enlace d
 Se completó la descripción para buscadores con mi nombre, diseño/desarrollo front end y el recorrido por Buenos Aires. Ya no quedan marcadores de texto pendiente en src.
 
 Se preparó la publicación de los cambios de esta sesión y se comprobó que el sitio y el repositorio responden. Se corrigió el dominio de la configuración y pasaron las pruebas del clima. Falta mi confirmación para subir el commit.
+
+Confirmé la subida. Los cambios ya están en GitHub y en Vercel; se comprobó que la web publicada incluye Pegatina y mi presentación nueva.

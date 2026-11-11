@@ -298,3 +298,5 @@ fondo aprobada por Mica. Siguen sin medición: fps, mejora real de tirones y mob
 Check/build OK. Simulación con métodos reales del motor, ancho 390, cinco proyectos y desplazamientos en ambos sentidos: 3010 posiciones conservan su coordenada mundial, sin escrituras de corrección horizontal; la mirada sigue el estado activo. Se eliminó el ajuste para contener el cartel activo en pantalla, que provocaba que acompañara a la chica. Las comprobaciones anteriores de contención horizontal deben reinterpretarse: el cartel puede recortarse al entrar o salir del viewport. Falta prueba visual real en móvil.
 
 Verificación previa a publicación del mismo día: once pruebas de clima OK; portfolio y repositorio públicos responden HTTP 200. Se actualizó el dominio configurado. La disponibilidad de la versión publicada no verifica todavía los cambios locales pendientes de push.
+
+Después del push autorizado de 5befe8e: Vercel devuelve HTTP 200; el HTML publicado incluye el enlace de Pegatina y la presentación con nombre completo. Git quedó sincronizado tras el push. No se repitió la matriz visual.
