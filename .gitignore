@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Documentación personal: conservar localmente, sin versionar.
+*.[mM][dD]
+!/AGENTS.md
+!/README.md
+!/src/content/proyectos/*.md

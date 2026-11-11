@@ -134,15 +134,9 @@ las capturas y la presentación en lista para pantallas bajas.
 
 Entre las dificultades registradas hubo problemas con movimientos poco naturales del personaje y la animación del mismo, y ajustes que desplazaban los carteles. También, el paso de desktop a mobile requirió de varios ajustes para lograr el mismo funcionamiento en ambos formatos.
 
-El registro del proceso está disponible en:
-
-- [Bitácora resumida](docs/bitacora-mica.md).
-- [Bitácora técnica](docs/bitacora.md).
-- [Decisiones y alternativas](docs/decisiones.md).
-- [Pruebas y resultados](docs/pruebas.md).
-- [Capturas del proceso](docs/capturas/).
-- [Registro de uso de IA](docs/uso-de-ia.md).
-- [Consigna del examen](examen-final-portfolio.txt).
+La bitácora del proceso se entrega por separado en Google Drive. La documentación
+personal de seguimiento y preparación de la defensa se conserva fuera del repositorio
+publicado. La consigna está disponible en [Consigna del examen](examen-final-portfolio.txt).
 
 Para revisar la codificación de los archivos, construir el sitio y ejecutar las
 pruebas del clima:
