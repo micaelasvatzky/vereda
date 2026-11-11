@@ -73,7 +73,6 @@
   --cielo-superior: #a1e3e4;
   --cielo-inferior: #a1e3e4;
   --cielo-texto: var(--verde-cartelera-oscuro);
-  --cielo-texto-oscuro: #000000;
   --cielo-texto-claro: #ffffff;
   --nube-color: #f3f0df;
   --cielo-veladura: #b0bfc0;
@@ -130,12 +129,10 @@
 }
 
 html[data-momento='amanecer'] {
-  --cielo-texto: var(--cielo-texto-oscuro);
   --cielo-superior: #b47c8b;
   --cielo-inferior: #f5ce9b;
 }
 html[data-momento='tarde'] {
-  --cielo-texto: var(--cielo-texto-oscuro);
   --cielo-superior: #946b88;
   --cielo-inferior: #efb073;
 }
