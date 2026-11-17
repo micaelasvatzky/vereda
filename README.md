@@ -134,23 +134,11 @@ las capturas y la presentación en lista para pantallas bajas.
 
 Entre las dificultades registradas hubo problemas con movimientos poco naturales del personaje y la animación del mismo, y ajustes que desplazaban los carteles. También, el paso de desktop a mobile requirió de varios ajustes para lograr el mismo funcionamiento en ambos formatos.
 
-La bitácora del proceso se entrega por separado en Google Drive. La documentación
-personal de seguimiento y preparación de la defensa se conserva fuera del repositorio
-publicado. La consigna está disponible en [Consigna del examen](examen-final-portfolio.txt).
+La [bitácora del proceso](https://docs.google.com/document/d/1LJ_BVI_-dVA0WYhtqJkUKtvpBoMEElFBW36WhSWh-dw/edit?usp=sharing) se encuentra en Google Drive.
 
-Para revisar la codificación de los archivos, construir el sitio y ejecutar las
-pruebas del clima:
-
-```bash
-npm run check
-npm run build
-node --test scripts/probar-clima.mjs
-```
 
 ## Limitaciones y posibles mejoras
 
-Queda pendiente que los carteles se vean completos al entrar o salir de pantalla. Prefiero que mantengan
-su posición en la vereda antes que desplazarlos para que permanezcan siempre visibles.
 Como mejora futura, puedo reemplazar las capturas y seguir ajustando
 la lectura en pantallas pequeñas.
 
