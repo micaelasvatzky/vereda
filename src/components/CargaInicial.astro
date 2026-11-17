@@ -1,0 +1,71 @@
+---
+import { CARGA } from '../config.js';
+---
+
+<script is:inline define:vars={{ esperaMaxima: CARGA.esperaMaxima }}>
+  document.documentElement.dataset.carga = 'rojo';
+  // También libera el sitio si el módulo no llega a ejecutarse.
+  window.__respaldoCarga = setTimeout(() => {
+    delete document.documentElement.dataset.carga;
+    document.querySelector('main')?.removeAttribute('inert');
+  }, esperaMaxima);
+</script>
+
+<div class="carga" data-carga-inicial>
+  <div class="carga__contenido">
+    <svg class="carga__semaforo" viewBox="0 0 180 340" aria-hidden="true">
+      <!-- Frente recto; los planos de color conservan el acabado ilustrado. -->
+      <rect class="carcasa" x="10" y="5" width="160" height="330" rx="18" />
+      <path class="carcasa__luz" d="M28 11H151L157 17H29Q22 17 22 26V313L16 318V26Q16 11 28 11Z" />
+      <rect class="lente" x="26" y="27" width="128" height="130" rx="8" />
+      <rect class="lente" x="26" y="183" width="128" height="130" rx="8" />
+      <path class="desgaste" d="M17 76V102M162 237V259M35 327H56" />
+      <g class="figura figura--roja">
+        <circle cx="90" cy="47" r="11" />
+        <path d="M78 64H102Q115 64 115 77V109H105V80H102V145H92V109H88V145H78V80H75V109H65V77Q65 64 78 64Z" />
+      </g>
+      <g class="figura figura--blanca">
+        <circle cx="99" cy="201" r="11" />
+        <path d="M88 217L105 220L115 241L134 252L128 263L105 250L99 239L94 260L115 281L122 306H108L101 287L82 272L69 305H54L72 258L78 235L67 246L49 249L46 236L61 232L77 218Z" />
+      </g>
+    </svg>
+    <p class="carga__texto" role="status" aria-live="polite" data-carga-texto>{CARGA.textoCargando}</p>
+  </div>
+</div>
+
+<script>
+  import '../scripts/carga.js';
+</script>
+
+<style>
+  .carga { display: none; }
+  :global(html[data-carga]) .carga {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: var(--carga-fondo);
+    opacity: 1;
+    transition: opacity var(--carga-salida) ease;
+    touch-action: none;
+  }
+  :global(html[data-carga]) { overflow: hidden; }
+  :global(html[data-carga]) main { visibility: hidden; }
+  :global(html[data-carga='saliendo']) main { visibility: visible; }
+  :global(html[data-carga='saliendo']) .carga { opacity: 0; }
+  .carga__contenido { display: grid; justify-items: center; gap: var(--carga-espacio); }
+  .carga__semaforo { width: var(--carga-ancho); max-height: 70dvh; }
+  .carcasa { fill: var(--carga-carcasa); stroke: var(--carga-borde); stroke-width: 2.5; stroke-linejoin: round; }
+  .carcasa__luz { fill: var(--carga-luz); }
+  .lente { fill: var(--carga-lente); stroke: var(--carga-borde); stroke-width: 2; }
+  .desgaste { fill: none; stroke: var(--carga-luz); stroke-width: 1.5; stroke-linecap: round; }
+  .figura { fill: var(--carga-apagado); }
+  .figura--roja { fill: var(--carga-rojo); }
+  :global(html[data-carga='blanco']) .figura--roja,
+  :global(html[data-carga='saliendo']) .figura--roja { fill: var(--carga-apagado); }
+  :global(html[data-carga='blanco']) .figura--blanca,
+  :global(html[data-carga='saliendo']) .figura--blanca { fill: var(--carga-blanco); }
+  .carga__texto { margin: 0; color: var(--carga-carcasa); font-family: var(--fuente-bienvenida); font-size: var(--carga-texto); }
+  @media (prefers-reduced-motion: reduce) { :global(html[data-carga]) .carga { transition: none; } }
+</style>

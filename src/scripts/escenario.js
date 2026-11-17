@@ -163,6 +163,9 @@ class Escenario {
   desplazar() {
     if (this.modoLista || this.redimensionando) return;
     const y = window.scrollY;
+    // Las flechas ya pintan en su frame; el evento scroll posterior no repite el trabajo.
+    if (this.yPintado === y) return;
+    this.yPintado = y;
     const p = acotar(y / Math.max(1, this.recorridoScroll), 0, 1);
     this.progreso = p;
     this.desplazamiento = p * this.recorrido;
@@ -310,14 +313,18 @@ class Escenario {
     const teclas = new Set();
     let cuadro = 0;
     let anterior = 0;
+    let destinoTeclado = window.scrollY;
 
     const avanzar = (segundos) => {
       if (this.modoLista || this.redimensionando) return false;
       const direccion = Number(teclas.has('ArrowRight')) - Number(teclas.has('ArrowLeft'));
       const paso = direccion * ESCENA.velocidadTeclado * this.escala * ESCENA.ritmo * segundos;
-      const destino = acotar(window.scrollY + paso, 0, this.recorridoScroll);
-      if (destino === window.scrollY) return false;
+      const destino = acotar(destinoTeclado + paso, 0, this.recorridoScroll);
+      if (destino === destinoTeclado) return direccion !== 0 && segundos === 0;
+      // Conservamos fracciones: el navegador puede redondear scrollY a píxeles enteros.
+      destinoTeclado = destino;
       window.scrollTo({ top: destino, behavior: 'instant' });
+      this.desplazar();
       return true;
     };
 
@@ -337,6 +344,7 @@ class Escenario {
     };
 
     const alPresionar = (evento) => {
+      if (document.documentElement.dataset.carga) { detener(); return; }
       if (this.modoLista) { detener(); return; }
       if (evento.ctrlKey || evento.altKey || evento.metaKey) return;
       if (evento.target instanceof HTMLElement &&
@@ -352,6 +360,7 @@ class Escenario {
           if (evento.repeat) return;
           if (teclas.has(evento.key)) return;
           teclas.add(evento.key);
+          if (!cuadro) destinoTeclado = window.scrollY;
           // Un toque también mueve; sostener continúa sin depender de la repetición del teclado.
           avanzar(1 / 60);
           if (!cuadro) {
@@ -484,6 +493,7 @@ class Escenario {
         else if (!eraLista) window.scrollTo({ top: 0, behavior: 'instant' });
 
         this.ultimoY = window.scrollY;
+        this.yPintado = null;
         this.ponerCaminando(false);
         this.redimensionando = false;
         this.desplazar();

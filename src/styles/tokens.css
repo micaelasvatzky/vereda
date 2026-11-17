@@ -1,6 +1,18 @@
 /* VEREDA — tokens del sistema de diseño. Todo lo ajustable vive acá. */
 
 :root {
+  --carga-fondo: #b9def0;
+  --carga-carcasa: #416147;
+  --carga-borde: #263d2d;
+  --carga-luz: #71896f;
+  --carga-lente: #1e2b23;
+  --carga-apagado: #344338;
+  --carga-rojo: #ef6659;
+  --carga-blanco: #fff9e9;
+  --carga-ancho: clamp(170px, 27vw, 250px);
+  --carga-texto: 1rem;
+  --carga-espacio: 1.5rem;
+  --carga-salida: 250ms;
   /* --- Cartelera ------------------------------------------------------ */
   --verde-cartelera: #1f6b47;
   --verde-cartelera-oscuro: #154a31;

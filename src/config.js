@@ -24,6 +24,14 @@ export const BIENVENIDA = {
   instruccionesLista: 'Explorá los proyectos y abrí sus webs o repositorios.',
 };
 
+export const CARGA = {
+  minimoRojo: 650,
+  duracionBlanco: 650,
+  esperaMaxima: 10000,
+  textoCargando: 'Cargando la vereda…',
+  textoListo: 'Ya podés cruzar',
+};
+
 export const ESCENA = {
   /** Alto de referencia del escenario, en px. Todo el mundo se expresa contra esto. */
   altoRef: 1080,

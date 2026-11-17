@@ -17,6 +17,10 @@ Portfolio publicado: [La vereda de Mica](https://vereda-portfolio.vercel.app/).
 
 ## Recorrido
 
+Al abrir, un semáforo peatonal acompaña la carga de imágenes y tipografías:
+la figura roja espera y la blanca indica la entrada al recorrido. Si un recurso
+falla o demora demasiado, la pantalla se retira igualmente. Sin JavaScript no se muestra.
+
 Se puede avanzar con las flechas del teclado, la rueda del mouse o el desplazamiento
 táctil. Cuando el personaje se acerca a un cartel, lo mira y aparece la información
 del proyecto: nombre, año, tecnologías y una descripción breve. La imagen permite
