@@ -1,0 +1,72 @@
+---
+import { CONTACTO } from '../config.js';
+
+const { tituloId } = Astro.props;
+const gmail = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACTO.email)}`;
+---
+
+<div class="contacto">
+  <h2 id={tituloId}>{CONTACTO.titulo}</h2>
+  <p class="contacto__invitacion">{CONTACTO.invitacion}</p>
+  <div class="contacto__enlaces">
+    <a href={gmail} target="_blank" rel="noopener noreferrer" aria-label="Escribirle a Micaela en Gmail (se abre en otra pestaña)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="2" />
+        <path d="m3 6 9 7 9-7" />
+      </svg>
+    </a>
+    <a href={CONTACTO.linkedin} target="_blank" rel="noopener noreferrer" aria-label="Ver el perfil de Micaela Svatzky en LinkedIn (se abre en otra pestaña)">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2ZM8 19H5v-9h3Zm-1.5-10.2a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4ZM19 19h-3v-4.4c0-1.3-.4-2-1.4-2-1.1 0-1.6.8-1.6 2V19h-3v-9h2.9v1.2a3 3 0 0 1 2.6-1.4c2.3 0 3.5 1.4 3.5 4Z" />
+      </svg>
+    </a>
+  </div>
+</div>
+
+<style>
+  .contacto {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: var(--contacto-espacio);
+    min-height: 100%;
+    padding: var(--contacto-relleno);
+    background: var(--verde-cartelera-oscuro);
+    color: var(--afiche-texto);
+    text-align: center;
+  }
+
+  .contacto h2 {
+    margin: 0;
+    font: 400 var(--contacto-titulo) / 1.1 var(--fuente-bienvenida);
+    text-wrap: balance;
+  }
+
+  .contacto__invitacion {
+    margin: 0;
+    font: 400 var(--contacto-invitacion) / 1.2 var(--fuente-texto);
+  }
+
+  .contacto__enlaces {
+    display: flex;
+    gap: var(--contacto-espacio);
+  }
+
+  .contacto a {
+    display: grid;
+    place-items: center;
+    width: var(--boton-proyecto-tamano);
+    height: var(--boton-proyecto-tamano);
+    color: inherit;
+  }
+
+  .contacto a:focus-visible {
+    outline: var(--foco-grosor) solid currentColor;
+    outline-offset: calc(-1 * (var(--foco-grosor) + var(--foco-margen)));
+  }
+
+  .contacto svg {
+    width: var(--contacto-icono);
+    height: var(--contacto-icono);
+  }
+</style>

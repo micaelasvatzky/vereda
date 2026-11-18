@@ -24,6 +24,13 @@ export const BIENVENIDA = {
   instruccionesLista: 'Explorá los proyectos y abrí sus webs o repositorios.',
 };
 
+export const CONTACTO = {
+  titulo: '¿Querés trabajar juntos en tus proyectos?',
+  invitacion: 'Contactame',
+  email: 'svatzkymicaela@gmail.com',
+  linkedin: 'https://www.linkedin.com/in/micaela-svatzky-402082279',
+};
+
 export const CARGA = {
   minimoRojo: 650,
   duracionBlanco: 650,

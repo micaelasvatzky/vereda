@@ -29,16 +29,19 @@
 import { Image } from 'astro:assets';
 import { render, type CollectionEntry } from 'astro:content';
 import { RUTAS_CARTEL, CARTEL } from '../config.js';
+import Contacto from './Contacto.astro';
 
 interface Props {
   indice: number;
   proyecto?: CollectionEntry<'proyectos'>;
+  contacto?: boolean;
 }
 
-const { indice, proyecto } = Astro.props;
+const { indice, proyecto, contacto } = Astro.props;
 const descripcion = proyecto ? await render(proyecto) : null;
 const Content = descripcion?.Content;
 const descripcionId = `descripcion-proyecto-${indice}`;
+const tituloId = contacto ? 'titulo-contacto' : `titulo-proyecto-${indice}`;
 ---
 
 <article
@@ -46,12 +49,14 @@ const descripcionId = `descripcion-proyecto-${indice}`;
   data-cartelera
   data-indice={indice}
   data-activa="false"
-  aria-labelledby={`titulo-proyecto-${indice}`}
+  aria-labelledby={tituloId}
   style={`--indice: ${indice};`}
 >
-  <h2 class="cartelera__titulo visualmente-oculto" id={`titulo-proyecto-${indice}`}>
-    {proyecto?.data.titulo}
-  </h2>
+  {!contacto && (
+    <h2 class="cartelera__titulo visualmente-oculto" id={tituloId}>
+      {proyecto?.data.titulo}
+    </h2>
+  )}
   <div
     class="cartelera__cartel"
     style={`--cartel-proporcion:${CARTEL.proporcion}; --hueco-left:${CARTEL.hueco.left}%; --hueco-top:${CARTEL.hueco.top}%; --hueco-width:${CARTEL.hueco.width}%; --hueco-height:${CARTEL.hueco.height}%;`}
@@ -64,7 +69,11 @@ const descripcionId = `descripcion-proyecto-${indice}`;
       decoding="async"
     />
     {
-      proyecto && (
+      contacto ? (
+        <div class="cartelera__preview">
+          <Contacto tituloId={tituloId} />
+        </div>
+      ) : proyecto && (
         <div class="cartelera__preview">
           <Image
             class="cartelera__preview-img"

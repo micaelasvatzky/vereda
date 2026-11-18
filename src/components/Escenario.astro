@@ -110,6 +110,7 @@ const franjaVereda = `url(${RUTAS_CAPAS.vereda})`;
         ))
       }
       {proyectos.map((proyecto, i) => <Cartelera indice={i} proyecto={proyecto} />)}
+      <Cartelera indice={proyectos.length} contacto />
     </div>
 
     <Caminante />

@@ -21,6 +21,11 @@
   --cartel-activo-elevacion: -10px;
   --cartel-activo-margen: 12px;
   --boton-proyecto-tamano: 44px;
+  --contacto-titulo: clamp(1rem, 8cqw, 2rem);
+  --contacto-invitacion: clamp(0.875rem, 5cqw, 1.125rem);
+  --contacto-espacio: 0.25rem;
+  --contacto-relleno: 0.35rem 0.5rem;
+  --contacto-icono: 1.4rem;
   --lista-espacio: 1rem;
   --lista-tarjeta-ancho: 18rem;
   --lista-titulo-espacio: 0.5rem;
